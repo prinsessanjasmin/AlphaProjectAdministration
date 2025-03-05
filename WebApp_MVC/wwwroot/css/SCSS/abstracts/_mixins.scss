@@ -1,0 +1,16 @@
+﻿
+@mixin respond-to($size) {
+    $breakpoint: map-get($breakpoints, $size); // Get the value from the map
+    @media (min-width: $breakpoint) {
+        @content;
+    }
+}
+
+@mixin button {
+    font-family: "Nunito";
+    font-weight: 500;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 14px;
+}
