@@ -1,4 +1,5 @@
-﻿
+﻿@import "_variables.scss";
+
 @mixin respond-to($size) {
     $breakpoint: map-get($breakpoints, $size); // Get the value from the map
     @media (min-width: $breakpoint) {
@@ -7,7 +8,6 @@
 }
 
 @mixin button {
-    font-family: "Nunito";
     font-weight: 500;
     font-size: 15px;
     border: none;

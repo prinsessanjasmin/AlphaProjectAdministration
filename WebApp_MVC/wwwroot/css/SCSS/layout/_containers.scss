@@ -1,4 +1,6 @@
-﻿.container {
+﻿@import "../abstracts/mixins"; 
+
+.container {
     width: 100%;
     padding-inline: 1rem;
     margin: auto;
@@ -14,4 +16,15 @@
     @include respond-to('x-large') {
         max-width: 1320px;
     }
+}
+
+.login-container {
+    width: 600px; 
+    height: 900px; 
+
+}
+
+.popupp-container {
+    width: 550px; 
+    height: 1131px; 
 }

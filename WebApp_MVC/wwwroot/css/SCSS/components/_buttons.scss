@@ -1,3 +1,16 @@
-﻿.btn {
+﻿@import "../abstracts/mixins";
 
+.btn {
+    @include button;
+    font-family: Nunito;
+    background-color: $clr-accent;
+    height: 48px;
+}
+
+#btn-popup {
+    width: 490px; 
+}
+
+#btn-page {
+    width: 153px; 
 }
