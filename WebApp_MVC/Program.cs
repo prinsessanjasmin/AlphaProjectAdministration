@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
+using WebApp_MVC.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped<AddProjectViewModel>();
 
 // Add services to the container.
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)

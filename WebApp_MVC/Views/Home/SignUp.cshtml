@@ -1,0 +1,16 @@
+﻿
+
+@model SignUpFormModel
+	@{
+	ViewData["Title"] = "Sign Up";
+}
+
+<div>
+	<div>
+		<form method="post" asp-controller="Home" asp-action="SignUp">
+			<label asp-for="FirstName">First Name</label>
+			<input asp-for="FirstName"/>
+			<span asp-validation-for="FirstName"></span>
+		</form>
+	</div>
+</div>

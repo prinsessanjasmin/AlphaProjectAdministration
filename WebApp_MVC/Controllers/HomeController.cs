@@ -1,34 +1,40 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebApp_MVC.Models;
+using Business.Models;
 
 namespace WebApp_MVC.Controllers;
 
 [Authorize]
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
-    {
-        _logger = logger;
-    }
 
     public IActionResult Index()
     {
+        var formData = new SignUpFormModel(); 
+        return View(formData);
+    }
+
+    [HttpPost]
+    public IActionResult SignUp(SignUpFormModel formData)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(formData);
+        }
         return View();
     }
 
-    public IActionResult Privacy()
+    [HttpPost]
+    public IActionResult SignIn()
     {
         return View();
     }
 
-    [AllowAnonymous]
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    public IActionResult SignOut()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return RedirectToAction("Index", "HomeController"); 
     }
+
+
 }

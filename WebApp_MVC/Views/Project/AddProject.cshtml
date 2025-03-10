@@ -1,0 +1,31 @@
+﻿@using Business.Models
+
+@model AddProjectViewModel
+@{
+	ViewData["Title"] = "Add Project";
+}
+
+
+<div>
+	<div>
+		<form method="post" asp-controller="Home" asp-action="SignUp">
+
+			<div>
+				<label asp-for="FormData.ProjectName"></label>
+				<input asp-for="FormData.ProjectName" value="@Model?.FormData?.ProjectName" />
+				<span asp-validation-for="FormData.ProjectName"></span>
+			</div>
+
+			<div>
+				<label asp-for="FormData.MemberId"></label>
+				<select asp-for="FormData.MemberId" asp-items="@Model?.MemberOptions" value="@Model?.FormData?.MemberId">
+					<options value="" disabled selected hidden>"-- Select a member to add to the team --"</options>
+				</select>
+				<span asp-validation-for="FormData.MemberId"></span>
+			</div>
+			
+
+
+		</form>
+	</div>
+</div>

@@ -12,8 +12,6 @@ public class ProjectEntity
     [Column(TypeName = "nvarchar(100)")]
     public string ProjectName { get; set; } = null!;
 
-   
-
     [Column(TypeName = "nvarchar(max)")]
     public string? Description { get; set; }
 
@@ -36,5 +34,7 @@ public class ProjectEntity
 
     [Required]
     public int StatusId { get; set; }
-    public StatusEntity Status { get; set; } = null!; 
+    public StatusEntity Status { get; set; } = null!;
+    public string? ImageUrl { get; set; } = null!;
+
 }
