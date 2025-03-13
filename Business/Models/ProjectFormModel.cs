@@ -1,10 +1,12 @@
 ﻿using Data.Entities;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace Business.Models; 
 
 public class ProjectFormModel
 {
+    public IFormFile? ProjectImage { get; set; }
     public string ProjectName { get; set; } = null!;
 
     [Display(Name = "Select a Client", Prompt = "Select a client")]

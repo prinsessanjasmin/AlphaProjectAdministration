@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Entities;
@@ -35,6 +36,6 @@ public class ProjectEntity
     [Required]
     public int StatusId { get; set; }
     public StatusEntity Status { get; set; } = null!;
-    public string? ImageUrl { get; set; } = null!;
+    public IFormFile? ProjectImage { get; set; }
 
 }

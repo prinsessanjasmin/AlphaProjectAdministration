@@ -1,1 +1,31 @@
-﻿
+﻿.projects-container {
+    display: flex; 
+    flex-direction: column; 
+    padding: 2rem; 
+}
+
+.project-view {
+    margin-top: 2rem; 
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr; 
+    gap: 2rem;
+    align-content: space-evenly;
+    justify-content: space-evenly;
+}
+
+.project-categories {
+    display: flex; 
+    flex-direction: row; 
+    gap: 3rem; 
+    margin-top: 2rem; 
+    border-bottom: 1px solid $clr-border-200;
+    
+
+    a {
+        font-size: 32px;
+        font-weight: 700;
+        color: $clr-body-light; 
+        cursor: pointer; 
+    }
+}

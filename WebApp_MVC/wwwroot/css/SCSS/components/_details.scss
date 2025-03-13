@@ -1,0 +1,19 @@
+.single-line {
+    border-bottom: 1px solid $clr-border-200;
+    width: 100%;
+}
+
+.horizontal {
+    display: flex; 
+    flex-direction: row;
+    align-items: center; 
+}
+
+.vertical {
+    display: flex; 
+    flex-direction: column;
+}
+
+.space-between {
+    justify-content: space-between;
+}

@@ -5,12 +5,116 @@
     font-family: Nunito;
     background-color: $clr-accent;
     height: 48px;
+    color: $clr-surface; 
 }
 
-#btn-popup {
+.btn-popup {
     width: 490px; 
+    margin-top: 1rem; 
 }
 
-#btn-page {
+.btn-login {
+    width: 400px; 
+    margin: 1rem 0; 
+}
+
+.btn-page {
     width: 153px; 
+}
+
+.btn-google {
+    width: 400px; 
+    background-color: $clr-grey-100;
+    color: $clr-header;
+    font-weight: 600;
+    padding-right: 2rem; 
+    background-image: url("/images/Icons/google-icon.svg");
+    background-position: 16px 13px; 
+    background-repeat: no-repeat;
+    background-size: 18px;
+}
+
+.btn-projects {
+    background-color: $clr-accent-opacity;
+    color: $clr-accent;
+    font-weight: 600;
+    text-align: left; 
+    padding: 0 2.7rem;
+    margin: 0 .5rem;
+    background-image: url("/images/Icons/Projects.svg");
+    background-position: 16px 15px; 
+    background-repeat: no-repeat;
+    background-size: 18px;
+}
+
+.btn-upload-image {
+    position: relative;
+    top: 37%;
+    left: 37%;
+    justify-self: center;
+    align-self: center;
+    background-color: rgb(51, 51, 51, 0.7);
+    height: 40px; 
+    width: 40px; 
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.btn-edit-image {
+    position: relative;
+    top: 66%;
+    left: 37%;
+    justify-self: center;
+    align-self: center;
+    background-color: rgb(51, 51, 51, 0.7);
+    height: 40px; 
+    width: 40px; 
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#btn-2-dots {
+    height: 40px; 
+    width: 40px; 
+    border: none; 
+    cursor: pointer;
+    border-radius: 16px;
+    background-color: $clr-surface; 
+    background-image: url("/images/Icons/2dots.svg");
+    background-position: 7.5px 7.5px; 
+    background-repeat: no-repeat;
+    background-size: 24px;
+
+    &:hover {
+        background-color: $clr-grey-100; 
+    }
+}
+
+.btn-options {
+    padding-left: 3.5rem;
+    text-align: start;
+    background-color: $clr-surface;
+    color: $clr-header;
+    width: 100%; 
+    background-position: 14px 14px; 
+    background-repeat: no-repeat;
+    background-size: 20px;
+    z-index: 10;
+
+    &:hover {
+        background-color: $clr-grey-100; 
+    }
+}
+
+#btn-edit-project {
+    background-image: url("/images/Icons/Edit.svg");
+}
+
+#btn-add-member {
+    background-image: url("/images/Icons/Add\ User.svg");
+}
+
+#btn-delete-project {
+    background-image: url("/images/Icons/Delete.svg");
+    color: $clr-red; 
 }

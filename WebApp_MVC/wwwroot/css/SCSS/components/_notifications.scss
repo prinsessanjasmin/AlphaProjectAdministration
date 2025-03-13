@@ -1,0 +1,59 @@
+.notification-box {
+    background-color: $clr-surface; 
+    width: 380px; 
+    z-index: 10; 
+    border-radius: 16px; 
+    padding: 1.5rem; 
+}
+
+.notification-number {
+    align-self: center; 
+    justify-self: center; 
+    background-color: $clr-red;
+    width: 2rem; 
+    height: 2rem; 
+    border-radius: 50%;
+    
+    
+    h3 {
+        color: $clr-surface;
+        align-self: center; 
+        justify-self: center;
+        font-weight: 700; 
+    }
+    
+}
+
+#notification-row {
+    padding-bottom: .5rem; 
+}
+
+.notification {
+    background-color: $clr-grey-100; 
+    border: none; 
+    border-radius: 16px; 
+    padding: .5rem; 
+    margin-top: 1rem; 
+    gap: 1rem; 
+    justify-content: space-between;
+
+    p {
+        font-weight: 700; 
+    }
+
+    span {
+        font-size: 14px; 
+        color: $clr-body-light;
+    }
+}
+
+.btn-x {
+    height: 2rem; 
+    width: 2rem; 
+    background-color: $clr-grey-100;
+    border: none; 
+    background-image: url("/images/Icons/X.svg");
+    background-position: 8px 8px;
+    background-repeat: no-repeat;
+    background-size: 12px;
+}

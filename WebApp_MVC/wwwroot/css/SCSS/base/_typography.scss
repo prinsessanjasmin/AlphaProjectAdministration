@@ -42,6 +42,17 @@
     font-style: normal;
 }
 
+.admin-headline {
+    font-family: Poppins; 
+    font-weight: 700;
+    font-size: 72px;
+    color: $clr-surface; 
+}
+
+.admin-headline2 {
+    color: $clr-orange; 
+}
+
 body {
     font-family: Nunito;
     font-weight: 400;
@@ -78,7 +89,44 @@ h6 {
     font-size: 18px;
 }
 
+a {
+    color: $clr-accent;
+}
 
+
+.divider {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    text-align: center;
+    width: 75%;
+    color: $clr-body-light;
+    font-weight: 400;
+    font-size: 12px;
+
+    &::before,
+    &::after {
+        content: "";
+        display: block;
+        height: 1px;
+        background-color: $clr-grey-200;
+        margin: 1rem .1rem;
+    }
+//Got this whole thing from ChatGPT, but of course changed the details. 
+}
+
+.center {
+    text-align: center;
+}
+
+.left {
+    text-align: left; 
+}
+
+.p-light {
+    color: $clr-body-light;
+}
 
 #logo-text {
     font-family: Comfortaa;
@@ -90,4 +138,8 @@ h6 {
     font-family: Poppins;
     font-weight: 700;
     font-size: 72px;
+}
+
+#no-account {
+    margin: 2rem 0 1rem 0;
 }

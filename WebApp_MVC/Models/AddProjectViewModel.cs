@@ -1,11 +1,17 @@
 ﻿using Business.Models;
+using Business.Services; 
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApp_MVC.Models;
 
 public class AddProjectViewModel
 {
-    private readonly IEmployeeService _employeeService; 
+    private readonly IEmployeeService _employeeService;
+
+    public AddProjectViewModel(IEmployeeService)
+    {
+        
+    }
     public ProjectFormModel FormData = new();
     public List<SelectListItem> MemberOptions = [];
 

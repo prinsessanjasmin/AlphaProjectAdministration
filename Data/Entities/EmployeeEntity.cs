@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Entities;
@@ -28,7 +29,7 @@ public class EmployeeEntity
     [Column(TypeName = "nvarchar(50)")]
     public string JobTitle { get; set; } = null!;
 
-    public string? ImageUrl { get; set; } = null!;
+    public IFormFile? ProfileImage { get; set; }
 
     [DataType(DataType.Date)]    // Claude AI
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)] // Claude AI

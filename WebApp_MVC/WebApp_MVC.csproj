@@ -20,9 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Shared\Images\Logos\" />
-    <Folder Include="Views\Shared\Images\Pictures\" />
-    <Folder Include="wwwroot\fonts\" />
+    <Folder Include="Views\Shared\images\Pictures\" />
   </ItemGroup>
 
   <ItemGroup>

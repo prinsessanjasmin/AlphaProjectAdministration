@@ -1,0 +1,16 @@
+.dropdown-date-picker {
+    width: 100%;
+  }
+  .dropdown-date-picker .select-horizontal {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+  .dropdown-date-picker .select-horizontal .dropdown {
+    width: 1fr;
+  }
+  
+  select {
+    border: 1px solid;
+  }/*# sourceMappingURL=dropdown-date-picker.css.map */
