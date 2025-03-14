@@ -22,4 +22,10 @@ public class UserEntity
 
     [Required]
     public string EncryptedPassword { get; set; } = null!;
+
+    [Required]
+    public string SecurityKey { get; set; } = null!;
+
+    [Required]
+    public bool IsAdmin { get; set; } = false;
 }

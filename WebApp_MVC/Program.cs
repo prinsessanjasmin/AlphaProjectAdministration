@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using WebApp_MVC.Models;
+using Business.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<AddProjectViewModel>();
+builder.Services.AddScoped<IEmployeeService, IEmployeeService>();
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(

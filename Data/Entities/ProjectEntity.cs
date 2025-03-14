@@ -31,7 +31,7 @@ public class ProjectEntity
     public int ClientId { get; set; }
     public ClientEntity Client { get; set; } = null!;
 
-    public ICollection<ProjectEmployeeEntity> ProjectEmployees { get; set; } = new List<ProjectEmployeeEntity>();
+    public ICollection<ProjectEmployeeEntity> TeamMembers { get; set; } = new List<ProjectEmployeeEntity>();
     //Got help from ChatGPT 4o on this one ^
 
     [Required]

@@ -23,7 +23,7 @@ public class SignUpFormModel
     [Display(Name = "Password", Prompt = "Minimum 8 characters, including at least one letter, one number and one special character.")]
     [DataType(DataType.Password)]
     [Required(ErrorMessage = "You must choose a password.")]
-    [RegularExpression("", ErrorMessage = "Your password must be at least 8 characters long and contain both letters, numbers and a special character.")]
+    [RegularExpression("^(?=.*[A-ZÅÄÖa-zåäö])(?=.*\\d)(?=.*[!@#$%^&*()_\\-+={}[\\]\\\\|:;'\\\"<>,.?/~`]).{8,}$", ErrorMessage = "Your password must be at least 8 characters long and contain both letters, numbers and a special character.")]
     public string Password { get; set; } = null!;
 
     [Display(Name = "Confirm Password", Prompt = "Repeat your password.")]
@@ -32,5 +32,4 @@ public class SignUpFormModel
     [Compare(nameof(Password), ErrorMessage ="The passwords do not match.")]
     public string ConfirmPassword{ get; set; } = null!;
     public bool AcceptTerms { get; set; } 
-
 }

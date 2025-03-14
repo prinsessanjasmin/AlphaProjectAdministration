@@ -1,5 +1,6 @@
 ﻿using Business.Models;
-using Business.Services; 
+using Business.Services;
+using Business.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApp_MVC.Models;
@@ -8,10 +9,7 @@ public class AddProjectViewModel
 {
     private readonly IEmployeeService _employeeService;
 
-    public AddProjectViewModel(IEmployeeService)
-    {
-        
-    }
+
     public ProjectFormModel FormData = new();
     public List<SelectListItem> MemberOptions = [];
 
@@ -20,18 +18,18 @@ public class AddProjectViewModel
         _employeeService = employeeService;
     }
 
-    public async Task PopulateMemberOptionsAsync()
-    {
-        var members = await _employeeService.GetAllAsync();
-        MemberOptions = [.. members.Select(x => SelectListItem 
-        {
-            Value = x.Id.ToString(), 
-            Text = x.Name
-        }).ToList(); 
-    }
+    //public async Task PopulateMemberOptionsAsync()
+    //{
+    //    var members = await _employeeService.GetAllAsync();
+    //    MemberOptions = [.. members.Select(x => SelectListItem
+    //    {
+    //        Value = x.Id.ToString(), 
+    //        Text = x.Name
+    //    }).ToList();
+    //}
 
     public void ClearFormData()
     {
-        FormData = new(); 
+        FormData = new();
     }
 }

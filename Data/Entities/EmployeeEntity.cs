@@ -34,6 +34,14 @@ public class EmployeeEntity
     [DataType(DataType.Date)]   
     public DateOnly DateOfBirth { get; set; }
 
-    public ICollection<ProjectEmployeeEntity> ProjectEmployees { get; set; } = new List<ProjectEmployeeEntity>();
+    public ICollection<ProjectEmployeeEntity> EmployeeProjects { get; set; } = new List<ProjectEmployeeEntity>();
 
+    [Required]
+    public string StreetAddress { get; set; } = null!;
+
+    [Required]
+    public string PostCode { get; set; } = null!;
+
+    [Required]
+    public string City { get; set; } = null!;
 }
