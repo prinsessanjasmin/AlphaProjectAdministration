@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Authentication;
+using Data.Contexts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -8,6 +9,11 @@ using WebApp_MVC.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<AddProjectViewModel>();
+
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
 
 // Add services to the container.
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)

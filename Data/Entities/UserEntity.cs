@@ -17,16 +17,9 @@ public class UserEntity
     public string LastName { get; set; } = null!;
 
     [Required]
-    [Column(TypeName = "varchar(100)")]
+    [EmailAddress]
     public string Email { get; set; } = null!;
 
     [Required]
-    //regex 
-    public string Password { get; set; } = null!;
-
-    //[Required]
-    ////regex 
-    //public string EncryptedPassword { get; set; } = null!;
-
-
+    public string EncryptedPassword { get; set; } = null!;
 }

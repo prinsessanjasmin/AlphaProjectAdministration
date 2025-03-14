@@ -9,6 +9,8 @@ public class StatusEntity
     public int Id { get; set; }
 
     [Required]
-    [Column(TypeName = "varchar(10)")]
+    [Column(TypeName = "varchar(20)")]
     public string StatusName { get; set; } = null!;
+
+    public ICollection<ProjectEntity> Projects { get; set; } = new List<ProjectEntity>();
 }

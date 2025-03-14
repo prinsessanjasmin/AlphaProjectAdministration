@@ -17,14 +17,12 @@ public class ProjectEntity
     public string? Description { get; set; }
 
     [Required]
-    [DataType(DataType.Date)]    // Claude AI
-    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)] // Claude AI
-    public DateTime StartDate { get; set; }
+    [DataType(DataType.Date)]   
+    public DateOnly StartDate { get; set; }
 
     [Required]
-    [DataType(DataType.Date)]    // Claude AI
-    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)] // Claude AI
-    public DateTime EndDate { get; set; }
+    [DataType(DataType.Date)]  
+    public DateOnly EndDate { get; set; }
 
     public decimal? Budget { get; set; }
 
@@ -32,6 +30,9 @@ public class ProjectEntity
     [Column(TypeName = "nvarchar(100)")]
     public int ClientId { get; set; }
     public ClientEntity Client { get; set; } = null!;
+
+    public ICollection<ProjectEmployeeEntity> ProjectEmployees { get; set; } = new List<ProjectEmployeeEntity>();
+    //Got help from ChatGPT 4o on this one ^
 
     [Required]
     public int StatusId { get; set; }

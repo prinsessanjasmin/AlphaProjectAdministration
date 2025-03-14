@@ -18,7 +18,7 @@ public class EmployeeEntity
     public string LastName { get; set; } = null!;
 
     [Required]
-    [Column(TypeName = "varchar(100)")]
+    [EmailAddress]
     public string Email { get; set; } = null!;
 
     [Required]
@@ -31,8 +31,9 @@ public class EmployeeEntity
 
     public IFormFile? ProfileImage { get; set; }
 
-    [DataType(DataType.Date)]    // Claude AI
-    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)] // Claude AI
-    public DateTime DateOfBirth { get; set; }
+    [DataType(DataType.Date)]   
+    public DateOnly DateOfBirth { get; set; }
+
+    public ICollection<ProjectEmployeeEntity> ProjectEmployees { get; set; } = new List<ProjectEmployeeEntity>();
 
 }
