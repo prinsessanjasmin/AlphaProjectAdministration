@@ -11,6 +11,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<ProjectEmployeeEntity> ProjectEmployees { get; set; }
     public DbSet<ProjectEntity> Projects { get; set; }
     public DbSet<StatusEntity> Statuses { get; set; }
+    public DbSet<AddressEntity> Addresses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -35,13 +36,13 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
         modelBuilder.Entity<ProjectEmployeeEntity>()
             .HasOne(pe => pe.Project)
-            .WithMany(p => p.ProjectEmployees)
+            .WithMany(p => p.TeamMembers)
             .HasForeignKey(pe => pe.EmployeeId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ProjectEmployeeEntity>()
             .HasOne(pe => pe.Employee)
-            .WithMany(p => p.ProjectEmployees)
+            .WithMany(p => p.EmployeeProjects)
             .HasForeignKey(pe => pe.ProjectId)
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -64,6 +65,12 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<EmployeeEntity>()
             .HasIndex(e => e.Email)
             .IsUnique();
+
+        modelBuilder.Entity<EmployeeEntity>()
+            .HasOne(e => e.Address)
+            .WithMany(ad => ad.Employees)
+            .HasForeignKey(e => e.AddressId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         base.OnModelCreating(modelBuilder);
     }

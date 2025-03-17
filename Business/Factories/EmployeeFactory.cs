@@ -5,9 +5,9 @@ namespace Business.Factories;
 
 public static class EmployeeFactory
 {
-    public static EmployeeEntity Create (MemberFormModel form)
+    public static EmployeeEntity Create (MemberFormModel form, int id)
     {
-        return new EmployeeEntity
+        var employeeEntity = new EmployeeEntity
         {
             FirstName = form.FirstName,
             LastName = form.LastName,
@@ -16,13 +16,15 @@ public static class EmployeeFactory
             JobTitle = form.JobTitle,
             ProfileImage = form.ProfileImage,
             DateOfBirth = form.DateOfBirth,
-            StreetAddress = form.StreetAddress,
-            PostCode = form.PostCode,
-            City = form.City,
+            AddressId = id
         };
+
+
+
+            return employeeEntity;
     }
 
-    public static MemberFormModel Create(EmployeeEntity employee)
+    public static MemberFormModel Create(EmployeeEntity employee, AddressEntity address)
     {
         return new MemberFormModel
         {
@@ -33,9 +35,9 @@ public static class EmployeeFactory
             JobTitle = employee.JobTitle,
             ProfileImage = employee.ProfileImage,
             DateOfBirth = employee.DateOfBirth,
-            StreetAddress = employee.StreetAddress,
-            PostCode = employee.PostCode,
-            City = employee.City,
+            StreetAddress = address.StreetAddress,
+            PostCode = address.PostCode,
+            City = address.City,
         };
     }
 }

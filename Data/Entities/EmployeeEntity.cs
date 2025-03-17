@@ -37,11 +37,6 @@ public class EmployeeEntity
     public ICollection<ProjectEmployeeEntity> EmployeeProjects { get; set; } = new List<ProjectEmployeeEntity>();
 
     [Required]
-    public string StreetAddress { get; set; } = null!;
-
-    [Required]
-    public string PostCode { get; set; } = null!;
-
-    [Required]
-    public string City { get; set; } = null!;
+    public int AddressId { get; set; }
+    public AddressEntity Address { get; set; } = null!; 
 }

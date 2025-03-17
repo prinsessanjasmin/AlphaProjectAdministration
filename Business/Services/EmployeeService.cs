@@ -6,9 +6,11 @@ using Data.Interfaces;
 
 namespace Business.Services;
 
-public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployeeService
+public class EmployeeService(IEmployeeRepository employeeRepository, IAddressService addressService) : IEmployeeService
 {
     private readonly IEmployeeRepository _employeeRepository = employeeRepository;
+    private readonly IAddressService _addressService = addressService; 
+
 
     public async Task<IResult> CreateEmployee(MemberFormModel form)
     {
@@ -24,8 +26,11 @@ public class EmployeeService(IEmployeeRepository employeeRepository) : IEmployee
                 return Result.AlreadyExists("The email adress you are trying to register already exists."); 
             }
 
-            var entity = EmployeeFactory.Create(form);
+            //(Result, AddressEntity addressEntity) = await _addressService.CreateAddress(form); 
+
+            var entity = EmployeeFactory.Create(form, addressEntity.Id);
             EmployeeEntity employee = await _employeeRepository.CreateAsync(entity);
+            await _employeeRepository.SaveAsync();
             await _employeeRepository.CommitTransactionAsync();
             return Result<EmployeeEntity>.Created(employee); 
             
