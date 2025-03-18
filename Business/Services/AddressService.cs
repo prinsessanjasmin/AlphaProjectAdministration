@@ -10,14 +10,14 @@ public class AddressService(IAddressRepository addressRepository) : IAddressServ
 {
     private readonly IAddressRepository _addressRepository = addressRepository;
 
-    public async Task<IResult> CreateAddress(MemberFormModel form)
+    public async Task<IResult<AddressEntity>> CreateAddress(MemberFormModel form)
     {
         await _addressRepository.BeginTransactionAsync();
         try
         {
             if (form.StreetAddress == null || form.PostCode == null || form.City == null)
             {
-                return Result.BadRequest("You need to fill out all address fields.");
+                 return Result<AddressEntity>.Error("You need to fill out all address fields.");
             }
 
             string normailizedStreetAddress = form.StreetAddress.Trim().ToLower();
@@ -31,8 +31,7 @@ public class AddressService(IAddressRepository addressRepository) : IAddressServ
 
             if (existingAddress != null) 
             {
-                int id = existingAddress.Id;
-                return Result<int>.Ok(id); 
+                return Result<AddressEntity>.Ok(existingAddress); 
             }
             else
             {
@@ -46,7 +45,7 @@ public class AddressService(IAddressRepository addressRepository) : IAddressServ
         catch
         {
             await _addressRepository.RollbackTransactionAsync();
-            return Result.Error("Something went wrong.");
+            return Result<AddressEntity>.Error("Something went wrong.");
         }
     }
 

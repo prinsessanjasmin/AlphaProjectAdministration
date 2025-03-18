@@ -9,8 +9,8 @@ public interface IProjectService
     Task<IResult> GetAllProjects();
     Task<IResult> GetProjectById(int id);
     Task<IResult> GetProjectByProjectName(string projectName);
-    Task<IResult> GetProjectByStartdate(DateTime startDate);
-    Task<IResult> GetProjectByEndDate(DateTime endDate);
+    Task<IResult> GetProjectsByStartdate(DateTime startDate);
+    Task<IResult> GetProjectsByEndDate(DateTime endDate);
     Task<IResult> UpdateProject(int id, ProjectEntity updatedProject);
     Task<IResult> DeleteProject(int id);
 }

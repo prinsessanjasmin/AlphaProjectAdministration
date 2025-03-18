@@ -37,9 +37,10 @@ public abstract class Result : IResult
     }
 }
 
-public class Result<T> : Result
+public class Result<T> : Result, IResult<T>
 {
     public T? Data { get; private set; }
+
     public static Result<T> Ok(T? data)
     {
         return new Result<T>
@@ -57,6 +58,39 @@ public class Result<T> : Result
             Success = true,
             StatusCode = 201,
             Data = data,
+        };
+    }
+
+    public static Result<T> Error(string message, int statusCode = 400)
+    {
+        return new Result<T>
+        {
+            Success = false,
+            StatusCode = statusCode,
+            ErrorMessage = message,
+            Data = default
+        };
+    }
+
+    public static Result<T> NotFound(string message, int statusCode = 404)
+    {
+        return new Result<T>
+        {
+            Success = false,
+            StatusCode = statusCode,
+            ErrorMessage = message,
+            Data = default
+        };
+    }
+
+    public static Result<T> AlreadyExists(string message, int statusCode = 409)
+    {
+        return new Result<T>
+        {
+            Success = false,
+            StatusCode = statusCode,
+            ErrorMessage = message,
+            Data = default
         };
     }
 }

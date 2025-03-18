@@ -19,21 +19,24 @@ public class EmployeeService(IEmployeeRepository employeeRepository, IAddressSer
         {
             if (form == null) 
             {
-                return Result.BadRequest("You need to fillt out the form.");
+                return Result.BadRequest("You need to fill out the form.");
             }
+
             if (await _employeeRepository.AlreadyExistsAsync(x => x.Email == form.Email))
             {
                 return Result.AlreadyExists("The email adress you are trying to register already exists."); 
             }
 
-            //(Result, AddressEntity addressEntity) = await _addressService.CreateAddress(form); 
+            var result = await _addressService.CreateAddress(form);
 
-            var entity = EmployeeFactory.Create(form, addressEntity.Id);
+            if (!result.Success || result.Data == null)
+                return Result.Error("Something went wrong when handling the address.");
+               
+            var entity = EmployeeFactory.Create(form, result.Data.Id);
             EmployeeEntity employee = await _employeeRepository.CreateAsync(entity);
             await _employeeRepository.SaveAsync();
             await _employeeRepository.CommitTransactionAsync();
-            return Result<EmployeeEntity>.Created(employee); 
-            
+            return Result<EmployeeEntity>.Created(employee);
         }
         catch
         {
@@ -42,28 +45,101 @@ public class EmployeeService(IEmployeeRepository employeeRepository, IAddressSer
         }
     }
 
-    public async Task<IResult> DeleteEmployee(int id)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<IResult> GetAllEmployees()
     {
-        throw new NotImplementedException();
+        IEnumerable<EmployeeEntity> employees = new List<EmployeeEntity>();
+
+        try
+        {
+            employees = await _employeeRepository.GetAsync();
+            if (employees == null)
+            {
+                return Result.NotFound("There are no employees registered.");
+            }
+
+            return Result<IEnumerable<EmployeeEntity>>.Ok(employees); 
+        }
+        catch
+        {
+            return Result.Error("Something went wrong");
+        }
     }
 
     public async Task<IResult> GetEmployeeByEmail(string email)
     {
-        throw new NotImplementedException();
+        try
+        {
+            EmployeeEntity employee = await _employeeRepository.GetAsync(e => e.Email == email);
+            if (employee == null)
+            {
+                return Result.NotFound("An employee with that email address wasn't found.");
+            }
+
+            return Result<EmployeeEntity>.Ok(employee);
+        }
+        catch
+        {
+            return Result.Error("Something went wrong");
+        }
     }
 
     public async Task<IResult> GetEmployeeById(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            EmployeeEntity employee = await _employeeRepository.GetAsync(e => e.Id == id);
+            if (employee == null)
+            {
+                return Result.NotFound("An employee with that id wasn't found.");
+            }
+
+            return Result<EmployeeEntity>.Ok(employee);
+        }
+        catch
+        {
+            return Result.Error("Something went wrong");
+        }
     }
 
     public async Task<IResult> UpdateEmployee(int id, EmployeeEntity updatedEmployee)
     {
-        throw new NotImplementedException();
+        await _employeeRepository.BeginTransactionAsync();
+        try
+        {
+            EmployeeEntity employee = await _employeeRepository.UpdateAsync(e => e.Id == id, updatedEmployee);
+            if (employee == null) 
+                return Result.NotFound("Could not find the employee in the database.");
+
+            await _employeeRepository.SaveAsync();
+            await _employeeRepository.CommitTransactionAsync(); 
+            return Result<EmployeeEntity>.Ok(employee);
+        }
+        catch
+        {
+            return Result.Error("Something went wrong");
+        }
+    }
+
+    public async Task<IResult> DeleteEmployee(int id)
+    {
+        await _employeeRepository.BeginTransactionAsync(); 
+        try
+        {
+            bool deleted = await _employeeRepository.DeleteAsync(e => e.Id == id);
+            if (deleted)
+            {
+                await _employeeRepository.SaveAsync();
+                await _employeeRepository.CommitTransactionAsync();
+                return Result.Ok();
+            }
+
+            return Result.Error("Something went wrong.");
+
+        }
+        catch
+        {
+            await _employeeRepository.RollbackTransactionAsync();
+            return Result.Error("Something went wrong."); 
+        }
     }
 }
