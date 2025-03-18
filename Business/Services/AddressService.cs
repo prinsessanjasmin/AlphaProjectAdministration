@@ -3,6 +3,7 @@ using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
 using Data.Interfaces;
+using Data.Repositories;
 
 namespace Business.Services;
 
@@ -49,23 +50,87 @@ public class AddressService(IAddressRepository addressRepository) : IAddressServ
         }
     }
 
-    public Task<IResult> DeleteAddress(int id)
+
+
+    public async Task<IResult> GetAllAddresses()
     {
-        throw new NotImplementedException();
+        IEnumerable<AddressEntity> addresses = new List<AddressEntity>();
+
+        try
+        {
+            addresses = await _addressRepository.GetAsync();
+            if (addresses == null)
+            {
+                return Result.NotFound("There are no addresses registered.");
+            }
+
+            return Result<IEnumerable<AddressEntity>>.Ok(addresses);
+        }
+        catch
+        {
+            return Result.Error("Something went wrong");
+        }
     }
 
-    public Task<IResult> GetAddressByAddress(string streetAddress, string postCode, string city)
+    public async Task<IResult> GetAddressByAddress(string streetAddress, string postCode, string city)
     {
-        throw new NotImplementedException();
+        try
+        {
+            AddressEntity address = await _addressRepository.GetAsync(a => a.StreetAddress == streetAddress && a.PostCode == postCode && a.City == city );
+            if (address == null)
+            {
+                return Result.NotFound("This address does not exist in the database yet.");
+            }
+
+            return Result<AddressEntity>.Ok(address);
+        }
+        catch
+        {
+            return Result.Error("Something went wrong");
+        }
     }
 
-    public Task<IResult> GetAllAddresses()
+
+    public async Task<IResult> UpdateAddress(int id, AddressEntity updatedAddress)
     {
-        throw new NotImplementedException();
+        await _addressRepository.BeginTransactionAsync();
+        try
+        {
+            AddressEntity address = await _addressRepository.UpdateAsync(a => a.Id == id, updatedAddress);
+            if (address == null)
+                return Result.NotFound("Could not find the address in the database.");
+
+            await _addressRepository.SaveAsync();
+            await _addressRepository.CommitTransactionAsync();
+            return Result<AddressEntity>.Ok(address);
+        }
+        catch
+        {
+            return Result.Error("Something went wrong");
+        }
     }
 
-    public Task<IResult> UpdateAddress()
+    public async Task<IResult> DeleteAddress(int id)
     {
-        throw new NotImplementedException();
+        await _addressRepository.BeginTransactionAsync();
+        try
+        {
+            bool deleted = await _addressRepository.DeleteAsync(a => a.Id == id);
+            if (deleted)
+            {
+                await _addressRepository.SaveAsync();
+                await _addressRepository.CommitTransactionAsync();
+                return Result.Ok();
+            }
+
+            return Result.Error("Something went wrong.");
+
+        }
+        catch
+        {
+            await _addressRepository.RollbackTransactionAsync();
+            return Result.Error("Something went wrong.");
+        }
     }
 }
+

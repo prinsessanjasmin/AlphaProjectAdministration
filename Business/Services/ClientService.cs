@@ -118,5 +118,4 @@ public class ClientService(IClientRepository clientRepository) : IClientService
             return Result.Error("Something went wrong.");
         }
     }
-
 }

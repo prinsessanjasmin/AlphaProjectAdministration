@@ -31,7 +31,7 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult SignOut()
+    public IActionResult LogOut()
     {
         return RedirectToAction("Index", "HomeController"); 
     }

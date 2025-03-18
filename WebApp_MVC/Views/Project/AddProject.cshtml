@@ -17,11 +17,11 @@
 			</div>
 
 			<div>
-				<label asp-for="FormData.MemberId"></label>
-				<select asp-for="FormData.MemberId" asp-items="@Model?.MemberOptions" value="@Model?.FormData?.MemberId">
+				<label asp-for="FormData.SelectedTeamMemberIds"></label>
+				<select asp-for="FormData.SelectedTeamMemberIds" asp-items="@Model?.MemberOptions" value="@Model?.FormData?.SelectedTeamMemberIds">
 					<options value="" disabled selected hidden>"-- Select a member to add to the team --"</options>
 				</select>
-				<span asp-validation-for="FormData.MemberId"></span>
+				<span asp-validation-for="FormData.SelectedTeamMemberIds"></span>
 			</div>
 			
 

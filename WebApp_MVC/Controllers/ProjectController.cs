@@ -5,14 +5,10 @@ using WebApp_MVC.Models;
 
 namespace WebApp_MVC.Controllers
 {
-    public class ProjectController : Controller
+    public class ProjectController(AddProjectViewModel addProjectViewModel) : Controller
     {
-        private readonly AddProjectViewModel _addProjectViewModel;
+        private readonly AddProjectViewModel _addProjectViewModel = addProjectViewModel;
 
-        public ProjectController(AddProjectViewModel addProjectViewModel)
-        {
-            _addProjectViewModel = addProjectViewModel;
-        }
         public async Task<IActionResult> Index()
         {
             await _addProjectViewModel.PopulateMemberOptionsAsync(); 

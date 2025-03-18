@@ -5,28 +5,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApp_MVC.Models;
 
-public class AddProjectViewModel
+public class AddProjectViewModel(IEmployeeService employeeService)
 {
-    private readonly IEmployeeService _employeeService;
+    private readonly IEmployeeService _employeeService = employeeService;
 
 
     public ProjectFormModel FormData = new();
     public List<SelectListItem> MemberOptions = [];
 
-    public AddProjectViewModel(IEmployeeService employeeService)
+    public async Task PopulateMemberOptionsAsync()
     {
-        _employeeService = employeeService;
+        await _employeeService.GetAllEmployees();
+        //MemberOptions = [.. employees.Select(x => SelectListItem
+        //{
+        //    Value = x.EmployeeId.ToString(), 
+        //    Text = x.FirstName
+        //}).ToList();
     }
-
-    //public async Task PopulateMemberOptionsAsync()
-    //{
-    //    var members = await _employeeService.GetAllAsync();
-    //    MemberOptions = [.. members.Select(x => SelectListItem
-    //    {
-    //        Value = x.Id.ToString(), 
-    //        Text = x.Name
-    //    }).ToList();
-    //}
 
     public void ClearFormData()
     {
