@@ -13,8 +13,8 @@ public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
     public DataContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
-        optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Initial Catalog=Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = C:\Projects\AlphaProjectAdministration\Data\Databases\ProjectDatabase.mdf; Integrated Security = True");
-        
+        optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Projects\AlphaProjectAdministration\Data\Databases\AlphaDatabase.mdf;Integrated Security=True;Connect Timeout=30");
+
         return new DataContext(optionsBuilder.Options);
     }
 }

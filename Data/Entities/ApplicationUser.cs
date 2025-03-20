@@ -7,12 +7,12 @@ namespace Data.Entities;
 public class ApplicationUser : IdentityUser
 {
     [Required]
-    [ProtectedPersonalData]
+    [PersonalData]
     [Column(TypeName = "nvarchar(50)")]
     public string FirstName { get; set; } = null!;
 
     [Required]
-    [ProtectedPersonalData]
+    [PersonalData]
     [Column(TypeName = "nvarchar(50)")]
     public string LastName { get; set; } = null!;
 }

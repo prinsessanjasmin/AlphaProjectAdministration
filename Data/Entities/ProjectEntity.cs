@@ -26,8 +26,7 @@ public class ProjectEntity
 
     public decimal? Budget { get; set; }
 
-    [Required]
-    [Column(TypeName = "nvarchar(100)")]
+    
     public int ClientId { get; set; }
     public ClientEntity Client { get; set; } = null!;
 

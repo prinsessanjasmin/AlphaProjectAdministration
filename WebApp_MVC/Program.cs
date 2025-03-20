@@ -6,17 +6,22 @@ using Business.Services;
 using WebApp_MVC.Controllers;
 using Business.Models;
 using Data.Entities;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// In Program.cs
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
+    
+    )
+    .ConfigureWarnings(warnings =>
+        warnings.Log(RelationalEventId.PendingModelChangesWarning))
+);
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(x =>
     {
@@ -24,7 +29,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(x =>
         x.Password.RequireNonAlphanumeric = true;
         x.Password.RequireDigit = true;
         x.User.RequireUniqueEmail = true;
-        x.Stores.ProtectPersonalData = true;
     })
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
