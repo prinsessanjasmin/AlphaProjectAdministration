@@ -41,7 +41,7 @@ public class ClientService(IClientRepository clientRepository) : IClientService
 
     public async Task<IResult> GetAllClients()
     {
-        IEnumerable<ClientEntity> clients = new List<ClientEntity>();
+        IEnumerable<ClientEntity> clients = [];
 
         try
         {

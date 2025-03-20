@@ -5,17 +5,38 @@ using Business.Interfaces;
 using Business.Services;
 using WebApp_MVC.Controllers;
 using Business.Models;
+using Data.Entities;
+using Microsoft.AspNetCore.Identity;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(x =>
+    {
+        x.Password.RequiredLength = 8;
+        x.Password.RequireNonAlphanumeric = true;
+        x.Password.RequireDigit = true;
+        x.User.RequireUniqueEmail = true;
+        x.Stores.ProtectPersonalData = true;
+    })
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(x =>
+    {
+        x.LoginPath = "/auth/signin";
+        x.LogoutPath = "/auth/signout";
+        x.AccessDeniedPath = "/auth/denied";
+        x.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        x.SlidingExpiration = true;
+    });
 
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
@@ -32,11 +53,13 @@ builder.Services.AddScoped<MemberFormModel>();
 builder.Services.AddScoped<ProjectFormModel>();
 builder.Services.AddScoped<SignUpFormModel>();
 
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<AuthController>();
 builder.Services.AddScoped<HomeController>();
 builder.Services.AddScoped<ClientController>();
 builder.Services.AddScoped<EmployeeController>();
 builder.Services.AddScoped<ProjectController>();
-builder.Services.AddScoped<UserController>();
 
 builder.Services.AddScoped<AddProjectViewModel>();
 

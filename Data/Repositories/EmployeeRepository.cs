@@ -20,9 +20,11 @@ public class EmployeeRepository(DataContext context) : BaseRepository<EmployeeEn
 
     public override async Task<EmployeeEntity> GetAsync(Expression<Func<EmployeeEntity, bool>> expression)
     {
-        return await _context.Set<EmployeeEntity>()
+        var employee = await _context.Set<EmployeeEntity>()
             .Include(e => e.EmployeeProjects)
             .ThenInclude(ep => ep.Project)
             .FirstOrDefaultAsync(expression);
+
+        return employee ?? new EmployeeEntity();
     }
 }

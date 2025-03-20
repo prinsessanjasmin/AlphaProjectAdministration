@@ -1,43 +1,44 @@
 ﻿using Business.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SqlServer.Server;
 using WebApp_MVC.Models;
 
-namespace WebApp_MVC.Controllers
+namespace WebApp_MVC.Controllers;
+
+[Authorize]
+public class ProjectController(AddProjectViewModel addProjectViewModel) : Controller
 {
-    public class ProjectController(AddProjectViewModel addProjectViewModel) : Controller
+    private readonly AddProjectViewModel _addProjectViewModel = addProjectViewModel;
+
+    public async Task<IActionResult> Index()
     {
-        private readonly AddProjectViewModel _addProjectViewModel = addProjectViewModel;
+        await _addProjectViewModel.PopulateMemberOptionsAsync(); 
+        return View(_addProjectViewModel);
+    }
 
-        public async Task<IActionResult> Index()
+    public async Task<IActionResult> AddProject(ProjectFormModel formData)
+    {
+        if (!ModelState.IsValid)
         {
-            await _addProjectViewModel.PopulateMemberOptionsAsync(); 
-            return View(_addProjectViewModel);
+            await _addProjectViewModel.PopulateMemberOptionsAsync();
+            _addProjectViewModel.FormData = formData; 
+            return View(formData);
         }
+        // glöm ej att här skicka infon till databasen innan den töms 
 
-        public async Task<IActionResult> AddProject(ProjectFormModel formData)
-        {
-            if (!ModelState.IsValid)
-            {
-                await _addProjectViewModel.PopulateMemberOptionsAsync();
-                _addProjectViewModel.FormData = formData; 
-                return View(formData);
-            }
-            // glöm ej att här skicka infon till databasen innan den töms 
+        _addProjectViewModel.ClearFormData();
+        return View(_addProjectViewModel); 
+            //Eller redirecta 
+    }
 
-            _addProjectViewModel.ClearFormData();
-            return View(_addProjectViewModel); 
-                //Eller redirecta 
-        }
+    public IActionResult EditProject()
+    {
+        return View();
+    }
 
-        public IActionResult EditProject()
-        {
-            return View();
-        }
-
-        public IActionResult DeleteProject()
-        {
-            return View();
-        }
+    public IActionResult DeleteProject()
+    {
+        return View();
     }
 }

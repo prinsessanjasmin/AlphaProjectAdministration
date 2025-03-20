@@ -12,5 +12,5 @@ public class ClientEntity
     [Column(TypeName = "nvarchar(50)")]
     public string ClientName { get; set; } = null!;
 
-    public ICollection<ProjectEntity> Projects { get; set; } = new List<ProjectEntity>();
+    public ICollection<ProjectEntity> Projects { get; set; } = [];
 }

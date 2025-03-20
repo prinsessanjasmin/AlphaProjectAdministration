@@ -132,9 +132,7 @@ public class EmployeeService(IEmployeeRepository employeeRepository, IAddressSer
                 await _employeeRepository.CommitTransactionAsync();
                 return Result.Ok();
             }
-
             return Result.Error("Something went wrong.");
-
         }
         catch
         {

@@ -1,12 +1,12 @@
 ﻿using Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore; 
 
 namespace Data.Contexts;
 
-public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
+public class DataContext(DbContextOptions<DataContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<ClientEntity> Clients { get; set; }
-    public DbSet<UserEntity> Users { get; set; }
     public DbSet<EmployeeEntity> Employees { get; set; }
     public DbSet<ProjectEmployeeEntity> ProjectEmployees { get; set; }
     public DbSet<ProjectEntity> Projects { get; set; }
@@ -37,13 +37,13 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         modelBuilder.Entity<ProjectEmployeeEntity>()
             .HasOne(pe => pe.Project)
             .WithMany(p => p.TeamMembers)
-            .HasForeignKey(pe => pe.EmployeeId)
+            .HasForeignKey(pe => pe.ProjectId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ProjectEmployeeEntity>()
             .HasOne(pe => pe.Employee)
             .WithMany(p => p.EmployeeProjects)
-            .HasForeignKey(pe => pe.ProjectId)
+            .HasForeignKey(pe => pe.EmployeeId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ProjectEntity>()
@@ -58,9 +58,9 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             .HasForeignKey(p => p.ClientId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<UserEntity>()
-            .HasIndex(u => u.Email)
-            .IsUnique();
+        modelBuilder.Entity<ProjectEntity>()
+            .Property(p => p.Budget)
+            .HasPrecision(18, 2);
 
         modelBuilder.Entity<EmployeeEntity>()
             .HasIndex(e => e.Email)

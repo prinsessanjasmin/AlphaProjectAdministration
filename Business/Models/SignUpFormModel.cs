@@ -1,18 +1,20 @@
 ﻿using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace Business.Models;
 
-public class SignUpFormModel
+public class SignUpFormModel 
 {
     [Display(Name = "First Name", Prompt ="Enter your first name.")]
     [Required(ErrorMessage ="You must enter your first name.")]
+    [PersonalData]
     public string FirstName { get; set; } = null!;
 
+    [PersonalData]
     [Display(Name = "Last Name", Prompt = "Enter your last name.")]
     [Required(ErrorMessage = "You must enter your last name.")]
     public string LastName { get; set; } = null!;
-
 
     [Display(Name = "Email Address", Prompt = "Eg. nn@domain.xx ")]
     [DataType(DataType.EmailAddress)]
@@ -31,5 +33,11 @@ public class SignUpFormModel
     [Required(ErrorMessage = "You must confirm your password.")]
     [Compare(nameof(Password), ErrorMessage ="The passwords do not match.")]
     public string ConfirmPassword{ get; set; } = null!;
-    public bool AcceptTerms { get; set; } 
+
+    [Required (ErrorMessage = "You must confirm that you accept the terms and conditions.")]
+    [Display(Name = "Terms and conditions", Prompt = "I accept the terms and coditions.")]
+    public bool AcceptTerms { get; set; }
+
+
+    public string Role { get; set; } = null!; 
 }

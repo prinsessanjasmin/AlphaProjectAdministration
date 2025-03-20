@@ -31,12 +31,14 @@ public class ProjectEntity
     public int ClientId { get; set; }
     public ClientEntity Client { get; set; } = null!;
 
-    public ICollection<ProjectEmployeeEntity> TeamMembers { get; set; } = new List<ProjectEmployeeEntity>();
+    public ICollection<ProjectEmployeeEntity> TeamMembers { get; set; } = [];
     //Got help from ChatGPT 4o on this one ^
 
     [Required]
     public int StatusId { get; set; }
     public StatusEntity Status { get; set; } = null!;
+
+    [NotMapped]
     public IFormFile? ProjectImage { get; set; }
 
 }

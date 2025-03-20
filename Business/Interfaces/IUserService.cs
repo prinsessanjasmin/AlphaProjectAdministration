@@ -7,8 +7,8 @@ public interface IUserService
 {
     Task<IResult> CreateUser(SignUpFormModel form);
     Task<IResult> GetAllUsers();
-    Task<IResult> GetUserById(int id);
+    Task<IResult> GetUserById(string id);
     Task<IResult> GetUserByEmail(string email);
-    Task<IResult> UpdateUser(int id, UserEntity updatedUser); //OBS: använd den andra modellen? 
-    Task<IResult> DeleteProject(int id);
+    Task<IResult> UpdateUser(string id, ApplicationUser updatedUser); //OBS: använd den andra modellen? 
+    Task<IResult> DeleteUser(string id);
 }

@@ -4,6 +4,7 @@ using Business.Models;
 using Data.Entities;
 using Data.Interfaces;
 using Data.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace Business.Services;
 
@@ -13,30 +14,19 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public async Task<IResult> CreateUser(SignUpFormModel form)
     {
-        await _userRepository.BeginTransactionAsync();
-
         if (!form.AcceptTerms)
         {
             return Result.BadRequest("You have to accept the terms and conditions to proceed."); 
         }
 
-        if (await _userRepository.AlreadyExistsAsync(x => x.Email == form.Email))
-        {
-            return Result.AlreadyExists("The email adress you are trying to register already exists."); 
-        }
-
         try
         {
-            UserEntity userEntity = UserFactory.Create(form);
-            await _userRepository.CreateAsync(userEntity);
-            await _userRepository.SaveAsync();
-            await _userRepository.CommitTransactionAsync();
-            
-            return Result<UserEntity>.Created(userEntity);
+            ApplicationUser userEntity = UserFactory.Create(form);
+            await _userRepository.CreateUserAsync(userEntity, form.Password, form.Role);
+            return Result<ApplicationUser>.Created(userEntity);
         }
         catch
         {
-            await _userRepository.RollbackTransactionAsync();
             return Result.Error("Unable to create user.");
         }
     }
@@ -45,13 +35,13 @@ public class UserService(IUserRepository userRepository) : IUserService
     {
         try
         {
-            IEnumerable<UserEntity> users = await _userRepository.GetAsync();
+            IEnumerable<ApplicationUser> users = await _userRepository.GetAllUsersAsync();
             if (users == null)
             {
                 return Result.NotFound("No users were found.");
             }
                 
-            return Result<IEnumerable<UserEntity>>.Ok(); 
+            return Result<IEnumerable<ApplicationUser>>.Ok(); 
         }
         catch
         {
@@ -63,12 +53,12 @@ public class UserService(IUserRepository userRepository) : IUserService
     {
        try
         {
-            UserEntity user = await _userRepository.GetAsync(x => x.Email == email);
+            ApplicationUser? user = await _userRepository.GetUserByEmailAsync(email);
             if (user == null)
             {
                 return Result.NotFound("The user couldn't be found. Are you sure you entered the correct email address?");
             }
-            return Result<UserEntity>.Ok(user); 
+            return Result<ApplicationUser>.Ok(user); 
         }
         catch
         {
@@ -76,16 +66,16 @@ public class UserService(IUserRepository userRepository) : IUserService
         }
     }
 
-    public async Task<IResult> GetUserById(int id)
+    public async Task<IResult> GetUserById(string id)
     {
         try
         {
-            UserEntity user = await _userRepository.GetAsync(x => x.Id == id);
+            ApplicationUser? user = await _userRepository.GetUserByIdAsync(id);
             if (user == null)
             {
                 return Result.NotFound("The user couldn't be found.");
             }
-            return Result<UserEntity>.Ok(user);
+            return Result<ApplicationUser>.Ok(user);
         }
         catch
         {
@@ -93,18 +83,15 @@ public class UserService(IUserRepository userRepository) : IUserService
         }
     }
 
-    public async Task<IResult> UpdateUser(int id, UserEntity updatedUser) //Eller använd den andra modellen? 
+    public async Task<IResult> UpdateUser(string id, ApplicationUser updatedUser) //Eller använd den andra modellen? 
     {
-        await _userRepository.BeginTransactionAsync();
         try
         {
-            UserEntity user = await _userRepository.UpdateAsync(u => u.Id == id, updatedUser);
+            IdentityResult user = await _userRepository.UpdateUserAsync(updatedUser);
             if (user == null)
                 return Result.NotFound("Could not find the user in the database.");
 
-            await _userRepository.SaveAsync();
-            await _userRepository.CommitTransactionAsync();
-            return Result<UserEntity>.Ok(user);
+            return Result<ApplicationUser>.Ok();
         }
         catch
         {
@@ -112,24 +99,21 @@ public class UserService(IUserRepository userRepository) : IUserService
         }
     }
 
-    public async Task<IResult> DeleteProject(int id)
+    public async Task<IResult> DeleteUser(string id)
     {
         try
         {
-            await _userRepository.BeginTransactionAsync();
-            UserEntity user = await _userRepository.GetAsync(x => x.Id == id);
+            ApplicationUser? user = await _userRepository.GetUserByIdAsync(id);
             if (user == null)
             {
                 return Result.NotFound("The user you want to delete couldn't be found.");
             }
-            await _userRepository.DeleteAsync(x => x.Id == id);
-            await _userRepository.CommitTransactionAsync();
+            await _userRepository.DeleteUserAsync(user);
             
             return Result.Ok();
         }
         catch
         {
-            await _userRepository.RollbackTransactionAsync();
             return Result.Error("Something went wrong.");
         }
     }

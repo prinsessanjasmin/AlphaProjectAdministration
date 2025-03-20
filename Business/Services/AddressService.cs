@@ -50,8 +50,6 @@ public class AddressService(IAddressRepository addressRepository) : IAddressServ
         }
     }
 
-
-
     public async Task<IResult> GetAllAddresses()
     {
         IEnumerable<AddressEntity> addresses = new List<AddressEntity>();
@@ -89,7 +87,6 @@ public class AddressService(IAddressRepository addressRepository) : IAddressServ
             return Result.Error("Something went wrong");
         }
     }
-
 
     public async Task<IResult> UpdateAddress(int id, AddressEntity updatedAddress)
     {

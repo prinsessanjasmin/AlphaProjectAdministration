@@ -1,7 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model LoginFormModel
 @{
+	ViewData["Title"] = "Sign in";
 }
 
 <div class="popup-container login-container">
@@ -9,13 +8,19 @@
     <button class="btn btn-google">Login with Google</button>
     <div class="divider">OR</div>
     <form class="form" id="login-form">
+        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
         <div class="form-input">
-            <label for="email">Email</label>
-            <input type="email" name="email" class="input-box" placeholder="Your email address">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="input-box">
+            <span asp-validation-for="Email"></span>
         </div>
         <div class="form-input">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="input-password" class="input-box" placeholder="Enter your password">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" id="input-password" class="input-box">
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div>
+            @ViewBag.ErrorMessage
         </div>
         <div class="horizontal-form">
             <div>

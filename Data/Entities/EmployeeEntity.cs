@@ -29,12 +29,13 @@ public class EmployeeEntity
     [Column(TypeName = "nvarchar(50)")]
     public string JobTitle { get; set; } = null!;
 
+    [NotMapped]
     public IFormFile? ProfileImage { get; set; }
 
     [DataType(DataType.Date)]   
     public DateOnly DateOfBirth { get; set; }
 
-    public ICollection<ProjectEmployeeEntity> EmployeeProjects { get; set; } = new List<ProjectEmployeeEntity>();
+    public ICollection<ProjectEmployeeEntity> EmployeeProjects { get; set; } = [];
 
     [Required]
     public int AddressId { get; set; }

@@ -12,5 +12,5 @@ public class StatusEntity
     [Column(TypeName = "varchar(20)")]
     public string StatusName { get; set; } = null!;
 
-    public ICollection<ProjectEntity> Projects { get; set; } = new List<ProjectEntity>();
+    public ICollection<ProjectEntity> Projects { get; set; } = [];
 }

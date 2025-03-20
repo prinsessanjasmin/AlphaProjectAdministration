@@ -33,7 +33,7 @@ public class ProjectFormModel
     [Display(Name = "Team members", Prompt = "Select one or more team members")]
     [Required(ErrorMessage = "You must select at least one team member.")]
     public List<int> SelectedTeamMemberIds { get; set; } = new List<int>();
-    // For handling multiple employee selections
+    // For handling multiple employee selections Claude AI
 
     // Optional: Include this if you need to populate a dropdown in the UI
     public List<EmployeeSelectListItem>? AvailableEmployees { get; set; }
