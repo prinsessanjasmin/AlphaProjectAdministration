@@ -1,5 +1,5 @@
 ﻿using Business.Models;
-using Business.Services;
+using Business.Interfaces;
 using Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace WebApp_MVC.Controllers
 {
-    public class AuthController(UserService userService, SignInManager<ApplicationUser> signInManager) : Controller
+    public class AuthController(IUserService userService, SignInManager<ApplicationUser> signInManager) : Controller
     {
-        private readonly UserService _userService = userService;
+        private readonly IUserService _userService = userService;
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
 
         public IActionResult SignIn(string returnUrl = "/")
@@ -33,10 +33,7 @@ namespace WebApp_MVC.Controllers
             Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, true, false);
             if (result.Succeeded)
             {
-                if (Url.IsLocalUrl(returnUrl))
-                {
-                    return Redirect(returnUrl);
-                }
+                return RedirectToAction("Projects", "Project");
                 
             }
                 
@@ -58,18 +55,28 @@ namespace WebApp_MVC.Controllers
             }
 
             var result = await _userService.CreateUser(form); 
-
             
-            
-            //switch(result.StatusCode)
-            //{
-            //    case 201:
-            //        return RedirectToAction("SignIn", "Auth");
+            switch (result.StatusCode)
+            {
+                case 201:
+                    return RedirectToAction("SignIn", "Auth");
 
-            //    case 400: 
-            //}
+                case 400:
+                    ViewBag.ErrorMessage = "Error."; 
+                    return View(form);
 
-            return RedirectToAction("SignIn", "Auth");
+                case 404:
+                    ViewBag.ErrorMessage = "Error.";
+                    return View(form);
+
+                case 500:
+                    ViewBag.ErrorMessage = "Error.";
+                    return View(form);
+
+                default:
+                    ViewBag.ErrorMessage = "Error.";
+                    return View(form);
+            }
         }
 
         public new async Task<IActionResult> SignOut()

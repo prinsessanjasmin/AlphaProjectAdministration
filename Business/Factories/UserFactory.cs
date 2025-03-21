@@ -13,6 +13,7 @@ public static class UserFactory
             FirstName = model.FirstName,
             LastName = model.LastName,
             Email = model.Email,
+            UserName = model.Email
         };
 
         return appUser;

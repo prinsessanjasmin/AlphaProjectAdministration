@@ -8,8 +8,8 @@
     margin: auto;
     display: flex;
     flex-direction: column; 
-    justify-content: center; 
-    align-content: center; 
+    justify-items: center; 
+    align-items: center; 
     padding-top: 2rem;
 
     @include respond-to('medium') {

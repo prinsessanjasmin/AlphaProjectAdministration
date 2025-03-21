@@ -1,4 +1,4 @@
-*, *::after, *::before {
+﻿*, *::after, *::before {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -150,8 +150,8 @@ a {
   margin: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-content: center;
+  justify-items: center;
+  align-items: center;
   padding-top: 2rem;
 }
 @media (min-width: 768px) {
@@ -217,8 +217,11 @@ a {
 
 .page-login {
   background-color: #F1F3F7;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
 }
 
 .page-projects {
@@ -308,6 +311,13 @@ footer {
   grid-row: 3/4;
   grid-column: 2/5;
   align-items: center;
+}
+
+.background {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #F1F3F7;
 }
 
 .projects-container {
@@ -495,12 +505,6 @@ footer {
   border: 1px solid #C6C8CC;
   padding: 0.5rem;
 }
-.form .form-input input::-moz-placeholder {
-  color: #637085;
-  font-family: Nunito;
-  font-weight: 400;
-  font-size: 15px;
-}
 .form .form-input input::placeholder {
   color: #637085;
   font-family: Nunito;
@@ -515,12 +519,6 @@ footer {
   border-radius: 16px;
   border: 1px solid #C6C8CC;
   padding: 0.5rem;
-}
-.form .long-form-input textarea::-moz-placeholder {
-  color: #637085;
-  font-family: Nunito;
-  font-weight: 400;
-  font-size: 15px;
 }
 .form .long-form-input textarea::placeholder {
   color: #637085;
@@ -596,7 +594,7 @@ footer {
 
 select {
   border: 1px solid;
-} 
+} /*# sourceMappingURL=dropdown-date-picker.css.map */
 .project-card {
   display: flex;
   flex-direction: column;
@@ -733,4 +731,4 @@ select {
 
 .space-between {
   justify-content: space-between;
-}/*# sourceMappingURL=site.css.map */
+}

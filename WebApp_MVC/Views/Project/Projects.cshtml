@@ -1,5 +1,86 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Projects";
 }
+
+<section class="page-projects">
+    <div class="wrapper">
+        <div class="header">
+            <img src="../images/Logos/alpha-logo.svg" alt="Alpha logo."></img>
+            <h3 id="logo-text">alpha</h3>
+        </div>
+        <aside class="sidebar">
+            <button class="btn btn-projects">Projects</button>
+        </aside>
+        <div class="top-bar">
+            <div class="search-input">
+                <p>Search anything...</p>
+            </div>
+            <a id="btn-notifications">
+                <img src="/images/Icons/bell-ringing.svg" />
+            </a>
+            <a id="btn-settings">
+                <img src="/images//Icons/Setting.svg" />
+            </a>
+            <a id="btn-account">
+                <img src="/images/Icons/Avatar.svg" />
+            </a>
+
+        </div>
+        <main class="main-view">
+            <div class="projects-container">
+                <h2>Projects</h2>
+                <div class="project-categories">
+                    <a>All [9]</a>
+                    <a>STARTED [8]</a>
+                    <a>COMPLETED [1]</a>
+                </div>
+                <div class="project-view">
+
+                    <div class="project-card">
+                        <div class="horizontal horizontal-project">
+                            <div class="horizontal horizontal-project">
+                                <img src="../images/Icons/projectlogo.svg" />
+                                <div class="vertical">
+                                    <h6>Website Redesign </h6>
+                                    <p class="p-light">GitLab Inc</p>
+                                </div>
+                            </div>
+                            <button id="btn-2-dots"></button>
+                        </div>
+                        <div class="project-info vertical">
+                            <p>It is necessary to develop a website redesign in a corporate style.</p>
+                        </div>
+                        <div class="horizontal horizontal-project">
+                            <div class="time-left">5 days left</div>
+                            <div class="horizontal horizontal-project" id="avatars">
+                                <img src="../images/Icons/Avatar.svg" />
+                                <img src="../images/Icons/Avatar.svg" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="notification-box">
+                        <div class="horizontal space-between" id="notification-row">
+                            <h5>Notifications</h5>
+                            <div class="notification-number">
+                                <h3>1</h3>
+                            </div>
+                        </div>
+                        <div class="single-line"></div>
+                        <div class="notification horizontal">
+                            <img src="/images/Icons/projectlogo.svg" />
+                            <div class="vertical"
+                                        <p>ASP.NET Web App added. </p>
+                                        <span>10 minutes ago</span>
+                                    </div>
+                            <button class="btn-x"></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+        <footer class="container footer">
+            <p class="center">© 2025 Alpha. All rights reserved.</p>
+        </footer>
+    </div>
+</section>

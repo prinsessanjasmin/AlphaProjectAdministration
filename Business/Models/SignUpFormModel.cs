@@ -19,7 +19,7 @@ public class SignUpFormModel
     [Display(Name = "Email Address", Prompt = "Eg. nn@domain.xx ")]
     [DataType(DataType.EmailAddress)]
     [Required(ErrorMessage = "You must enter your email address.")]
-    [RegularExpression("", ErrorMessage ="The email address is not in a valid format.")]
+    [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "The email address is not in a valid format.")]
     public string Email { get; set; } = null!;
 
     [Display(Name = "Password", Prompt = "Minimum 8 characters, including at least one letter, one number and one special character.")]
@@ -38,6 +38,6 @@ public class SignUpFormModel
     [Display(Name = "Terms and conditions", Prompt = "I accept the terms and coditions.")]
     public bool AcceptTerms { get; set; }
 
-
+    [Required(ErrorMessage = "You must set a role.")]
     public string Role { get; set; } = null!; 
 }

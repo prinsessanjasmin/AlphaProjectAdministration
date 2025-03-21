@@ -9,20 +9,9 @@
     <link rel="stylesheet" href="~/WebApp_MVC.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        
-    </header>
-    <div class="container">
-        <main>
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer>
-        <div class="container">
-            &copy; 2025 - Jasmin de Freitas
-        </div>
-    </footer>
+    <main >
+        @RenderBody()
+    </main>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

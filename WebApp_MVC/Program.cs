@@ -8,6 +8,8 @@ using Business.Models;
 using Data.Entities;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
+using Data.Repositories;
+using Data.Interfaces;
 
 
 
@@ -42,14 +44,17 @@ builder.Services.ConfigureApplicationCookie(x =>
         x.SlidingExpiration = true;
     });
 
-builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-builder.Services.AddScoped<IProjectService, ProjectService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAddressService, AddressService>();
-builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IAddressRepository, AddressRepository>();
+builder.Services.AddTransient<IClientRepository, ClientRepository>();
 
-builder.Services.AddScoped<SuccessResult>();
-builder.Services.AddScoped<ErrorResult>();
+builder.Services.AddTransient<IEmployeeService, EmployeeService>();
+builder.Services.AddTransient<IProjectService, ProjectService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddTransient<IAddressService, AddressService>();
+builder.Services.AddTransient<IClientService, ClientService>();
 
 builder.Services.AddScoped<ClientFormModel>(); 
 builder.Services.AddScoped<LoginFormModel>();
@@ -81,10 +86,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Auth}/{action=SignUp}/{id?}")
     .WithStaticAssets();
-
-app.MapRazorPages()
-   .WithStaticAssets();
 
 app.Run();

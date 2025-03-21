@@ -3,33 +3,37 @@
 	ViewData["Title"] = "Sign in";
 }
 
-<div class="popup-container login-container">
-    <h2 class="center">Login</h2>
-    <button class="btn btn-google">Login with Google</button>
-    <div class="divider">OR</div>
-    <form class="form" id="login-form">
-        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
-        <div class="form-input">
-            <label asp-for="Email"></label>
-            <input asp-for="Email" class="input-box">
-            <span asp-validation-for="Email"></span>
+<section class="page-login">
+    <main class="container">
+        <div class="popup-container login-container">
+            <h2 class="center">Login</h2>
+            <button class="btn btn-google">Login with Google</button>
+            <div class="divider">OR</div>
+            <form asp-action="SignIn" asp-controller="Auth" class="form" id="login-form">
+                <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                <div class="form-input">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="input-box">
+                    <span asp-validation-for="Email"></span>
+                </div>
+                <div class="form-input">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" id="input-password" class="input-box">
+                    <span asp-validation-for="Password"></span>
+                </div>
+                <div>
+                    @ViewBag.ErrorMessage
+                </div>
+                <div class="horizontal-form">
+                    <div>
+                        <input type="checkbox" name="rememberMe">
+                        <label for="rememberMe">Remember me</label>
+                    </div>
+                    <a>Forgot password?</a>
+                </div>
+                <button type="submit" class="btn btn-login">Log In</button>
+            </form>
+            <p id="no-account">Don't have an account? <a asp-controller="Auth" asp-action="SignUp">Sign up</a></p>
         </div>
-        <div class="form-input">
-            <label asp-for="Password"></label>
-            <input asp-for="Password" id="input-password" class="input-box">
-            <span asp-validation-for="Password"></span>
-        </div>
-        <div>
-            @ViewBag.ErrorMessage
-        </div>
-        <div class="horizontal-form">
-            <div>
-                <input type="checkbox" name="rememberMe">
-                <label for="rememberMe">Remember me</label>
-            </div>
-            <a>Forgot password?</a>
-        </div>
-        <button class="btn btn-login">Log In</button>
-    </form>
-    <p id="no-account">Don't have an account? <a>Sign up</a></p>
-</div>
+    </main>
+</section>
