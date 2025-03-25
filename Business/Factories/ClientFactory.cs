@@ -5,7 +5,7 @@ namespace Business.Factories;
 
 public static class ClientFactory
 {
-    public static ClientEntity Create (ClientFormModel form)
+    public static ClientEntity Create (ClientDto form)
     {
         return new ClientEntity
         {
@@ -13,9 +13,9 @@ public static class ClientFactory
         };  
     }
 
-    public static ClientFormModel Create(ClientEntity entity)
+    public static ClientDto Create(ClientEntity entity)
     {
-        return new ClientFormModel
+        return new ClientDto
         {
             ClientName = entity.ClientName,
         };

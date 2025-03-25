@@ -1,0 +1,28 @@
+﻿@model ProjectEntity
+
+<div class="project-card">
+    <div class="horizontal horizontal-project">
+        <div class="horizontal horizontal-project">
+            <img src="@Model.ProjectImage" />
+            <div class="vertical">
+                <h6>@Model.ProjectName</h6>
+                <p class="p-light">@Model.Client.ClientName</p>
+            </div>
+        </div>
+        <button id="btn-2-dots"></button>
+    </div>
+    <div class="project-info vertical">
+        <p>@Model.Description</p>
+    </div>
+    <div class="horizontal horizontal-project">
+        <div class="time-left"> </div>
+        <div class="horizontal horizontal-project" id="avatars">
+            <div class="project-view">
+                @foreach (var teamMember in Model.TeamMembers)
+                {
+                    <img src="(@teamMember.Employee.ProfileImage ?? ../Views/Shared/images/Icons/Avatar.svg" alt="Profile Image" />
+                }
+            </div>
+        </div>
+    </div>
+</div>

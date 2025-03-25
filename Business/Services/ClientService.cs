@@ -11,7 +11,7 @@ public class ClientService(IClientRepository clientRepository) : IClientService
 {
     private readonly IClientRepository _clientRepository = clientRepository;
 
-    public async Task<IResult> CreateClient(ClientFormModel form)
+    public async Task<IResult> CreateClient(ClientDto form)
     {
         await _clientRepository.BeginTransactionAsync();
         try
@@ -41,16 +41,9 @@ public class ClientService(IClientRepository clientRepository) : IClientService
 
     public async Task<IResult> GetAllClients()
     {
-        IEnumerable<ClientEntity> clients = [];
-
         try
         {
-            clients = await _clientRepository.GetAsync();
-            if (clients == null)
-            {
-                return Result.NotFound("There are no clients registered.");
-            }
-
+            var clients = await _clientRepository.GetAsync() ?? new List<ClientEntity>();
             return Result<IEnumerable<ClientEntity>>.Ok(clients);
         }
         catch

@@ -5,7 +5,7 @@ namespace Business.Interfaces;
 
 public interface IProjectService
 {
-    Task<IResult> CreateProject(ProjectFormModel form);
+    Task<IResult> CreateProject(ProjectDto form);
     Task<IResult> GetAllProjects();
     Task<IResult> GetProjectById(int id);
     Task<IResult> GetProjectByProjectName(string projectName);

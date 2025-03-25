@@ -26,7 +26,6 @@
     </PackageReference>  </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Partials\" />
     <Folder Include="Views\Shared\images\Pictures\" />
   </ItemGroup>
 

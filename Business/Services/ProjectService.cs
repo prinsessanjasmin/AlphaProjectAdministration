@@ -12,7 +12,7 @@ public class ProjectService(IProjectRepository projectRepository) : IProjectServ
 {
     private readonly IProjectRepository _projectRepository = projectRepository;
 
-    public async Task<IResult> CreateProject(ProjectFormModel form)
+    public async Task<IResult> CreateProject(ProjectDto form)
     {
         await _projectRepository.BeginTransactionAsync();
         try
@@ -43,15 +43,9 @@ public class ProjectService(IProjectRepository projectRepository) : IProjectServ
 
     public async Task<IResult> GetAllProjects()
     {
-        IEnumerable<ProjectEntity> projects = new List<ProjectEntity>();
-
         try
         {
-            projects = await _projectRepository.GetAsync();
-            if (projects == null)
-            {
-                return Result.NotFound("There are no projects registered.");
-            }
+            var projects = await _projectRepository.GetAsync() ?? new List<ProjectEntity>();
             return Result<IEnumerable<ProjectEntity>>.Ok(projects);
         }
         catch

@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Business.Models;
+using WebApp_MVC.Models;
 
 namespace WebApp_MVC.Controllers;
 
@@ -11,12 +12,12 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var formData = new SignUpFormModel(); 
+        var formData = new AppUserDto(); 
         return View(formData);
     }
 
     [HttpPost]
-    public IActionResult SignUp(SignUpFormModel formData)
+    public IActionResult SignUp(AppUserViewModel formData)
     {
         if (!ModelState.IsValid)
         {

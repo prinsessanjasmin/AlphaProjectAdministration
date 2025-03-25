@@ -12,13 +12,8 @@ public class UserService(IUserRepository userRepository) : IUserService
 {
     private readonly IUserRepository _userRepository = userRepository;
 
-    public async Task<IResult> CreateUser(SignUpFormModel form)
+    public async Task<IResult> CreateUser(AppUserDto form)
     {
-        if (!form.AcceptTerms)
-        {
-            return Result.BadRequest("You have to accept the terms and conditions to proceed."); 
-        }
-
         try
         {
             ApplicationUser userEntity = UserFactory.Create(form);

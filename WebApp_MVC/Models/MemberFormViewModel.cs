@@ -1,10 +1,9 @@
-﻿
-using Microsoft.AspNetCore.Http;
+﻿using Business.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace Business.Models;
+namespace WebApp_MVC.Models;
 
-public class MemberFormModel
+public class MemberFormViewModel
 {
     [Display(Name = "First Name", Prompt = "Enter team member's first name.")]
     [Required(ErrorMessage = "You must enter the team member's first name.")]
@@ -43,4 +42,23 @@ public class MemberFormModel
 
     [Display(Name = "Profile Picture", Prompt = "Upload a profile picture")]
     public IFormFile? ProfileImage { get; set; }
+
+    public static implicit operator MemberDto(MemberFormViewModel model)
+    {
+        return model == null
+            ? null!
+            : new MemberDto
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                JobTitle = model.JobTitle,
+                StreetAddress = model.StreetAddress,
+                PostCode = model.PostCode,
+                City = model.City,
+                DateOfBirth = model.DateOfBirth,
+                ProfileImage = model.ProfileImage,
+            };
+    }
 }

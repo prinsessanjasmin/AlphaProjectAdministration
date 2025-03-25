@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Business.Models;
+using System.ComponentModel.DataAnnotations;
 
-namespace Business.Models;
+namespace WebApp_MVC.Models;
 
-public class LoginFormModel
+public class LoginFormViewModel
 {
     [Display(Name = "Email Address", Prompt = "Enter your email address")]
     [DataType(DataType.EmailAddress)]
@@ -11,7 +12,7 @@ public class LoginFormModel
 
     [Display(Name = "Password", Prompt = "Enter your password")]
     [Required(ErrorMessage = "You must enter your password.")]
-    [DataType (DataType.Password)]
+    [DataType(DataType.Password)]
     public string Password { get; set; } = null!;
 
     public bool RememberMe { get; set; }

@@ -5,7 +5,7 @@ namespace Business.Factories;
 
 public static class EmployeeFactory
 {
-    public static EmployeeEntity Create (MemberFormModel form, int id)
+    public static EmployeeEntity Create (MemberDto form, int id)
     {
         var employeeEntity = new EmployeeEntity
         {
@@ -24,9 +24,9 @@ public static class EmployeeFactory
             return employeeEntity;
     }
 
-    public static MemberFormModel Create(EmployeeEntity employee, AddressEntity address)
+    public static MemberDto Create(EmployeeEntity employee, AddressEntity address)
     {
-        return new MemberFormModel
+        return new MemberDto
         {
             FirstName = employee.FirstName,
             LastName = employee.LastName,

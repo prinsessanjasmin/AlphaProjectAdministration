@@ -6,7 +6,7 @@ namespace Business.Factories;
 
 public static class UserFactory
 {
-    public static ApplicationUser Create (SignUpFormModel model)
+    public static ApplicationUser Create (AppUserDto model)
     {
         var appUser = new ApplicationUser
         {

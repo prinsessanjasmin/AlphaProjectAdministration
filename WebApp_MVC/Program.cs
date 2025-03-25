@@ -42,7 +42,14 @@ builder.Services.ConfigureApplicationCookie(x =>
         x.AccessDeniedPath = "/auth/denied";
         x.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         x.SlidingExpiration = true;
+        x.Cookie.HttpOnly = true; 
     });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admins", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("Managers", policy => policy.RequireRole("Admin", "Manager"));
+});
 
 builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
@@ -56,11 +63,10 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddTransient<IAddressService, AddressService>();
 builder.Services.AddTransient<IClientService, ClientService>();
 
-builder.Services.AddScoped<ClientFormModel>(); 
-builder.Services.AddScoped<LoginFormModel>();
-builder.Services.AddScoped<MemberFormModel>();
-builder.Services.AddScoped<ProjectFormModel>();
-builder.Services.AddScoped<SignUpFormModel>();
+builder.Services.AddScoped<ClientDto>(); 
+builder.Services.AddScoped<MemberDto>();
+builder.Services.AddScoped<ProjectDto>();
+builder.Services.AddScoped<AppUserDto>();
 
 builder.Services.AddControllersWithViews();
 
@@ -70,7 +76,12 @@ builder.Services.AddScoped<ClientController>();
 builder.Services.AddScoped<EmployeeController>();
 builder.Services.AddScoped<ProjectController>();
 
-builder.Services.AddScoped<AddProjectViewModel>();
+builder.Services.AddScoped<ProjectViewModel>();
+builder.Services.AddScoped<AppUserViewModel>();
+builder.Services.AddScoped<ClientFormViewModel>();
+builder.Services.AddScoped<LoginFormViewModel>();
+builder.Services.AddScoped<MemberFormViewModel>();
+builder.Services.AddScoped<SignUpViewModel>();
 
 var app = builder.Build();
 
@@ -82,6 +93,23 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthorization();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    string[] roleNames = { "Admin", "Manager", "User" };
+
+    foreach (var roleName in roleNames)
+    {
+        var exists = await roleManager.RoleExistsAsync(roleName);
+        if (!exists)
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+}
+
 app.MapStaticAssets();
 
 app.MapControllerRoute(
@@ -90,3 +118,5 @@ app.MapControllerRoute(
     .WithStaticAssets();
 
 app.Run();
+
+

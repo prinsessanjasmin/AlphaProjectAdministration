@@ -1,5 +1,5 @@
 ﻿
-@model AddProjectViewModel
+@model ProjectViewModel
 @{
 	ViewData["Title"] = "Add Project";
 }
@@ -7,7 +7,7 @@
 
 <div>
 	<div>
-		<form method="post" asp-controller="Home" asp-action="SignUp">
+		<form method="post" asp-controller="Project" asp-action="AddProject">
 
 			<div>
 				<label asp-for="FormData.ProjectName"></label>

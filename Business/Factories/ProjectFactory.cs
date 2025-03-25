@@ -6,7 +6,7 @@ namespace Business.Factories
 {
     public static class ProjectFactory
     {
-        public static ProjectEntity Create (ProjectFormModel form)
+        public static ProjectEntity Create (ProjectDto form)
         {
             var projectEntity = new ProjectEntity
             {
@@ -34,9 +34,9 @@ namespace Business.Factories
             return projectEntity;
         }
 
-        public static ProjectFormModel Create(ProjectEntity entity) 
+        public static ProjectDto Create(ProjectEntity entity) 
         {
-            var projectFormModel = new ProjectFormModel
+            var projectFormModel = new ProjectDto
             {
                 ProjectName = entity.ProjectName,
                 StartDate = entity.StartDate,

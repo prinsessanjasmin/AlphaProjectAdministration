@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApp_MVC.Models;
 
-public class AppUser : IdentityUser
+public class AppUserViewModel : IdentityUser
 {
     [Required]
     [ProtectedPersonalData]

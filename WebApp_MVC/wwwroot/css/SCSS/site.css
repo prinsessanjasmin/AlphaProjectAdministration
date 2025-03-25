@@ -1,4 +1,4 @@
-﻿*, *::after, *::before {
+*, *::after, *::before {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -143,6 +143,12 @@ a {
   margin: 2rem 0 1rem 0;
 }
 
+.member-title {
+  background-color: #F0F1F5;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
 .container {
   margin: auto;
   width: 100%;
@@ -150,8 +156,8 @@ a {
   margin: auto;
   display: flex;
   flex-direction: column;
-  justify-items: center;
-  align-items: center;
+  justify-content: center;
+  align-content: center;
   padding-top: 2rem;
 }
 @media (min-width: 768px) {
@@ -167,6 +173,22 @@ a {
 @media (min-width: 1400px) {
   .container {
     max-width: 1320px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container-large {
+    max-width: 768px;
+  }
+}
+@media (min-width: 1200px) {
+  .container-large {
+    max-width: 1200px;
+  }
+}
+@media (min-width: 1400px) {
+  .container-large {
+    max-width: 1400px;
   }
 }
 
@@ -215,13 +237,18 @@ a {
   padding: 1rem;
 }
 
+.side-by-side {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .page-login {
   background-color: #F1F3F7;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .page-projects {
@@ -313,13 +340,6 @@ footer {
   align-items: center;
 }
 
-.background {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: #F1F3F7;
-}
-
 .projects-container {
   display: flex;
   flex-direction: column;
@@ -351,9 +371,52 @@ footer {
 }
 
 .admin-left {
-  background-color: rgb(99, 5, 136);
   height: 100dvh;
   width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 3rem;
+  padding-bottom: 5rem;
+  position: relative;
+  overflow: hidden;
+}
+.admin-left::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background-image: url("/images/Pictures/1.svg");
+  filter: blur(20px);
+  background-size: cover;
+  z-index: -1;
+}
+
+.admin-text {
+  position: relative;
+  z-index: 5;
+  line-height: 1.2;
+}
+.admin-text p {
+  padding-top: 1rem;
+  color: #FFFFFF;
+}
+
+.admin-right {
+  height: 100dvh;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#admin-login {
+  box-shadow: none;
+  border: none;
 }
 
 .btn {
@@ -394,17 +457,70 @@ footer {
   background-size: 18px;
 }
 
-.btn-projects {
+.btn-menu-views-active {
   background-color: rgba(26, 142, 255, 0.1);
   color: #2D99FF;
   font-weight: 600;
   text-align: left;
   padding: 0 2.7rem;
   margin: 0 0.5rem;
-  background-image: url("/images/Icons/Projects.svg");
+  background-image: url("/images/Icons/suitcase-blue.svg");
   background-position: 16px 15px;
   background-repeat: no-repeat;
   background-size: 18px;
+}
+
+.btn-menu-views-not-active {
+  background-color: #F1F3F7;
+  color: #1A1926;
+  font-weight: 600;
+  text-align: left;
+  padding: 0 2.7rem;
+  margin: 0 0.5rem;
+  background-image: url("/images/Icons/suitcase-blue.svg");
+  background-position: 16px 15px;
+  background-repeat: no-repeat;
+  background-size: 18px;
+}
+
+#btn-projects-grey {
+  background-image: url("/images/Icons/suitcase-grey.svg");
+}
+
+#btn-members-blue {
+  background-image: url("/images/Icons/members-blue.svg");
+}
+
+#btn-members-grey {
+  background-image: url("/images/Icons/members-grey.svg");
+}
+
+#btn-statuses-blue {
+  background-image: url("/images/Icons/traffic-light-solid.svg");
+  background-size: 12px;
+  background-position: 17px 14px;
+}
+
+#btn-statuses-grey {
+  background-color: #F1F3F7;
+  color: #1A1926;
+  background-image: url("/images/Icons/traffic-light-solid-grey.svg");
+  background-size: 12px;
+  background-position: 17px 14px;
+}
+
+#btn-clients-blue {
+  background-image: url("/images/Icons/building-solid-blue.svg");
+  background-size: 12px;
+  background-position: 17px 14px;
+}
+
+#btn-clients-grey {
+  background-color: #F1F3F7;
+  color: #1A1926;
+  background-image: url("/images/Icons/building-solid.svg");
+  background-size: 12px;
+  background-position: 17px 14px;
 }
 
 .btn-upload-image {
@@ -464,6 +580,13 @@ footer {
   background-color: #F5F7FA;
 }
 
+.btn-message {
+  background-color: #F5F7FA;
+  color: #1A1926;
+  padding: 0.5rem 2rem;
+  width: 100%;
+}
+
 #btn-edit-project {
   background-image: url("/images/Icons/Edit.svg");
 }
@@ -475,6 +598,14 @@ footer {
 #btn-delete-project {
   background-image: url("/images/Icons/Delete.svg");
   color: #FF6640;
+}
+
+.btn-add-new {
+  padding: 0.5rem 1.5rem 0.5rem 2.5rem;
+  background-image: url("/images/Icons/Plus.svg");
+  background-position: 16px 17px;
+  background-repeat: no-repeat;
+  background-size: 15px;
 }
 
 .form {
@@ -505,6 +636,12 @@ footer {
   border: 1px solid #C6C8CC;
   padding: 0.5rem;
 }
+.form .form-input input::-moz-placeholder {
+  color: #637085;
+  font-family: Nunito;
+  font-weight: 400;
+  font-size: 15px;
+}
 .form .form-input input::placeholder {
   color: #637085;
   font-family: Nunito;
@@ -519,6 +656,12 @@ footer {
   border-radius: 16px;
   border: 1px solid #C6C8CC;
   padding: 0.5rem;
+}
+.form .long-form-input textarea::-moz-placeholder {
+  color: #637085;
+  font-family: Nunito;
+  font-weight: 400;
+  font-size: 15px;
 }
 .form .long-form-input textarea::placeholder {
   color: #637085;
@@ -594,7 +737,7 @@ footer {
 
 select {
   border: 1px solid;
-} /*# sourceMappingURL=dropdown-date-picker.css.map */
+} 
 .project-card {
   display: flex;
   flex-direction: column;
@@ -643,6 +786,44 @@ select {
 }
 
 #avatars {
+  gap: 0.5rem;
+}
+
+.member-card {
+  display: flex;
+  flex-direction: column;
+  height: 460px;
+  width: 300px;
+  background-color: #FFFFFF;
+  border: none;
+  border-radius: 16px;
+  padding: 2.5rem;
+  padding-top: 1rem;
+  box-shadow: 0 10px 10px rgba(4, 15, 21, 0.1764705882);
+  z-index: 1;
+  justify-content: space-between;
+  align-items: center;
+}
+.member-card #btn-2-dots {
+  align-self: flex-end;
+  justify-self: flex-end;
+  padding-bottom: -2rem;
+}
+
+.img-container-big-avatar {
+  padding-top: -1rem;
+  height: 150px;
+  width: 150px;
+}
+
+.img-big-avatar {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 }
 
@@ -731,4 +912,4 @@ select {
 
 .space-between {
   justify-content: space-between;
-}
+}/*# sourceMappingURL=site.css.map */

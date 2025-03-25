@@ -11,7 +11,7 @@ public class AddressService(IAddressRepository addressRepository) : IAddressServ
 {
     private readonly IAddressRepository _addressRepository = addressRepository;
 
-    public async Task<IResult<AddressEntity>> CreateAddress(MemberFormModel form)
+    public async Task<IResult<AddressEntity>> CreateAddress(MemberDto form)
     {
         await _addressRepository.BeginTransactionAsync();
         try

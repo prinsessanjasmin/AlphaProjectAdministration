@@ -1,13 +1,13 @@
-﻿using Microsoft.Identity.Client;
+﻿using Business.Models;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace Business.Models;
+namespace WebApp_MVC.Models;
 
-public class SignUpFormModel 
+public class SignUpViewModel
 {
-    [Display(Name = "First Name", Prompt ="Enter your first name.")]
-    [Required(ErrorMessage ="You must enter your first name.")]
+    [Display(Name = "First Name", Prompt = "Enter your first name.")]
+    [Required(ErrorMessage = "You must enter your first name.")]
     [PersonalData]
     public string FirstName { get; set; } = null!;
 
@@ -31,13 +31,26 @@ public class SignUpFormModel
     [Display(Name = "Confirm Password", Prompt = "Repeat your password.")]
     [DataType(DataType.Password)]
     [Required(ErrorMessage = "You must confirm your password.")]
-    [Compare(nameof(Password), ErrorMessage ="The passwords do not match.")]
-    public string ConfirmPassword{ get; set; } = null!;
+    [Compare(nameof(Password), ErrorMessage = "The passwords do not match.")]
+    public string ConfirmPassword { get; set; } = null!;
 
-    [Required (ErrorMessage = "You must confirm that you accept the terms and conditions.")]
     [Display(Name = "Terms and conditions", Prompt = "I accept the terms and coditions.")]
+    [Range(typeof(bool), "true", "true", ErrorMessage = "You must confirm that you accept the terms and conditions.")]
     public bool AcceptTerms { get; set; }
 
     [Required(ErrorMessage = "You must set a role.")]
-    public string Role { get; set; } = null!; 
+    public string Role { get; set; } = null!;
+
+    public static implicit operator AppUserDto(SignUpViewModel model)
+    {
+        return model == null
+            ? null!
+            : new AppUserDto
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                Password = model.Password,
+            };
+    }
 }

@@ -5,7 +5,7 @@ namespace Business.Interfaces;
 
 public interface IUserService
 {
-    Task<IResult> CreateUser(SignUpFormModel form);
+    Task<IResult> CreateUser(AppUserDto form);
     Task<IResult> GetAllUsers();
     Task<IResult> GetUserById(string id);
     Task<IResult> GetUserByEmail(string email);

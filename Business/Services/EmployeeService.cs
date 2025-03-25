@@ -3,6 +3,7 @@ using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
 using Data.Interfaces;
+using Data.Repositories;
 
 namespace Business.Services;
 
@@ -12,7 +13,7 @@ public class EmployeeService(IEmployeeRepository employeeRepository, IAddressSer
     private readonly IAddressService _addressService = addressService; 
 
 
-    public async Task<IResult> CreateEmployee(MemberFormModel form)
+    public async Task<IResult> CreateEmployee(MemberDto form)
     {
         await _employeeRepository.BeginTransactionAsync();
         try
@@ -47,17 +48,10 @@ public class EmployeeService(IEmployeeRepository employeeRepository, IAddressSer
 
     public async Task<IResult> GetAllEmployees()
     {
-        IEnumerable<EmployeeEntity> employees = new List<EmployeeEntity>();
-
         try
         {
-            employees = await _employeeRepository.GetAsync();
-            if (employees == null)
-            {
-                return Result.NotFound("There are no employees registered.");
-            }
-
-            return Result<IEnumerable<EmployeeEntity>>.Ok(employees); 
+            var employees = await _employeeRepository.GetAsync() ?? new List<EmployeeEntity>();
+            return Result<IEnumerable<EmployeeEntity>>.Ok(employees);
         }
         catch
         {

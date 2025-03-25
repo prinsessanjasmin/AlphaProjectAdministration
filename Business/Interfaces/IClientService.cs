@@ -5,7 +5,7 @@ namespace Business.Interfaces;
 
 public interface IClientService
 {
-    Task<IResult> CreateClient(ClientFormModel form);
+    Task<IResult> CreateClient(ClientDto form);
     Task<IResult> GetAllClients();
     Task<IResult> GetClientById(int id);
     Task<IResult> UpdateClient(int id, ClientEntity updatedClient);

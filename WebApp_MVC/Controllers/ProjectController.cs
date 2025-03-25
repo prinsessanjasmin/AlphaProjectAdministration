@@ -6,29 +6,31 @@ using WebApp_MVC.Models;
 
 namespace WebApp_MVC.Controllers;
 
-[Authorize]
-public class ProjectController(AddProjectViewModel addProjectViewModel) : Controller
+public class ProjectController(ProjectViewModel projectViewModel) : Controller
 {
-    private readonly AddProjectViewModel _addProjectViewModel = addProjectViewModel;
+    private readonly ProjectViewModel _projectViewModel = projectViewModel;
 
     public async Task<IActionResult> Index()
     {
-        await _addProjectViewModel.PopulateMemberOptionsAsync(); 
-        return View(_addProjectViewModel);
+        
+        await _projectViewModel.GetProjects(); // Ensure data is loaded before rendering the view
+        return View(_projectViewModel);
     }
 
-    public async Task<IActionResult> AddProject(ProjectFormModel formData)
+    [HttpPost]
+    public async Task<IActionResult> AddProject(ProjectViewModel formData)
     {
         if (!ModelState.IsValid)
         {
-            await _addProjectViewModel.PopulateMemberOptionsAsync();
-            _addProjectViewModel.FormData = formData; 
+            await _projectViewModel.PopulateMemberOptionsAsync();
+            await _projectViewModel.PopulateClientOptionsAsync();
+            _projectViewModel.FormData = formData; 
             return View(formData);
         }
         // glöm ej att här skicka infon till databasen innan den töms 
 
-        _addProjectViewModel.ClearFormData();
-        return View(_addProjectViewModel); 
+        _projectViewModel.ClearFormData();
+        return View(_projectViewModel); 
             //Eller redirecta 
     }
 
