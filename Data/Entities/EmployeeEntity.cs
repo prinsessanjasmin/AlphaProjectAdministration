@@ -29,8 +29,7 @@ public class EmployeeEntity
     [Column(TypeName = "nvarchar(50)")]
     public string JobTitle { get; set; } = null!;
 
-    [NotMapped]
-    public IFormFile? ProfileImage { get; set; }
+    public string? ProfileImagePath { get; set; }
 
     [DataType(DataType.Date)]   
     public DateOnly DateOfBirth { get; set; }

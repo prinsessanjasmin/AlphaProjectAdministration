@@ -1,55 +1,52 @@
 ﻿@model SignUpViewModel
 @{
 	ViewData["Title"] = "Sign up";
+    Layout = "_CleanLayout";
 }
 
-<section class="page-login">
-    <main class="container">
-        <div class="popup-container signup-container">
-            <h2 class="center">Create Account</h2>
-            <button class="btn btn-google">Sign Up with Google</button>
-            <div class="divider">OR</div>
-            <form id="signup-form" asp-action="SignUp" asp-controller="Auth" method="post" class="form" novalidate>
-                <div class="horizontal-form">
-                    <div class="form-input">
-                        <label asp-for="FirstName"></label>
-                        <input asp-for="FirstName" class="input-box">
-                        <span asp-validation-for="FirstName"></span>
-                    </div>
-                    <div class="form-input">
-                        <label asp-for="LastName"></label>
-                        <input asp-for="LastName" class="input-box">
-                        <span asp-validation-for="LastName"></span>
-                    </div>
-                </div>
-                <div class="form-input">
-                    <label asp-for="Email"></label>
-                    <input asp-for="Email" class="input-box">
-                    <span asp-validation-for="Email"></span>
-                </div>
-                <div class="form-input">
-                    <label asp-for="Role"></label>
-                    <input asp-for="Role" class="input-box">
-                    <span asp-validation-for="Role"></span>
-                </div>
-                <div class="form-input">
-                    <label asp-for="Password"></label>
-                    <input asp-for="Password" class="input-box" id="input-password">
-                    <span asp-validation-for="Password"></span>
-                </div>
-                <div class="form-input">
-                    <label asp-for="ConfirmPassword"></label>
-                    <input asp-for="ConfirmPassword" class="input-box" id="input-password">
-                    <span asp-validation-for="ConfirmPassword"></span>
-                </div>
-                <div>
-                    <input asp-for="AcceptTerms" type="checkbox">
-                    <label asp-for="AcceptTerms">I accept <a>Terms and Conditions</a></label>
-                    <span asp-validation-for="AcceptTerms"></span>
-                </div>
-                <button type="submit" class="btn btn-login">Create Account</button>
-            </form>
-            <p id="no-account">Already have an account? <a asp-controller="Auth" asp-action="SignIn">Log in</a></p>
+<div class="popup-container signup-container">
+    <h2 class="center">Create Account</h2>
+    <button class="btn btn-google">Sign Up with Google</button>
+    <div class="divider">OR</div>
+    <form id="signup-form" asp-action="SignUp" asp-controller="Auth" method="post" class="form" novalidate>
+        <div class="horizontal-form">
+            <div class="form-input">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="input-box">
+                <span asp-validation-for="FirstName"></span>
+            </div>
+            <div class="form-input">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="input-box">
+                <span asp-validation-for="LastName"></span>
+            </div>
         </div>
-    </main>
-</section>
+        <div class="form-input">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="input-box">
+            <span asp-validation-for="Email"></span>
+        </div>
+        <div class="form-input">
+            <label asp-for="Role"></label>
+            <input asp-for="Role" class="input-box">
+            <span asp-validation-for="Role"></span>
+        </div>
+        <div class="form-input">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="input-box" id="input-password">
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div class="form-input">
+            <label asp-for="ConfirmPassword"></label>
+            <input asp-for="ConfirmPassword" class="input-box" id="input-password">
+            <span asp-validation-for="ConfirmPassword"></span>
+        </div>
+        <div>
+            <input asp-for="AcceptTerms" type="checkbox">
+            <label asp-for="AcceptTerms">I accept <a>Terms and Conditions</a></label>
+            <span asp-validation-for="AcceptTerms"></span>
+        </div>
+        <button type="submit" class="btn btn-login">Create Account</button>
+    </form>
+    <p id="no-account">Already have an account? <a asp-controller="Auth" asp-action="SignIn">Log in</a></p>
+</div>

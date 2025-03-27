@@ -1,0 +1,30 @@
+Auth controller 
+- Start page 
+- Login page 
+- Sign in page 
+
+Project Controller 
+- Projects Index 
+- Add Project partial
+- Edit Project partial 
+
+
+Partials 
+- Notifications 
+- User 
+
+
+[Authorized - Admin, Manager]
+Admin login 
+
+Employee Controller 
+- Employees Index 
+- Add Employee (Member) partial 
+- Edit Employee (Member) partial 
+
+Client Controller 
+- Clients Index 
+- Add Client partial 
+- Edit Client Partial 
+
+

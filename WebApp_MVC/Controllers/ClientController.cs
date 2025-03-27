@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebApp_MVC.Controllers
+namespace WebApp_MVC.Controllers;
+
+//[Route("clients")]
+public class ClientController : Controller
 {
-    public class ClientController : Controller
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }

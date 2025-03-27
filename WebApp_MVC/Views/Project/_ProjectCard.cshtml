@@ -3,10 +3,17 @@
 <div class="project-card">
     <div class="horizontal horizontal-project">
         <div class="horizontal horizontal-project">
-            <img src="@Model.ProjectImage" />
+            @if (!string.IsNullOrEmpty(@Model.ProjectImagePath))
+            {
+                <img src="@Url.Content(Model.ProjectImagePath)" alt="@Model.ProjectName" />
+            }
+            else
+            {
+                <img src="~/ProjectImages/Icons/projectlogo.svg" alt="Project Image Placeholder" />
+            }
             <div class="vertical">
                 <h6>@Model.ProjectName</h6>
-                <p class="p-light">@Model.Client.ClientName</p>
+                <p class="p-light">@Model.Client?.ClientName</p>
             </div>
         </div>
         <button id="btn-2-dots"></button>
@@ -15,14 +22,30 @@
         <p>@Model.Description</p>
     </div>
     <div class="horizontal horizontal-project">
-        <div class="time-left"> </div>
+        <div class="time-left time-indicator @(Model.DaysRemaining < 0 ? "overdue" : (Model.DaysRemaining < 7 ? "due-soon" : "on-track"))"">
+            <span>@Model.FormattedTimeRemaining</span>
+        </div>
         <div class="horizontal horizontal-project" id="avatars">
-            <div class="project-view">
-                @foreach (var teamMember in Model.TeamMembers)
+            @if (Model.TeamMembers != null && Model.TeamMembers.Any())
+            {
+                @foreach (ProjectEmployeeEntity projectEmployee in Model.TeamMembers)
                 {
-                    <img src="(@teamMember.Employee.ProfileImage ?? ../Views/Shared/images/Icons/Avatar.svg" alt="Profile Image" />
+                    <div class="avatar-container">
+                        @if (!string.IsNullOrEmpty(projectEmployee.Employee.ProfileImagePath))
+                        {
+                            <img src="@Url.Content(projectEmployee.Employee.ProfileImagePath)" alt="@projectEmployee.Employee.FirstName" class="team-avatar" />
+                        }
+                        else
+                        {
+                            <img src="~/ProjectImages/Icons/avatar2.svg" alt="Profile Image Placeholder" class="team-avatar" />
+                        }
+                    </div>
                 }
-            </div>
+            }
+            else
+            {
+                <p class="small-text">No team members assigned</p>
+            }
         </div>
     </div>
 </div>

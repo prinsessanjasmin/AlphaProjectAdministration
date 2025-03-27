@@ -2,57 +2,39 @@
 @{
     ViewData["Title"] = "Projects";
 }
+@{
+    var addProjectViewModel = ViewData["AddProjectViewModel"] as AddProjectViewModel;
+}
 
-<section class="page-projects">
-    <div class="wrapper">
-        <div class="header">
-            < src="../Views/Shared/images/Logos/alpha-logo.svg" alt="Alpha logo."/>
-            <h3 id="logo-text">alpha</h3>
-        </div>
-        <aside class="sidebar">
-            <button class="btn btn-projects">Projects</button>
-        </aside>
-        <div class="top-bar">
-            <div class="search-input">
-                <p>Search anything...</p>
-            </div>
-            <a id="btn-notifications">
-                <img src="../Views/Shared/images/Icons/bell-ringing.svg"/>
-            </a>
-            <a id="btn-settings">
-                <img src="../Views/Shared/images/Icons/Setting.svg" />
-            </a>
-            <a id="btn-account">
-                <img src="../Views/Shared/images/Icons/Avatar.svg"/>
-            </a>
 
-        </div>
-        <main class="main-view">
-            <div class="projects-container">
-                <h2>Projects</h2>
-                <div class="project-categories">
-                    <a>All [9]</a>
-                    <a>STARTED [8]</a>
-                    <a>COMPLETED [1]</a>
-                </div>
-                <div class="project-view">
-                    @if (!Model.Projects.Any())
-                    {
-                        <h4>There are no projects to show.</h4>
-                    }
-                    else 
-                    {
-                        @foreach (ProjectEntity project in Model.Projects)
-                        {
-                            @await Html.PartialAsync("_ProjectCard", project)
-                        }
-                    }
-                    
-				</div>
-            </div>
-        </main>
-        <footer class="container footer">
-            <p class="center">© 2025 Alpha. All rights reserved.</p>
-        </footer>
+
+<partial name="_AddProject" model="addProjectViewModel" />
+<div class="projects-container">
+    <div class="side-by-side">
+        <h2>Projects</h2>
+        <button class="btn btn-add-new" data-modal="true" data-target="#addProjectModal" asp-controller="Project" asp-action="AddProject">Add Project</button>
     </div>
-</section>
+
+   
+
+    <div class="project-categories">
+        <a>All [9]</a>
+        <a>STARTED [8]</a>
+        <a>COMPLETED [1]</a>
+    </div>
+    <div class="project-view">
+        @if (!Model.Projects.Any())
+        {
+            <h4>There are no projects to show.</h4>
+        }
+        else 
+        {
+            @foreach (ProjectEntity project in Model.Projects)
+            {
+                @await Html.PartialAsync("_ProjectCard", project)
+            }
+        }
+                    
+	</div>
+</div>
+        

@@ -1,4 +1,34 @@
-﻿//<script src="https://kit.fontawesome.com/584828937d.js" crossorigin="anonymous"></script>
+﻿
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    const modalButtons = document.querySelectorAll('[data-modal="true"]')
+    modalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modalTarget = button.getAttribute('data-target')
+            const modal = document.querySelector(modalTarget)
+
+            if (modal)
+                modal.style.display = 'flex';
+        })
+    })
+
+    const closeButtons = document.querySelectorAll('[data-close="true"]')
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.modal')
+            if (modal) {
+                modal.style.display = 'none'
+                //clear form osv
+            }
+        })
+    })
+
+})
+
+
+
+//<script src="https://kit.fontawesome.com/584828937d.js" crossorigin="anonymous"></script>
 
 //<script>
 //  var quill = new Quill('#editor', {
@@ -37,3 +67,5 @@
 //    }
 //});
 //</script>
+
+

@@ -45,8 +45,13 @@ public class ProjectService(IProjectRepository projectRepository) : IProjectServ
     {
         try
         {
-            var projects = await _projectRepository.GetAsync() ?? new List<ProjectEntity>();
-            return Result<IEnumerable<ProjectEntity>>.Ok(projects);
+            var projects = await _projectRepository.GetAsync();
+            if (projects != null)
+            {
+                return Result<IEnumerable<ProjectEntity>>.Ok(projects);
+            }
+            return Result.NotFound("There are no projects.");
+            
         }
         catch
         {
@@ -188,7 +193,7 @@ public class ProjectService(IProjectRepository projectRepository) : IProjectServ
                 existingProject.Budget = updatedProject.Budget;
                 existingProject.ClientId = updatedProject.ClientId;
                 existingProject.StatusId = updatedProject.StatusId;
-                existingProject.ProjectImage = updatedProject.ProjectImage;
+                existingProject.ProjectImagePath = updatedProject.ProjectImagePath;
                 existingProject.TeamMembers.Clear();
 
                 foreach (var teamMember in updatedProject.TeamMembers)

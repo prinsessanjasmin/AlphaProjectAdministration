@@ -45,11 +45,11 @@ builder.Services.ConfigureApplicationCookie(x =>
         x.Cookie.HttpOnly = true; 
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("Admins", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("Managers", policy => policy.RequireRole("Admin", "Manager"));
-});
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("Admins", policy => policy.RequireRole("Admin"));
+//    options.AddPolicy("Managers", policy => policy.RequireRole("Admin", "Manager"));
+//});
 
 builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
@@ -114,7 +114,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Auth}/{action=SignUp}/{id?}")
+    pattern: "{controller=Project}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.Run();

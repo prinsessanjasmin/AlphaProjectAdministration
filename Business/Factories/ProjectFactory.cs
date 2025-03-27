@@ -16,7 +16,7 @@ namespace Business.Factories
                 EndDate = form.EndDate,
                 Budget = form.Budget,
                 ClientId = form.ClientId,
-                ProjectImage = form.ProjectImage,
+                ProjectImagePath = form.ProjectImagePath,
                 TeamMembers = new List<ProjectEmployeeEntity>()
             };
 

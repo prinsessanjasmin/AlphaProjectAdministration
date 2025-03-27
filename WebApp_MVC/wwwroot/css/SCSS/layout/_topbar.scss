@@ -10,17 +10,17 @@
 
 .search-input {
     grid-column: 1;
-    border: none; 
-    height: 4rem 2rem; 
+    border: none;
+    height: 4rem 2rem;
     color: $clr-body-light;
-    background-image: url("/images/Icons/Search.svg");
-    background-position: 25px 12px; 
+    background-image: url("/ProjectImages/Icons/Search.svg");
+    background-position: 25px 12px;
     background-repeat: no-repeat;
     background-size: 22px;
     align-content: center;
-    
+
     p {
-        padding-left: 4rem; 
+        padding-left: 4rem;
     }
 }
 

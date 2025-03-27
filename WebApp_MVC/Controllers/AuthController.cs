@@ -7,103 +7,107 @@ using System.Threading.Tasks;
 using WebApp_MVC.Models;
 using System.Security.Claims;
 
-namespace WebApp_MVC.Controllers
+namespace WebApp_MVC.Controllers;
+
+//[Route("auth")]
+public class AuthController(IUserService userService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager) : Controller
 {
-    public class AuthController(IUserService userService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager) : Controller
+    private readonly IUserService _userService = userService;
+    private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
+
+    [Route("signin")]
+    public IActionResult SignIn(string returnUrl = "/")
     {
-        private readonly IUserService _userService = userService;
-        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
-        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        ViewBag.ErrorMessage = "";
+        ViewBag.ReturnUrl = returnUrl;
+        return View();
+    }
 
-        public IActionResult SignIn(string returnUrl = "/")
+ 
+    [HttpPost]
+    public async Task<IActionResult> SignIn(LoginFormViewModel form, string returnUrl = "/")
+    {
+        if (!ModelState.IsValid)
         {
-            ViewBag.ErrorMessage = "";
+            ViewBag.ErrorMessage = "Incorrect email or password"; ;
             ViewBag.ReturnUrl = returnUrl;
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SignIn(LoginFormViewModel form, string returnUrl = "/")
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.ErrorMessage = "Incorrect email or password"; ;
-                ViewBag.ReturnUrl = returnUrl;
-                return View(form);
-            }
-
-            
-
-            Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, true, false);
-            if (result.Succeeded)
-            {
-                //var user = await _userManager.FindByEmailAsync(form.Email);
-                //if (user != null)
-                //{
-                //    await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
-                //}
-                return RedirectToAction("Index", "Project"); 
-            }
-                
-            ViewBag.ErrorMessage = "Incorrect email or password";
             return View(form);
         }
 
-        public async Task AddClaimByEmailAsync(ApplicationUser user, string typeName, string value)
-        {
-            if (user != null)
-            {
-                var claims = await _userManager.GetClaimsAsync(user);
+        
 
-                if (!claims.Any(x => x.Type == typeName))
-                {
-                    await _userManager.AddClaimAsync(user, new Claim(typeName, value));
-                }
-            }
+        Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, true, false);
+        if (result.Succeeded)
+        {
+            //var user = await _userManager.FindByEmailAsync(form.Email);
+            //if (user != null)
+            //{
+            //    await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
+            //}
+            return RedirectToAction("Index", "Project"); 
         }
-
-        public IActionResult SignUp()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SignUp(SignUpViewModel model)
-        {
-            if (!ModelState.IsValid) 
-            {
-                return View(model);
-            }
-
-            var result = await _userService.CreateUser(model); 
             
-            switch (result.StatusCode)
+        ViewBag.ErrorMessage = "Incorrect email or password";
+        return View(form);
+    }
+
+    public async Task AddClaimByEmailAsync(ApplicationUser user, string typeName, string value)
+    {
+        if (user != null)
+        {
+            var claims = await _userManager.GetClaimsAsync(user);
+
+            if (!claims.Any(x => x.Type == typeName))
             {
-                case 201:
-                    return RedirectToAction("SignIn", "Auth");
-
-                case 400:
-                    ViewBag.ErrorMessage = "Error."; 
-                    return View(model);
-
-                case 404:
-                    ViewBag.ErrorMessage = "Error.";
-                    return View(model);
-
-                case 500:
-                    ViewBag.ErrorMessage = "Error.";
-                    return View(model);
-
-                default:
-                    ViewBag.ErrorMessage = "Error.";
-                    return View(model);
+                await _userManager.AddClaimAsync(user, new Claim(typeName, value));
             }
         }
+    }
 
-        public new async Task<IActionResult> SignOut()
+    //[Route("signup")]
+    public IActionResult SignUp()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SignUp(SignUpViewModel model)
+    {
+        if (!ModelState.IsValid) 
         {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return View(model);
         }
+
+        var result = await _userService.CreateUser(model); 
+        
+        switch (result.StatusCode)
+        {
+            case 201:
+                return RedirectToAction("SignIn", "Auth");
+
+            case 400:
+                ViewBag.ErrorMessage = "Error."; 
+                return View(model);
+
+            case 404:
+                ViewBag.ErrorMessage = "Error.";
+                return View(model);
+
+            case 500:
+                ViewBag.ErrorMessage = "Error.";
+                return View(model);
+
+            default:
+                ViewBag.ErrorMessage = "Error.";
+                return View(model);
+        }
+    }
+
+    //[Route("signout")]
+    public new async Task<IActionResult> SignOut()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction("Index", "Home");
     }
 }

@@ -8,7 +8,6 @@
     border-radius: 16px;
     padding: 1.5rem; 
     box-shadow: 0 10px 10px $shadow-drop-1;
-    z-index: 1; 
 }
 
 #btn-2-dots {
@@ -16,7 +15,7 @@
     justify-self: end;
     position: relative;
     top: -.5rem; 
-    right: -.5rem;;
+    right: -.5rem;
 }
 
 .horizontal-project {
@@ -31,18 +30,32 @@
 }
 
 .time-left {
-    width: 113px; 
-    height: 34px; 
-    background-color: $clr-red-opacity;
-    color: $clr-red;
+    width: 113px;
+    height: 34px;
     font-weight: 600;
+    font-size: 12px;
     border-radius: 16px;
-    padding: .5rem .5rem .5rem 1.8rem;
-    background-image: url("/images/Icons/Time.svg");
-    background-position: 7px 7px; 
+    padding: .5rem .5rem .5rem 1.9rem;
+    background-image: url("/ProjectImages/Icons/Time.svg");
+    background-position: 7px 7px;
     background-repeat: no-repeat;
     background-size: 20px;
     align-self: start;
+}
+
+.overdue {
+    background-color: $clr-red-opacity;
+    color: $clr-red;
+}
+
+.due-soon {
+    background-color: $clr-yellow-opacity;
+    color: $clr-yellow;
+}
+
+.on-track {
+    background-color: $clr-grey-200;
+    color: $clr-body-light;
 }
 
 #avatars {

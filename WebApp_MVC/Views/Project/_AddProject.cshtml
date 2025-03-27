@@ -1,0 +1,64 @@
+﻿@model AddProjectViewModel
+@{
+	ViewData["Title"] = "Add Project";
+	await Model.PopulateMemberOptionsAsync();
+	await Model.PopulateClientOptionsAsync();
+}
+
+<div class="modal" id="addProjectModal">
+    <div class="modal-content add-project-container" id="addProjectForm">
+        <div class="side-by-side">
+            <h2>Add Project</h2>
+            <button class="btn-close" type="button" data-close="true">X</button>
+        </div>
+        
+        <form class="form form-project" method="post" asp-action="AddProject" asp-controller="Project" novalidate>
+            <div class="upload-image">
+                <button class="btn-upload-image">
+                    <img src="~/ProjectImages/Icons/Camera.png" alt="Camera icon.">
+                </button>
+            </div>
+            <div class="form-input">
+                <label asp-for="ProjectName"></label>
+                <input asp-for="ProjectName" class="input-box" />
+                <span asp-validation-for="ProjectName"></span>
+            </div>
+            <div class="form-input">
+                <label asp-for="ClientId"></label>
+                <select asp-for="ClientId" class="input-box" asp-items="Model.ClientOptions">
+                    <option value="">-- Select Client --</option>
+                </select>
+                <span asp-validation-for="ClientId"></span>
+            </div>
+            <div class="form-input long-form-input">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" rows="8" contenteditable="true" class="rich-text"></textarea>
+                <span asp-validation-for="Description"></span>
+            </div>
+            <div class="horizontal-form">
+                <div class="form-input">
+                    <label asp-for="StartDate"></label>
+                    <input asp-for="StartDate" type="date" class="input-box" />
+                    <span asp-validation-for="StartDate"></span>
+                </div>
+                <div class="form-input">
+                    <label asp-for="EndDate"></label>
+                    <input asp-for="EndDate" type="date" class="input-box" />
+                    <span asp-validation-for="EndDate"></span>
+                </div>
+            </div>
+            <div class="form-input">
+                <label asp-for="SelectedTeamMemberIds">Team members</label>
+                <select asp-for="SelectedTeamMemberIds" class="input-box" asp-items="Model.MemberOptions" multiple>
+                </select>
+                <span asp-validation-for="SelectedTeamMemberIds"></span>
+            </div>
+            <div class="form-input">
+                <label asp-for="Budget"></label>
+                <input asp-for="Budget" class="input-box" id="budget-input" />
+                <span asp-validation-for="Budget"></span>
+            </div>
+            <button class="btn btn-popup">Create</button>
+        </form>
+    </div>
+</div>

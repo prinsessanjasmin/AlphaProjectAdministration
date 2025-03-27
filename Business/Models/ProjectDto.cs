@@ -6,7 +6,7 @@ namespace Business.Models;
 
 public class ProjectDto
 {
-    public IFormFile? ProjectImage { get; set; }
+    public string? ProjectImagePath { get; set; }
     public string ProjectName { get; set; } = null!;
     public int ClientId { get; set; }
     public string? Description { get; set; }

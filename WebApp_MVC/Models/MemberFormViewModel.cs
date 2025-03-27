@@ -57,8 +57,7 @@ public class MemberFormViewModel
                 StreetAddress = model.StreetAddress,
                 PostCode = model.PostCode,
                 City = model.City,
-                DateOfBirth = model.DateOfBirth,
-                ProfileImage = model.ProfileImage,
+                DateOfBirth = model.DateOfBirth
             };
     }
 }

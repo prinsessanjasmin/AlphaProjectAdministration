@@ -9,9 +9,11 @@
     <link rel="stylesheet" href="~/WebApp_MVC.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <main >
-        @RenderBody()
-    </main>
+    <section class="page-login">
+        <main class="container">
+           @RenderBody()
+        </main>
+    </section>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

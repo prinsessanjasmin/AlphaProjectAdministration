@@ -28,7 +28,7 @@
     color: $clr-heading;
     font-weight: 600;
     padding-right: 2rem; 
-    background-image: url("/images/Icons/google-icon.svg");
+    background-image: url("/ProjectImages/Icons/google-icon.svg");
     background-position: 16px 13px; 
     background-repeat: no-repeat;
     background-size: 18px;
@@ -38,66 +38,66 @@
     background-color: $clr-accent-opacity;
     color: $clr-accent;
     font-weight: 600;
-    text-align: left; 
+    text-align: left;
     padding: 0 2.7rem;
     margin: 0 .5rem;
-    background-image: url("/images/Icons/suitcase-blue.svg");
-    background-position: 16px 15px; 
+    background-image: url("/ProjectImages/Icons/suitcase-blue.svg");
+    background-position: 16px 15px;
     background-repeat: no-repeat;
     background-size: 18px;
 }
 
 .btn-menu-views-not-active {
     background-color: $clr-background;
-    color: $clr-heading; 
+    color: $clr-heading;
     font-weight: 600;
-    text-align: left; 
+    text-align: left;
     padding: 0 2.7rem;
     margin: 0 .5rem;
-    background-image: url("/images/Icons/suitcase-blue.svg");
-    background-position: 16px 15px; 
+    background-image: url("/ProjectImages/Icons/suitcase-blue.svg");
+    background-position: 16px 15px;
     background-repeat: no-repeat;
     background-size: 18px;
 }
 
 #btn-projects-grey {
-    background-image: url("/images/Icons/suitcase-grey.svg");
+    background-image: url("/ProjectImages/Icons/suitcase-grey.svg");
 }
 
 #btn-members-blue {
-    background-image: url("/images/Icons/members-blue.svg");
+    background-image: url("/ProjectImages/Icons/members-blue.svg");
 }
 
 #btn-members-grey {
-    background-image: url("/images/Icons/members-grey.svg");
+    background-image: url("/ProjectImages/Icons/members-grey.svg");
 }
 
 #btn-statuses-blue {
-    background-image: url("/images/Icons/traffic-light-solid.svg");
+    background-image: url("/ProjectImages/Icons/traffic-light-solid.svg");
     background-size: 12px;
-    background-position: 17px 14px; 
+    background-position: 17px 14px;
 }
 
 #btn-statuses-grey {
     background-color: $clr-background;
-    color: $clr-heading; 
-    background-image: url("/images/Icons/traffic-light-solid-grey.svg");
+    color: $clr-heading;
+    background-image: url("/ProjectImages/Icons/traffic-light-solid-grey.svg");
     background-size: 12px;
-    background-position: 17px 14px; 
+    background-position: 17px 14px;
 }
 
 #btn-clients-blue {
-    background-image: url("/images/Icons/building-solid-blue.svg");
+    background-image: url("/ProjectImages/Icons/building-solid-blue.svg");
     background-size: 12px;
-    background-position: 17px 14px; 
+    background-position: 17px 14px;
 }
 
 #btn-clients-grey {
     background-color: $clr-background;
-    color: $clr-heading; 
-    background-image: url("/images/Icons/building-solid.svg");
+    color: $clr-heading;
+    background-image: url("/ProjectImages/Icons/building-solid.svg");
     background-size: 12px;
-    background-position: 17px 14px; 
+    background-position: 17px 14px;
 }
 
 .btn-upload-image {
@@ -133,7 +133,7 @@
     cursor: pointer;
     border-radius: 16px;
     background-color: $clr-surface; 
-    background-image: url("/images/Icons/2dots.svg");
+    background-image: url("/Projectimages/Icons/2dots.svg");
     background-position: 7.5px 7.5px; 
     background-repeat: no-repeat;
     background-size: 24px;
@@ -167,22 +167,40 @@
 }
 
 #btn-edit-project {
-    background-image: url("/images/Icons/Edit.svg");
+    background-image: url("/ProjectImages/Icons/Edit.svg");
 }
 
 #btn-add-member {
-    background-image: url("/images/Icons/Add\ User.svg");
+    background-image: url("/ProjectImages/Icons/Add\ User.svg");
 }
 
 #btn-delete-project {
-    background-image: url("/images/Icons/Delete.svg");
-    color: $clr-red; 
+    background-image: url("/ProjectImages/Icons/Delete.svg");
+    color: $clr-red;
 }
 
 .btn-add-new {
     padding: .5rem 1.5rem .5rem 2.5rem;
-    background-image: url("/images/Icons/Plus.svg");
-    background-position: 16px 17px; 
+    background-image: url("/ProjectImages/Icons/Plus.svg");
+    background-position: 16px 17px;
     background-repeat: no-repeat;
     background-size: 15px;
+}
+
+.btn-close {
+    @include button;
+    border: none;
+    height: 24px;
+    width: 24px;
+    background-color: transparent; 
+    background-image: url("/ProjectImages/Icons/X.svg");
+    background-position: 8px 8px;
+    background-repeat: no-repeat;
+    background-size: 15px;
+
+    //Font awesome ? 
+
+    &:hover {
+        background-color: $clr-grey-100;
+    }
 }

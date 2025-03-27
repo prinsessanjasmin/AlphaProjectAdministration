@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
+    <Content Remove="wwwroot\Images\Uploads\ProfileImages\Avatar.svg" />
+    <Content Remove="wwwroot\Images\Uploads\ProjectImages\projectlogo.svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,15 +28,55 @@
     </PackageReference>  </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Shared\images\Pictures\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="compilerconfig.json" />
+    <None Include="wwwroot\Images\Uploads\ProfileImages\Avatar.svg" />
+    <None Include="wwwroot\Images\Uploads\ProjectImages\projectlogo.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\2dots.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Add User.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Avatar.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\avatar2.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\bell-ringing-dark.png" />
+    <None Include="wwwroot\ProjectImages\Icons\bell-ringing.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\building-solid-blue.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\building-solid.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Calendar-dark.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Calendar.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Camera-dark.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Camera.png" />
+    <None Include="wwwroot\ProjectImages\Icons\Delete.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Dollar-dark.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Dollar-light.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\edit-pic.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Edit.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\favicon.ico" />
+    <None Include="wwwroot\ProjectImages\Icons\google-icon.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Hide.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\member#2.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Members-blue.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Members-grey.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Plus.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\projectlogo.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Search.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Setting.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\settings-dark.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\suitcase-blue.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\suitcase-grey.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\Time.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\traffic-light-solid-grey.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\traffic-light-solid.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\UploadImage.svg" />
+    <None Include="wwwroot\ProjectImages\Icons\X.svg" />
+    <None Include="wwwroot\ProjectImages\Logos\alpha-logo.svg" />
+    <None Include="wwwroot\ProjectImages\Pictures\1.svg" />
+    <None Include="wwwroot\ProjectImages\Pictures\blur.svg" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Shared\Partials\Sections\" />
   </ItemGroup>
 
 </Project>

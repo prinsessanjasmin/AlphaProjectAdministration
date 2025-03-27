@@ -15,5 +15,5 @@ public class MemberDto
     public string PostCode { get; set; } = null!;
     public string City { get; set; } = null!;
     public DateOnly DateOfBirth { get; set; }
-    public IFormFile? ProfileImage { get; set; }
+    public string? ProfileImagePath { get; set; }
 }

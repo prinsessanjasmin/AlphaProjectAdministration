@@ -50,8 +50,12 @@ public class EmployeeService(IEmployeeRepository employeeRepository, IAddressSer
     {
         try
         {
-            var employees = await _employeeRepository.GetAsync() ?? new List<EmployeeEntity>();
-            return Result<IEnumerable<EmployeeEntity>>.Ok(employees);
+            var employees = await _employeeRepository.GetAsync();
+            if (employees != null)
+            {
+                return Result<IEnumerable<EmployeeEntity>>.Ok(employees);
+            }
+            return Result.NotFound("There are no team members.");
         }
         catch
         {

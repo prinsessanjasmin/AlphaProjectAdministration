@@ -1,27 +1,26 @@
 ﻿.admin-left {
-    
-    height: 100dvh; 
+    height: 100dvh;
     width: 50%;
-    display: flex; 
+    display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: flex-start;
     padding: 3rem;
     padding-bottom: 5rem;
-    position: relative; 
-    overflow: hidden; 
+    position: relative;
+    overflow: hidden;
 
     &::before {
         content: "";
-        position: absolute; 
+        position: absolute;
         top: -50px;
-        left:-50px;
-        right:-50px;
+        left: -50px;
+        right: -50px;
         bottom: -50px;
-        background-image: url("/images/Pictures/1.svg");
+        background-image: url("~/ProjectImages/Pictures/1.svg");
         filter: blur(20px);
-        background-size: cover; 
-        z-index: -1; 
+        background-size: cover;
+        z-index: -1;
     }
 }
 

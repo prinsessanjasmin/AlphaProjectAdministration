@@ -14,7 +14,7 @@ public static class EmployeeFactory
             Email = form.Email,
             PhoneNumber = form.PhoneNumber,
             JobTitle = form.JobTitle,
-            ProfileImage = form.ProfileImage,
+            ProfileImagePath = form.ProfileImagePath,
             DateOfBirth = form.DateOfBirth,
             AddressId = id
         };
@@ -33,7 +33,7 @@ public static class EmployeeFactory
             Email = employee.Email,
             PhoneNumber = employee.PhoneNumber,
             JobTitle = employee.JobTitle,
-            ProfileImage = employee.ProfileImage,
+            ProfileImagePath = employee.ProfileImagePath,
             DateOfBirth = employee.DateOfBirth,
             StreetAddress = address.StreetAddress,
             PostCode = address.PostCode,
