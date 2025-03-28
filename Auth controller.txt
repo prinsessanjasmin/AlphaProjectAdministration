@@ -1,3 +1,6 @@
+https://localhost:7124/Project/Index
+
+
 Auth controller 
 - Start page 
 - Login page 

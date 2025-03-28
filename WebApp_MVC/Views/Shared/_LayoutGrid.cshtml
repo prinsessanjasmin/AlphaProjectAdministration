@@ -11,13 +11,13 @@
 <body>
     <section class="page-projects">
         <div class="wrapper">          
-                @await Html.PartialAsync("Partials/Components/_Header")           
-                @await Html.PartialAsync("Partials/Components/_Sidebar")        
-                @await Html.PartialAsync("Partials/Components/_Topbar")
+            @await Html.PartialAsync("Partials/Components/_Header")           
+            @await Html.PartialAsync("Partials/Components/_Sidebar")        
+            @await Html.PartialAsync("Partials/Components/_Topbar")
             <main class="main-view">
                 @RenderBody()
             </main>
-                @await Html.PartialAsync("Partials/Components/_Footer")
+            @await Html.PartialAsync("Partials/Components/_Footer")
         </div>
     </section>
 

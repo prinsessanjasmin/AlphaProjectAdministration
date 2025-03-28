@@ -925,7 +925,7 @@ select {
 .modal {
   display: none;
   background-color: rgba(130, 106, 249, 0.1);
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   bottom: 0;

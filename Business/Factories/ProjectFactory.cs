@@ -17,6 +17,7 @@ namespace Business.Factories
                 Budget = form.Budget,
                 ClientId = form.ClientId,
                 ProjectImagePath = form.ProjectImagePath,
+                StatusId = form.StatusId,
                 TeamMembers = new List<ProjectEmployeeEntity>()
             };
 

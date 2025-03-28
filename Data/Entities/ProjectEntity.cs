@@ -33,7 +33,6 @@ public class ProjectEntity
     public ICollection<ProjectEmployeeEntity> TeamMembers { get; set; } = [];
     //Got help from ChatGPT 4o on this one ^
 
-    [Required]
     public int StatusId { get; set; }
     public StatusEntity Status { get; set; } = null!;
 
