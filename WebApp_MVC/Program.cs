@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Data.Repositories;
 using Data.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 
 
@@ -42,7 +43,20 @@ builder.Services.ConfigureApplicationCookie(x =>
         x.AccessDeniedPath = "/auth/denied";
         x.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         x.SlidingExpiration = true;
-        x.Cookie.HttpOnly = true; 
+        x.Cookie.HttpOnly = true;
+        x.Cookie.SameSite = SameSiteMode.None; //Cookiehanteringen skapas av tredje part 
+        x.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
+    });
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+    .AddCookie()
+    .AddGoogle(x =>
+    {
+        x.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        x.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     });
 
 //builder.Services.AddAuthorization(options =>
@@ -93,6 +107,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 using (var scope = app.Services.CreateScope())

@@ -1,8 +1,11 @@
-﻿using Business.Interfaces;
+﻿using Business.Factories;
+using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
+using WebApp_MVC.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
 using WebApp_MVC.Models;
 
 namespace WebApp_MVC.Controllers;
@@ -66,14 +69,19 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     {
         if (!ModelState.IsValid)
         {
-            // Repopulate dropdowns in case of validation errors
-            //form.ClientOptions = await PopulateClientsAsync(form);
-            //form.MemberOptions = await PopulateMembersAsync(form);
-            return PartialView("_AddProject", form);
+            //var errors = ModelState
+            //    .Where(x => x.Value?.Errors.Count > 0)
+            //    .ToDictionary(
+            //    kvp => kvp.Key,
+            //    kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
+            //    .ToList()
+            //    );
+
+            //return BadRequest(new { success = false, errors });
+            return View(form);
         }
 
         ProjectDto projectDto = form;
-        
 
         if (form.ProjectImage != null && form.ProjectImage.Length > 0)
         {
@@ -105,24 +113,110 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             ViewBag.ErrorMessage("Something went wrong.");
             return PartialView("_AddProject", form);
         }
-
-
-        return RedirectToAction("Index", "Project");
     }
+
 
     //[Route("edit")]
-    public IActionResult EditProject()
+    public async Task<IActionResult> EditProject(int id)
     {
-        return View();
+        var result = await _projectService.GetProjectById(id);
+
+        if (result.Success)
+        {
+            var projectResult = result as Result<ProjectEntity>;
+            ProjectEntity project = projectResult?.Data ?? new ProjectEntity();
+
+            var viewModel = new EditProjectViewModel(project);
+
+            await PopulateMembersAsync(viewModel);
+            await PopulateClientsAsync(viewModel);
+
+            return PartialView("_EditProject", viewModel);
+        }
+        else
+        {
+            ViewBag.ErrorMessage("No project found");
+            return RedirectToAction("Index", "Project");
+        }
     }
 
+    [HttpPost]
+    public async Task<IActionResult> EditProject(EditProjectViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
+                .ToList()
+                );
+
+            return BadRequest(new { success = false, errors });
+        }
+
+        ProjectDto projectDto = model;
+
+        if (model.ProjectImage != null && model.ProjectImage.Length > 0)
+        {
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProjectImage.FileName;
+            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Uploads", "ProjectImages");
+
+            // Ensure directory exists
+            Directory.CreateDirectory(uploadsFolder);
+
+            // Save the file
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await model.ProjectImage.CopyToAsync(fileStream);
+            }
+
+            // Set the image path in the DTO
+            projectDto.ProjectImagePath = "/Images/Uploads/ProjectImages/" + uniqueFileName;
+        }
+
+
+        ProjectEntity projectEntity = ProjectFactory.Create(projectDto); 
+
+        var result = await _projectService.UpdateProject(model.ProjectId, projectEntity);
+
+        if (result.Success)
+        {
+            return RedirectToAction("Index", "Project");
+        }
+        else
+        {
+            ViewBag.ErrorMessage("Something went wrong.");
+            return PartialView("_EditProject", model);
+        }
+    }
+
+    public IActionResult ConfirmDelete(int id)
+    {
+        // Return just the ID to the partial view
+        return PartialView("_DeleteProject", id);
+    }
+
+    [HttpPost]
     //[Route("delete")]
-    public IActionResult DeleteProject()
+    public async Task<IActionResult> DeleteProject(int id)
     {
-        return View();
+        var result = await _projectService.DeleteProject(id);
+
+        if (result.Success)
+        {
+            return RedirectToAction("Index", "Project");
+        }
+        else
+        {
+            ViewBag.ErrorMessage("Something went wrong.");
+            return RedirectToAction("Index", "Project");
+        }
     }
 
-    public async Task PopulateMembersAsync(AddProjectViewModel viewModel)
+    public async Task PopulateMembersAsync(IProjectViewModel viewModel)
     {
         var result = await _employeeService.GetAllEmployees();
         var employees = new List<EmployeeEntity>();
@@ -133,7 +227,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             employees = employeeResult?.Data?.ToList() ?? [];
         }
 
-        viewModel.MemberOptions = new List<SelectListItem>();
+        viewModel.MemberOptions = [];
         foreach (EmployeeEntity member in employees)
         {
             viewModel.MemberOptions.Add(new SelectListItem { Text = $"{member.FirstName} {member.LastName}", Value = member.Id.ToString() });
@@ -141,7 +235,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
 
     }
 
-    public async Task PopulateClientsAsync(AddProjectViewModel viewModel)
+    public async Task PopulateClientsAsync(IProjectViewModel viewModel)
     {
         var result = await _clientService.GetAllClients();
         var clients = new List<ClientEntity>();

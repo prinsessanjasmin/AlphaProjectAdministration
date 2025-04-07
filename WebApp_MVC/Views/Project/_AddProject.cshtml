@@ -1,64 +1,102 @@
 ﻿@model AddProjectViewModel
 @{
 	ViewData["Title"] = "Add Project";
-
 }
 
 <div class="modal" id="addProjectModal">
     <div class="modal-content add-project-container" id="addProjectForm">
-        <div class="side-by-side">
-            <h2>Add Project</h2>
-            <button class="btn-close" type="button" data-close="true"></button>
-        </div>
-        <form class="form form-project" method="post" asp-action="AddProject" asp-controller="Project" novalidate>
-            <div class="upload-image">
-                <button class="btn-upload-image">
-                    <img src="~/ProjectImages/Icons/Camera.png" alt="Camera icon.">
-                </button>
-            </div>
-            <div class="form-input">
-                <label asp-for="ProjectName"></label>
-                <input asp-for="ProjectName" class="input-box" />
-                <span asp-validation-for="ProjectName"></span>
-            </div>
-            <div class="form-input">
-                <label asp-for="ClientId"></label>
-                <select asp-for="ClientId" class="input-box" asp-items="Model.ClientOptions">
-                    <option value="">-- Select Client --</option>
-                </select>
-                <span asp-validation-for="ClientId"></span>
-            </div>
-            <div class="form-input long-form-input">
-                <label asp-for="Description"></label>
-                <textarea asp-for="Description" rows="8" contenteditable="true" class="rich-text"></textarea>
-                <span asp-validation-for="Description"></span>
-            </div>
-            <div class="horizontal-form">
-                <div class="form-input">
-                    <label asp-for="StartDate"></label>
-                    <input asp-for="StartDate" type="date" class="input-box" />
-                    <span asp-validation-for="StartDate"></span>
+        <form class="form form-project" method="post" asp-action="AddProject" asp-controller="Project" enctype="multipart/form-data" novalidate>
+            <header class="side-by-side">
+                <h2>Add Project</h2>
+                <button class="btn-close" type="button" data-close="true"></button>
+            </header>
+            <div class="form-content">
+                <div class="upload-image">
+                    <button class="btn-upload-image">
+                        <img src="~/ProjectImages/Icons/Camera.png" alt="Camera icon.">
+                        <input asp-for="ProjectImage" accept="image/*" class="hidden" />
+                    </button>
                 </div>
                 <div class="form-input">
-                    <label asp-for="EndDate"></label>
-                    <input asp-for="EndDate" type="date" class="input-box" />
-                    <span asp-validation-for="EndDate"></span>
+                    <label asp-for="ProjectName"></label>
+                    <div class="input-group">
+                        <input data-val="true" asp-for="ProjectName" />
+                        <span asp-validation-for="ProjectName" class=""></span>
+                    </div>
+                </div>
+                <div class="form-input">
+                    <label asp-for="ClientId"></label>
+                    <div class="input-group">
+                        <select data-val="true" asp-for="ClientId" asp-items="Model.ClientOptions">
+                            <option value="">-- Select Client --</option>
+                        </select>
+                        <span asp-validation-for="ClientId"></span>
+                    </div>
+                </div>
+                <div class="form-input long-form-input">
+                    <label asp-for="Description"></label>
+                    <div class="wysiwyg">
+                        <textarea asp-for="Description" class="hidden hidden-textarea"></textarea>
+                        <div id="wysiwyg-editor"></div>
+                        <div id="wysiwyg-toolbar">
+                            <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-align" value=""></button>
+                                <button class="ql-align" value="center"></button>
+                                <button class="ql-align" value="right"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-list" value="bullet"></button>
+                                <button class="ql-list" value="ordered"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-link"></button>
+                            </span>
+                        </div>
+                    </div> 
+                </div>
+                <div class="horizontal-form">
+                    <div class="form-input">
+                        <label asp-for="StartDate"></label>
+                        <div class="input-group">
+                            <input data-val="true" asp-for="StartDate" type="date" />
+                            <span asp-validation-for="StartDate"></span>
+                        </div>
+                    </div>
+                    <div class="form-input">
+                        <label asp-for="EndDate"></label>
+                        <div class="input-group">
+                            <input data-val="true" asp-for="EndDate" type="date" />
+                            <span asp-validation-for="EndDate"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-input">
+                    <label asp-for="SelectedTeamMemberIds">Team members</label>
+                    <div class="input-group">
+                        <select data-val="true" asp-for="SelectedTeamMemberIds" asp-items="Model.MemberOptions" multiple>
+                            <option value="">-- Select Team Member --</option>
+                        </select>
+                        <span asp-validation-for="SelectedTeamMemberIds"></span>
+                    </div>
+                </div>
+                <div class="form-input">
+                    <label asp-for="Budget"></label>
+                    <div class="input-group">
+                        <input data-val="true" asp-for="Budget" id="budget-input" />
+                        <span asp-validation-for="Budget"></span>
+                    </div>
                 </div>
             </div>
-            <div class="form-input">
-                <label asp-for="SelectedTeamMemberIds">Team members</label>
-                <select asp-for="SelectedTeamMemberIds" class="input-box" asp-items="Model.MemberOptions" multiple>
-                    <option value="">-- Select Team Member --</option>
-                </select>
-                <span asp-validation-for="SelectedTeamMemberIds"></span>
-            </div>
-            <div class="form-input">
-                <label asp-for="Budget"></label>
-                <input asp-for="Budget" class="input-box" id="budget-input" />
-                <span asp-validation-for="Budget"></span>
-            </div>
-            <button type="submit" class="btn btn-popup">Create</button>
-            
+            <footer>
+                <button type="submit" class="btn btn-popup">Create</button>
+            </footer>
         </form>
     </div>
 </div>
+@await Html.PartialAsync("Partials/Components/_ValidationScript")
+@await Html.PartialAsync("Partials/Components/_QuillScript")

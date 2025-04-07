@@ -59,7 +59,11 @@ public class ProjectEntity
             {
                 return "Due today";
             }
-            else if (DaysRemaining < 7)
+            else if (DaysRemaining == 1)
+            {
+                return "1 day left";
+            }
+            else if (DaysRemaining > 1 && DaysRemaining < 7)
             {
                 return $"{DaysRemaining} days left";
             }

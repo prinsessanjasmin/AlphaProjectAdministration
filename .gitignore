@@ -13,6 +13,28 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+# Ignore user secrets and local config
+appsettings.Development.json
+appsettings.*.json
+secrets.json
+.env
+
+# Build results
+bin/
+obj/
+*.dll
+*.exe
+
+# Visual Studio files
+*.user
+*.suo
+.vscode/
+.vs/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
 # Mono auto generated files
 mono_crash.*
 

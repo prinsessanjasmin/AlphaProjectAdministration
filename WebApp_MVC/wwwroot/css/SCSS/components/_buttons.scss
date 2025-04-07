@@ -23,13 +23,13 @@
 }
 
 .btn-google {
-    width: 400px; 
+    width: 400px;
     background-color: $clr-grey-100;
     color: $clr-heading;
     font-weight: 600;
-    padding-right: 2rem; 
+    padding-right: 2rem;
     background-image: url("/ProjectImages/Icons/google-icon.svg");
-    background-position: 16px 13px; 
+    background-position: 16px 13px;
     background-repeat: no-repeat;
     background-size: 18px;
 }
@@ -126,7 +126,7 @@
     cursor: pointer;
 }
 
-#btn-2-dots {
+.btn-2-dots {
     height: 40px; 
     width: 40px; 
     border: none; 
@@ -137,6 +137,7 @@
     background-position: 7.5px 7.5px; 
     background-repeat: no-repeat;
     background-size: 24px;
+    position: absolute;  
 
     &:hover {
         background-color: $clr-grey-100; 
@@ -159,10 +160,19 @@
     }
 }
 
+
+
 .btn-message {
     background-color: $clr-grey-100;
     color: $clr-heading;
     padding: .5rem 2rem; 
+    width: 100%;
+}
+
+.btn-confirm-delete {
+    background-color: $clr-red;
+    color: $clr-surface;
+    padding: .5rem 2rem;
     width: 100%;
 }
 

@@ -2,6 +2,7 @@
 using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
+using WebApp_MVC.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Metrics;
@@ -13,39 +14,39 @@ using Microsoft.AspNetCore.Components;
 namespace WebApp_MVC.Models;
 
 
-public class AddProjectViewModel()
+public class AddProjectViewModel() : IProjectViewModel
 {
-    public List<SelectListItem> MemberOptions { get; set; } = new();
-    
-    public List<SelectListItem> ClientOptions { get; set; } = new();
+    public List<SelectListItem> MemberOptions { get; set; } = [];
+    public List<SelectListItem> ClientOptions { get; set; } = [];
 
 
     [Display(Name = "Project Image", Prompt = "Upload a project image")]
+    [DataType(DataType.Upload)]
     public IFormFile? ProjectImage { get; set; }
 
     [Display(Name = "Project Title", Prompt = "Enter project name")]
-    [Required(ErrorMessage = "You must name the project.")]
+    [Required(ErrorMessage = "Required")]
     public string ProjectName { get; set; } = null!;
 
     [Display(Name = "Client", Prompt = "Select a client")]
-    [Required(ErrorMessage = "You must select a client.")]
+    [Required(ErrorMessage = "Required")]
     public int ClientId { get; set; }
 
     [Display(Name = "Description", Prompt = "Describe the aims of the project.")]
     public string? Description { get; set; }
 
     [Display(Name = "Start Date")]
-    [Required(ErrorMessage = "You need to select a start date.")]
+    [Required(ErrorMessage = "Required")]
     public DateOnly StartDate { get; set; }
 
     [Display(Name = "End Date")]
-    [Required(ErrorMessage = "You need to select an end date.")]
+    [Required(ErrorMessage = "Required")]
     public DateOnly EndDate { get; set; }
 
     public decimal? Budget { get; set; }
 
     [Display(Name = "Team members", Prompt = "Select one or more team members")]
-    [Required(ErrorMessage = "You must select at least one team member.")]
+    [Required(ErrorMessage = "Required")]
     public List<int> SelectedTeamMemberIds { get; set; } = [];
     // For handling multiple employee selections Claude AI
 

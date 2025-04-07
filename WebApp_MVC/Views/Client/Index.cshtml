@@ -1,0 +1,31 @@
+﻿@model ClientViewModel
+@{
+    ViewData["Title"] = "Clients";
+}
+@{
+    var addClientViewModel = ViewData["ClientFormViewModel"] as ClientFormViewModel;
+}
+
+
+
+<partial name="_AddClients" model="addClientViewModel" />
+<div class="projects-container">
+    <div class="side-by-side">
+        <h2>Clients</h2>
+        <button class="btn btn-add-new" data-modal="true" data-target="#addClientModal" asp-controller="Client" asp-action="AddClient">Add Client</button>
+    </div>
+
+    <div class="project-view">
+        @if (!Model.Clients.Any())
+        {
+            <h4>There are no clients to show.</h4>
+        }
+        else
+        {
+            @foreach (ClientEntity client in Model.Clients)
+            {
+                @await Html.PartialAsync("_ClientCard", client)
+            }
+        }
+    </div>
+</div>

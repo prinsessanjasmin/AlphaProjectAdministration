@@ -6,7 +6,9 @@
 
 <div class="popup-container signup-container">
     <h2 class="center">Create Account</h2>
-    <button class="btn btn-google">Sign Up with Google</button>
+    <div>
+        @await Html.PartialAsync("Partials/Components/_ExternalSignUp")
+    </div>
     <div class="divider">OR</div>
     <form id="signup-form" asp-action="SignUp" asp-controller="Auth" method="post" class="form" novalidate>
         <div class="horizontal-form">

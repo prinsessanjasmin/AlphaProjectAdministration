@@ -1,6 +1,9 @@
 ﻿@model ProjectEntity
+@{
+    var editProjectViewModel = ViewData["EditProjectViewModel"] as EditProjectViewModel;
+}
 
-<div class="project-card">
+<div class="card project-card">
     <div class="horizontal horizontal-project">
         <div class="horizontal horizontal-project">
             @if (!string.IsNullOrEmpty(@Model.ProjectImagePath))
@@ -16,7 +19,15 @@
                 <p class="p-light">@Model.Client?.ClientName</p>
             </div>
         </div>
-        <button id="btn-2-dots"></button>
+        <button type="button" data-modal="true" class="btn-2-dots" id="btn-2-dots"></button>
+        <div class="mini-modal" id="projectOptionsModal">
+            <div class="modal-content options-pop-up" id="projectOptionsForm">
+                <button type="button" data-controller="Project" data-action="EditProject" data-modal="true" data-target="#editProjectModal" data-id=@Model.ProjectId class="btn btn-options" id="btn-edit-project">Edit</button>
+                <div class="single-line"></div>
+                <button type="button" data-modal="true" data-target="#delete-modal" data-id="@Model.ProjectId" class="btn btn-options" id="btn-delete-project">Delete project</button>
+            </div>
+        </div>
+        
     </div>
     <div class="project-info vertical">
         <p>@Model.Description</p>

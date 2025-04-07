@@ -149,3 +149,8 @@ a {
     padding: .5rem 1rem; 
     border-radius: 8px;
 }
+
+.field.validation-error {
+    color: $clr-red;
+    font-size: 10px;
+}

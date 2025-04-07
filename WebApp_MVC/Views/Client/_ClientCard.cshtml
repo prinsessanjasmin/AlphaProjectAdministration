@@ -1,0 +1,24 @@
+﻿@model ClientEntity
+
+<div class="card client-card">
+	<div class="side-by-side">
+		<h6>@Model.ClientName</h6>
+		<button asp-controller="Client" asp-action="EditClient" data-modal="true" data-target="#editClientModal" data-project-id="@Model.Id" id="btn-2-dots"></button>
+	</div>
+	<div>
+        @if (Model.Projects != null && Model.Projects.Any())
+        {
+            <p>Current projects:</p>
+            <ul>
+            @foreach (ProjectEntity project in Model.Projects)
+            {
+                <li>project.ProjectName</li>
+            }
+            </ul>
+        }
+        else
+        {
+            <p class="small-text">No current projects.</p>
+        }
+	</div>
+</div>

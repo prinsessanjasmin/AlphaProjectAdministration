@@ -4,18 +4,24 @@
 }
 @{
     var addProjectViewModel = ViewData["AddProjectViewModel"] as AddProjectViewModel;
+    var editProjectViewModel = ViewData["EditProjectViewModel"] as EditProjectViewModel;
 }
 
 
-
 <partial name="_AddProject" model="addProjectViewModel" />
+<div id="delete-modal" class="modal">
+    <div class="modal-content"></div>
+</div>
+<div id="editProjectModal" class="modal">
+    <div class="modal-content add-project-container"></div>
+</div>
+
+
 <div class="projects-container">
     <div class="side-by-side">
         <h2>Projects</h2>
         <button class="btn btn-add-new" data-modal="true" data-target="#addProjectModal" asp-controller="Project" asp-action="AddProject">Add Project</button>
     </div>
-
-   
 
     <div class="project-categories">
         <a>All [9]</a>

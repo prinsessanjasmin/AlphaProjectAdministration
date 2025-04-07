@@ -1,10 +1,14 @@
 .form {
     width: 400px;
 
+    .form-content {
+        display: flex;
+        flex-direction: column;
+    }
 
     input-image-box {
-        height: 150;
-        width: 150;
+        height: 150px;
+        width: 150px;
         border: 1px $clr-grey-400 dashed;
         border-radius: 16px;
         margin: 1rem;
@@ -15,44 +19,53 @@
         flex-direction: column;
         gap: .5rem;
         width: 100%;
-        height: 75px;
-        margin: 1rem 0;
+        margin: .5rem 0;
 
         label {
             text-align: left;
             font-weight: 600;
         }
 
-        .input-box {
+        .input-group {
+            position: relative;
+            width: 100%;
             height: 48px;
-            border-radius: 16px;
-            border: 1px solid $clr-border-300;
-            padding: .5rem;
+
+
+            input {
+                border: none;
+                width: 100%;
+                height: 100%;
+                border-radius: 16px;
+                border: 1px solid $clr-border-300;
+                padding: 0 1rem;
+                font-family: Nunito;
+                font-weight: 400;
+                font-size: 15px;
+            }
+
+            select {
+                border-radius: 16px;
+                border: 1px solid $clr-border-300;
+                width: 100%;
+                height: 100%;
+                font-family: Nunito;
+                font-weight: 400;
+                font-size: 15px;
+                padding: 0 1rem;
+            }
+
+            input::placeholder {
+                color: $clr-body-light;
+                font-family: Nunito;
+                font-weight: 400;
+                font-size: 15px;
+            }
         }
 
-        input::placeholder {
-            color: $clr-body-light;
-            font-family: Nunito;
-            font-weight: 400;
-            font-size: 15px;
-        }
-    }
-
-    .long-form-input {
-        height: 200px;
-
-        .rich-text {
-            min-height: 173px;
-            border-radius: 16px;
-            border: 1px solid $clr-border-300;
-            padding: .5rem;
-        }
-
-        textarea::placeholder {
-            color: $clr-body-light;
-            font-family: Nunito;
-            font-weight: 400;
-            font-size: 15px;
+        .long-form-input {
+            height: 200px;
+            width: 100%;
         }
     }
 
@@ -82,11 +95,36 @@
 }
 
 .form-project {
-    width: 490px; 
+    width: 490px;
+
+    header h2 {
+        align-self: flex-start;
+        padding: 1rem;
+    }
 
     .form-input {
-        margin-bottom: 1.5rem; 
+        margin-bottom: 1.5rem;
     }
+}
+
+.input-validation-error {
+    border: 1px $clr-red;
+}
+
+.field-validation-error {
+    color: $clr-red; 
+    font-size: 10px; 
+    position: absolute; 
+    top: 4px; 
+    right: 1px; 
+    background-color: $clr-red-opacity; 
+    border-radius: 16px; 
+    padding: .4rem 1rem;
+    text-align: right; 
+    display: flex; 
+    gap: .5rem; 
+    align-items: center; 
+    z-index: 1; 
 }
 
 #login-form {
@@ -94,3 +132,48 @@
     flex-direction: column;
     gap: .5rem;
 }
+
+#google-login {
+    display: flex; 
+    flex-direction: column; 
+}
+
+.wysiwyg {
+    position: relative; 
+    height: 173px; 
+    width: 100%;
+}
+
+#wysiwyg-editor {
+    width: 100%;
+    min-height: 173px;
+    font-size: 15px;
+    font-weight: 400;
+    font-family: Nunito;
+    color: $clr-heading;
+    border: none;
+    border-radius: 16px;
+    z-index: 0;
+    outline: none;
+}
+
+.ql-editor {
+    border-radius: 16px;
+    min-height: 173px;
+    border: 1px solid $clr-border-300;
+}
+
+#wysiwyg-toolbar {
+    position: absolute;
+    box-sizing: border-box;
+    min-height: 20px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px solid $clr-border-300;
+    border-radius: 0 0 16px 16px;
+    color: $clr-heading;
+    background-color: $clr-surface; 
+
+}
+

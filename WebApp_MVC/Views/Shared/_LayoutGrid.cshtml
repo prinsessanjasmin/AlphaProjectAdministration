@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Alpha</title>
     <script type="importmap"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <link rel="stylesheet" href="~/css/SCSS/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApp_MVC.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 </head>
 <body>
     <section class="page-projects">
@@ -20,7 +23,6 @@
             @await Html.PartialAsync("Partials/Components/_Footer")
         </div>
     </section>
-
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

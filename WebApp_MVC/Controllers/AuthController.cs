@@ -110,4 +110,71 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
+
+    [HttpPost]
+    public IActionResult ExternalSignIn(string provider, string returnUrl = null!)
+    {
+        if (string.IsNullOrEmpty(provider))
+        {
+            ModelState.AddModelError("", "Invalid provider");
+            return View("SignIn");
+        }
+
+        var redirectUrl = Url.Action("ExternalSignInCallback", "Auth", new { returnUrl })!;
+        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+        return Challenge(properties, provider);
+    }
+
+    public async Task<IActionResult> ExternalSignInCallback(string returnUrl = null!, string remoteError = null!)
+    {
+        returnUrl ??= Url.Content("~/");
+        if (!string.IsNullOrEmpty(remoteError))
+        {
+            ModelState.AddModelError("", $"Errror from external provider: {remoteError}");
+            return View("SignIn"); 
+        }
+
+        var externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
+        if (externalLoginInfo == null)
+        {
+            return RedirectToAction("SignIn");
+        }
+
+        var signInResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+        if (signInResult.Succeeded)
+        {
+            return LocalRedirect(returnUrl);
+        }
+        else
+        {
+            string email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email)!;
+            string userName = $"ext_{externalLoginInfo.LoginProvider.ToLower()}_{email}";
+            string firstName = string.Empty;
+            string lastName = string.Empty;
+
+            try
+            {
+                firstName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.GivenName)!;
+                lastName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Surname)!;
+            }
+            catch {}
+
+            var user = new ApplicationUser { UserName = userName, Email = email, FirstName = firstName, LastName = lastName };
+            var identityResult = await _userManager.CreateAsync(user);
+            if (identityResult.Succeeded) 
+            {
+                await _userManager.AddLoginAsync(user, externalLoginInfo); 
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return LocalRedirect(returnUrl);
+            }
+
+            foreach(var error in identityResult.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            return View("SignIn");
+        }
+    }
 }

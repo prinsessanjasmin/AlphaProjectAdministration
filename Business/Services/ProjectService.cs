@@ -98,8 +98,8 @@ public class ProjectService(IProjectRepository projectRepository) : IProjectServ
 
     public async Task<IResult> GetProjectsByStartdate(DateTime startDate)
     {
-        IEnumerable<ProjectEntity> projects = new List<ProjectEntity>();
-        List<ProjectEntity> matchingProjects = new List<ProjectEntity>();
+        IEnumerable<ProjectEntity> projects = [];
+        List<ProjectEntity> matchingProjects = new();
         try
         {
             projects = await _projectRepository.GetAsync();
