@@ -1,15 +1,16 @@
 .upload-image {
-    height: 150px; 
+    height: 150px;
     width: 150px;
-    justify-self: center;
+    align-self: center;
     border-radius: 25%;
-    border: 2px $clr-grey-400 dashed; 
+    border: 2px $clr-grey-400 dashed;
+    margin: 1rem;
 }
 
 .edit-image {
-    height: 150px; 
+    height: 150px;
     width: 150px;
-    justify-self: center;
+    align-self: center;
     border-radius: 25%;
-    border: 2px $clr-grey-400 dashed; 
+    border: 2px $clr-grey-400 dashed;
 }

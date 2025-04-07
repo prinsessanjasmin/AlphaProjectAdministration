@@ -1,0 +1,9 @@
+.card {
+    display: flex; 
+    flex-direction: column;
+    background-color: $clr-surface;
+    border: none; 
+    border-radius: 16px;
+    padding: 1.5rem; 
+    box-shadow: 0 10px 10px $shadow-drop-1;
+}

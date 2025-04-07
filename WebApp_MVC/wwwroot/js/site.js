@@ -7,6 +7,9 @@
             const modalTarget = button.getAttribute('data-target')
             const modal = document.querySelector(modalTarget)
 
+            document.querySelector('.modal').scrollTop = 0;
+            document.querySelector('.modal-content').scrollTop = 0;
+
             if (!modal) return;
 
             // Get the ID if present (for edit and delete modals)

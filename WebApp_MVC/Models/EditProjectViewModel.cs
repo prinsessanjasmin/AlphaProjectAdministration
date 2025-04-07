@@ -64,6 +64,14 @@ public class EditProjectViewModel : IProjectViewModel
             };
     }
 
+    public EditProjectViewModel()
+    {
+        // Suggestion from Claude AI 
+        MemberOptions = new List<SelectListItem>();
+        ClientOptions = new List<SelectListItem>();
+        SelectedTeamMemberIds = new List<int>();
+    }
+
     public EditProjectViewModel(ProjectEntity project)
     {
         ProjectId = project.ProjectId;

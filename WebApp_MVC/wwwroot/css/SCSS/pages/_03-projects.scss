@@ -1,4 +1,11 @@
-﻿.projects-container {
+﻿.page-projects {
+    background-color: $clr-background;
+    min-width: 100vw;
+    min-height: 100vh;
+}
+
+
+.projects-container {
     display: flex; 
     flex-direction: column; 
     padding: 2rem; 
@@ -28,4 +35,31 @@
         color: $clr-body-light; 
         cursor: pointer; 
     }
+}
+
+.add-project-container {
+    width: 550px;
+    max-height: 90vh;
+    padding: 1rem;
+}
+
+.form-project {
+    width: 490px;
+
+    header h2 {
+        align-self: flex-start;
+        padding: 1rem;
+    }
+
+    .form-input {
+        margin-bottom: 1.5rem;
+    }
+}
+
+#budget-input {
+    padding-left: 2rem;
+    background-image: url("/ProjectImages/Icons/Dollar-light.svg");
+    background-position: 10px 13px;
+    background-repeat: no-repeat;
+    background-size: 18px;
 }

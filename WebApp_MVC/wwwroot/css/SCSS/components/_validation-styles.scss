@@ -1,0 +1,19 @@
+.input-validation-error {
+    border: 1px $clr-red;
+}
+
+.field-validation-error {
+    color: $clr-red; 
+    font-size: 10px; 
+    position: absolute; 
+    top: 4px; 
+    right: 1px; 
+    background-color: $clr-red-opacity; 
+    border-radius: 16px; 
+    padding: .4rem 1rem;
+    text-align: right; 
+    display: flex; 
+    gap: .5rem; 
+    align-items: center; 
+    z-index: 1; 
+}

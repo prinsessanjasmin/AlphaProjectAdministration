@@ -145,15 +145,15 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     {
         if (!ModelState.IsValid)
         {
-            var errors = ModelState
-                .Where(x => x.Value?.Errors.Count > 0)
-                .ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
-                .ToList()
-                );
+            //var errors = ModelState
+            //    .Where(x => x.Value?.Errors.Count > 0)
+            //    .ToDictionary(
+            //    kvp => kvp.Key,
+            //    kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
+            //    .ToList()
+            //    );
 
-            return BadRequest(new { success = false, errors });
+            return View(model);
         }
 
         ProjectDto projectDto = model;
