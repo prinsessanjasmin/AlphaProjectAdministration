@@ -7,17 +7,20 @@ using WebApp_MVC.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using WebApp_MVC.Models;
+using Data.Contexts;
+using System.Text.Json;
 
 namespace WebApp_MVC.Controllers;
 
 //[Route("projects")]
-public class ProjectController(IEmployeeService employeeService, IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment) : Controller
+public class ProjectController(IEmployeeService employeeService, IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext) : Controller
 {
 
     private readonly IEmployeeService _employeeService = employeeService;
     private readonly IClientService _clientService = clientService;
     private readonly IProjectService _projectService = projectService;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
+    private readonly DataContext _dataContext = dataContext;
 
 
 
@@ -54,6 +57,8 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             return PartialView("_AddProject", viewModel);
         }
 
+
+
         // Fallback if ViewData is null
         var fallbackModel = new AddProjectViewModel();
         await PopulateClientsAsync(fallbackModel);
@@ -67,18 +72,26 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     [HttpPost]
     public async Task<IActionResult> AddProject(AddProjectViewModel form)
     {
+        await PopulateClientsAsync(form);
+
         if (!ModelState.IsValid)
         {
-            //var errors = ModelState
-            //    .Where(x => x.Value?.Errors.Count > 0)
-            //    .ToDictionary(
-            //    kvp => kvp.Key,
-            //    kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
-            //    .ToList()
-            //    );
+            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
+            {
+                var errors = ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
+                .ToList()
+                );
 
-            //return BadRequest(new { success = false, errors });
-            return View(form);
+                return BadRequest(new { success = false, errors });
+            }
+            else
+            {
+                return View("_AddProject", form);
+            } 
         }
 
         ProjectDto projectDto = form;
@@ -102,16 +115,44 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             projectDto.ProjectImagePath = "/Images/Uploads/ProjectImages/" + uniqueFileName;
         }
 
+        if (string.IsNullOrEmpty(form.SelectedTeamMemberIds))
+        {
+            try
+            {
+                var memberIds = JsonSerializer.Deserialize<List<int>>(form.SelectedTeamMemberIds);
+                projectDto.SelectedTeamMemberIds = memberIds;
+            }
+            catch (JsonException ex)
+            {
+                ModelState.AddModelError("SelectedTeamMemberIds", "Invalid team member selection");
+                return PartialView("_AddProject", form); 
+            }
+        }
+
         var result = await _projectService.CreateProject(projectDto);
 
         if (result.Success)
         {
-            return RedirectToAction("Index", "Project");
+            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
+            {
+                return Ok(new { success = true, message = "Project created successfully" });
+            }
+            else
+            {
+                return RedirectToAction("Index", "Project");
+            }
         }
         else
         {
-            ViewBag.ErrorMessage("Something went wrong.");
-            return PartialView("_AddProject", form);
+            ModelState.AddModelError("", "Something went wrong when creating the project");
+            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
+            {
+                return BadRequest(new { success = false, message = "Failed to create project" });
+            }
+            else
+            {
+                return PartialView("_AddProject", "Project");
+            }
         }
     }
 
@@ -128,7 +169,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
 
             var viewModel = new EditProjectViewModel(project);
 
-            await PopulateMembersAsync(viewModel);
+            //await PopulateMembersAsync(viewModel);
             await PopulateClientsAsync(viewModel);
 
             return PartialView("_EditProject", viewModel);
@@ -145,15 +186,15 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     {
         if (!ModelState.IsValid)
         {
-            //var errors = ModelState
-            //    .Where(x => x.Value?.Errors.Count > 0)
-            //    .ToDictionary(
-            //    kvp => kvp.Key,
-            //    kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
-            //    .ToList()
-            //    );
+            var errors = ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
+                .ToList()
+                );
 
-            return View(model);
+            return PartialView("_EditProject", model);
         }
 
         ProjectDto projectDto = model;
@@ -216,23 +257,30 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
         }
     }
 
-    public async Task PopulateMembersAsync(IProjectViewModel viewModel)
+    public async Task PopulateMembersAsync(AddProjectViewModel viewModel, int? projectId = null)
     {
-        var result = await _employeeService.GetAllEmployees();
-        var employees = new List<EmployeeEntity>();
-
-        if (result.Success)
+        if (projectId.HasValue)
         {
-            var employeeResult = result as Result<IEnumerable<EmployeeEntity>>;
-            employees = employeeResult?.Data?.ToList() ?? [];
-        }
+            var project = await _projectService.GetProjectById(projectId.Value);
+            IResult<ProjectEntity>? projectResult = project as IResult<ProjectEntity>;
+            if (projectResult != null && projectResult?.Data?.TeamMembers?.Count < 0 == true)
+            {
+                viewModel.PreselectedTeamMembers = projectResult.Data.TeamMembers.Select(tm => new TeamMemberDto
+                {
+                    Id = tm.EmployeeId.ToString(),
+                    MemberFullName = (tm.Employee.FirstName + tm.Employee.LastName).ToString(),
+                    ProfileImage = tm.Employee.ProfileImagePath ?? "Avatar.svg"
+                }).ToList();
 
-        viewModel.MemberOptions = [];
-        foreach (EmployeeEntity member in employees)
+                var teamMemberIds = projectResult.Data.TeamMembers.Select(tm => tm.EmployeeId).ToList();
+                viewModel.SelectedTeamMemberIds = JsonSerializer.Serialize(teamMemberIds);
+            }
+        }
+        else
         {
-            viewModel.MemberOptions.Add(new SelectListItem { Text = $"{member.FirstName} {member.LastName}", Value = member.Id.ToString() });
+            viewModel.PreselectedTeamMembers = [];
+            viewModel.SelectedTeamMemberIds = "[]"; 
         }
-
     }
 
     public async Task PopulateClientsAsync(IProjectViewModel viewModel)
@@ -246,7 +294,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             clients = clientResult?.Data?.ToList() ?? [];
         }
 
-        viewModel.ClientOptions = new List<SelectListItem>();
+        viewModel.ClientOptions = [];
         foreach (ClientEntity client in clients)
         {
             viewModel.ClientOptions.Add(new SelectListItem { Text = client.ClientName, Value = client.Id.ToString() });

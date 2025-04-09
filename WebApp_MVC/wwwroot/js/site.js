@@ -7,8 +7,13 @@
             const modalTarget = button.getAttribute('data-target')
             const modal = document.querySelector(modalTarget)
 
-            document.querySelector('.modal').scrollTop = 0;
-            document.querySelector('.modal-content').scrollTop = 0;
+            if (document.querySelector('.modal')) {
+                document.querySelector('.modal').scrollTop = 0;
+            }
+            if (document.querySelector('.modal-content')) {
+                document.querySelector('.modal-content').scrollTop = 0;
+            }
+            if (!modal) return;
 
             if (!modal) return;
 
@@ -52,7 +57,6 @@
 
                     const data = await response.text();
                     modal.querySelector('.modal-content').innerHTML = data;
-
                 }
                 catch (error) {
                     console.error("Error loading modal content:", error);

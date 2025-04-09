@@ -9,6 +9,7 @@ public interface IEmployeeService
     Task<IResult> GetAllEmployees();
     Task<IResult> GetEmployeeById(int id);
     Task<IResult> GetEmployeeByEmail(string email);
+    Task<IResult> GetEmployeesBySearchTerm(string term);
     Task<IResult> UpdateEmployee(int id, EmployeeEntity updatedEmployee);
     Task<IResult> DeleteEmployee(int id);
 }

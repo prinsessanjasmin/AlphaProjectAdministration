@@ -4,7 +4,7 @@
 }
 
 <div id="editProjectForm">
-    <form class="form form-project" method="post" asp-action="EditProject" asp-controller="Project" novalidate>
+    <form class="form form-project" method="post" asp-action="EditProject" asp-controller="Project" enctype="multipart/form-data" novalidate>
         <header class="side-by-side">
             <h2>Edit Project</h2>
             <button class="btn-close" type="button" data-close="true"></button>
@@ -36,7 +36,7 @@
             <div class="form-input long-form-input">
                 <label asp-for="Description"></label>
                 <div class="wysiwyg">
-                    <textarea asp-for="Description" class="hidden hidden-textarea"></textarea>
+                    <textarea asp-for="Description" class="hidden hidden-textarea">@Model.Description</textarea>
                     <div id="wysiwyg-editor"></div>
                     <div id="wysiwyg-toolbar">
                         <span class="ql-formats">

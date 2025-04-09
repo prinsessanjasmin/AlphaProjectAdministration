@@ -31,3 +31,12 @@ Client Controller
 - Edit Client Partial 
 
 
+<div class="form-input">
+    <label asp-for="SelectedTeamMemberIds">Team members</label>
+    <div class="input-group">
+        <select data-val="true" asp-for="SelectedTeamMemberIds" asp-items="Model.MemberOptions" multiple>
+            <option value="">-- Select Team Member --</option>
+        </select>
+        <span asp-validation-for="SelectedTeamMemberIds"></span>
+    </div>
+</div>

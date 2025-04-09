@@ -6,39 +6,39 @@ namespace WebApp_MVC.Models;
 
 public class SignUpViewModel
 {
-    [Display(Name = "First Name", Prompt = "Enter your first name.")]
-    [Required(ErrorMessage = "You must enter your first name.")]
+    [Display(Name = "First Name", Prompt = "Your first name")]
+    [Required(ErrorMessage = "Required")]
     [PersonalData]
     public string FirstName { get; set; } = null!;
 
     [PersonalData]
-    [Display(Name = "Last Name", Prompt = "Enter your last name.")]
-    [Required(ErrorMessage = "You must enter your last name.")]
+    [Display(Name = "Last Name", Prompt = "Your last name")]
+    [Required(ErrorMessage = "Required")]
     public string LastName { get; set; } = null!;
 
-    [Display(Name = "Email Address", Prompt = "Eg. nn@domain.xx ")]
+    [Display(Name = "Email Address", Prompt = "Your email address")]
     [DataType(DataType.EmailAddress)]
-    [Required(ErrorMessage = "You must enter your email address.")]
-    [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "The email address is not in a valid format.")]
+    [Required(ErrorMessage = "Required")]
+    [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email")]
     public string Email { get; set; } = null!;
 
-    [Display(Name = "Password", Prompt = "Minimum 8 characters, including at least one letter, one number and one special character.")]
+    [Display(Name = "Password", Prompt = "Enter a safe password")]
     [DataType(DataType.Password)]
-    [Required(ErrorMessage = "You must choose a password.")]
-    [RegularExpression("^(?=.*[A-ZÅÄÖa-zåäö])(?=.*\\d)(?=.*[!@#$%^&*()_\\-+={}[\\]\\\\|:;'\\\"<>,.?/~`]).{8,}$", ErrorMessage = "Your password must be at least 8 characters long and contain both letters, numbers and a special character.")]
+    [Required(ErrorMessage = "Required")]
+    [RegularExpression("^(?=.*[A-ZÅÄÖa-zåäö])(?=.*\\d)(?=.*[!@#$%^&*()_\\-+={}[\\]\\\\|:;'\\\"<>,.?/~`]).{8,}$", ErrorMessage = "Invalid password")]
     public string Password { get; set; } = null!;
 
-    [Display(Name = "Confirm Password", Prompt = "Repeat your password.")]
+    [Display(Name = "Confirm Password", Prompt = "Repeat your password")]
     [DataType(DataType.Password)]
-    [Required(ErrorMessage = "You must confirm your password.")]
-    [Compare(nameof(Password), ErrorMessage = "The passwords do not match.")]
+    [Required(ErrorMessage = "Required")]
+    [Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
     public string ConfirmPassword { get; set; } = null!;
 
-    [Display(Name = "Terms and conditions", Prompt = "I accept the terms and coditions.")]
-    [Range(typeof(bool), "true", "true", ErrorMessage = "You must confirm that you accept the terms and conditions.")]
+    [Display(Name = "Terms and conditions", Prompt = "I accept the terms and coditions")]
+    [Range(typeof(bool), "true", "true", ErrorMessage = "Required")]
     public bool AcceptTerms { get; set; }
 
-    [Required(ErrorMessage = "You must set a role.")]
+    [Required(ErrorMessage = "Required")]
     public string Role { get; set; } = null!;
 
     public static implicit operator AppUserDto(SignUpViewModel model)

@@ -1,6 +1,11 @@
 .form {
     width: 490px;
 
+    button {
+        justify-self: center; 
+        align-self: center; 
+    }
+
     .form-content {
         display: flex;
         flex-direction: column;

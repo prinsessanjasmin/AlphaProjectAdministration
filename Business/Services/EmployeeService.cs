@@ -99,6 +99,29 @@ public class EmployeeService(IEmployeeRepository employeeRepository, IAddressSer
         }
     }
 
+    public async Task<IResult> GetEmployeesBySearchTerm(string term)
+    {
+        if (string.IsNullOrEmpty(term))
+        {
+            return Result<List<EmployeeEntity>>.Error("Search term cannot be empty.");
+        }
+
+        try
+        {
+            var employees = await _employeeRepository.SearchByTermAsync(term);
+            if (employees == null ||!employees.Any())
+            {
+                return Result.NotFound("No employees match your search."); 
+            }
+
+            return Result<IEnumerable<EmployeeEntity>>.Ok(employees);
+        }
+        catch
+        {
+            return Result.Error("Something went wrong");
+        }
+    }
+
     public async Task<IResult> UpdateEmployee(int id, EmployeeEntity updatedEmployee)
     {
         await _employeeRepository.BeginTransactionAsync();

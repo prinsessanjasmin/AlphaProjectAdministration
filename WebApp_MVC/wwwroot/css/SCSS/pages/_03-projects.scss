@@ -4,7 +4,6 @@
     min-height: 100vh;
 }
 
-
 .projects-container {
     display: flex; 
     flex-direction: column; 
@@ -62,4 +61,37 @@
     background-position: 10px 13px;
     background-repeat: no-repeat;
     background-size: 18px;
+}
+
+.member-search-results {
+    display: none; 
+    background-color: $clr-surface;
+    border: 1px solid $clr-border-300;
+    border-top: none; 
+    border-radius: 0 0 16px 16px; 
+    max-height: 200px; 
+    width: 100%; 
+    position: absolute;
+    top: 85%; 
+    left: 0; 
+    z-index: 10; 
+}
+
+.search-item {
+    padding: .5rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 14px;
+
+    &:hover {
+        background-color: $clr-accent-opacity;
+        border-radius: 16px;
+    }
+
+    &.active {
+        background-color: $clr-accent-opacity;
+        border-radius: 16px;
+    }
 }

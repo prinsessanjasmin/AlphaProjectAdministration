@@ -222,3 +222,21 @@
         background-color: $clr-grey-100;
     }
 }
+
+.btn-remove {
+    @include button;
+    border: none;
+    background-color: transparent;
+    color: $clr-grey-200;
+    transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out, color 0.1s ease-in-out;
+    //Font awesome ?
+
+    &:hover {
+        background-color: $clr-grey-400;
+    }
+}
+
+#google-login {
+    display: flex;
+    flex-direction: column;
+}

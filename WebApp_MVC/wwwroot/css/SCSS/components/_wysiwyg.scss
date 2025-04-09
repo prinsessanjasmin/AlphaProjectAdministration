@@ -11,7 +11,7 @@
     font-weight: 400;
     font-family: Nunito;
     color: $clr-heading;
-    border: none;
+    border: 1px solid $clr-border-300;
     border-radius: 16px;
     z-index: 0;
     outline: none;
@@ -20,7 +20,6 @@
 .ql-editor {
     border-radius: 16px;
     min-height: 173px;
-    border: 1px solid $clr-border-300;
 }
 
 #wysiwyg-toolbar {

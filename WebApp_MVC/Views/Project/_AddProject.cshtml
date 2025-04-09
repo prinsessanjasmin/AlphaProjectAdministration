@@ -77,10 +77,12 @@
                 </div>
                 <div class="form-input">
                     <label asp-for="SelectedTeamMemberIds">Team members</label>
-                    <div class="input-group">
-                        <select data-val="true" asp-for="SelectedTeamMemberIds" asp-items="Model.MemberOptions" multiple>
-                            <option value="">-- Select Team Member --</option>
-                        </select>
+                    <div class="input-group member-selector" id="tagged-members">
+                        <input type="text" id="input-member-search" placeholder="Add team member(s)..." />
+                        <input type="hidden" asp-for="SelectedTeamMemberIds" id="selectedTeamMemberIds" 
+                        data-val="true" data-val-required="Required" />
+                        @* <label for="search-icon" class="search-icon"></label> *@
+                        <div id="member-search-results" class="member-search-results"></div>
                         <span asp-validation-for="SelectedTeamMemberIds"></span>
                     </div>
                 </div>
@@ -100,3 +102,24 @@
 </div>
 @await Html.PartialAsync("Partials/Components/_ValidationScript")
 @await Html.PartialAsync("Partials/Components/_QuillScript")
+
+<script>
+
+    console.log("Member selector script loaded successfully");
+     document.addEventListener('DOMContentLoaded', function() {
+         initMemberSelector({
+            containerId: 'tagged-members',
+            inputId: 'input-member-search',
+            resultsId: 'member-search-results',
+            selectedIds: 'selectedTeamMemberIds',
+            searchUrl: '@Url.Action("SearchMembers", "Employee")',
+            displayProperty: 'memberFullName',
+            imageProperty: 'profileImage',
+            memberClass: 'member',
+            avatarFolder: '/Images/Uploads/ProfileImages/',
+            emptyMessage: 'No team member found.',
+            preselected: @Html.Raw(Json.Serialize(Model.PreselectedTeamMembers ?? new List<TeamMemberDto>()))
+        });
+     });
+
+</script>

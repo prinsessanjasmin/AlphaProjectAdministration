@@ -10,17 +10,14 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Reflection.Metadata;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Components;
+using System.Text.Json;
 
 namespace WebApp_MVC.Models;
 
 
 public class AddProjectViewModel() : IProjectViewModel
 {
-    public List<SelectListItem> MemberOptions { get; set; } = [];
-    public List<SelectListItem> ClientOptions { get; set; } = [];
-
-
-    [Display(Name = "Project Image", Prompt = "Upload a project image")]
+        [Display(Name = "Project Image", Prompt = "Upload a project image")]
     [DataType(DataType.Upload)]
     public IFormFile? ProjectImage { get; set; }
 
@@ -45,26 +42,34 @@ public class AddProjectViewModel() : IProjectViewModel
 
     public decimal? Budget { get; set; }
 
-    [Display(Name = "Team members", Prompt = "Select one or more team members")]
-    [Required(ErrorMessage = "Required")]
-    public List<int> SelectedTeamMemberIds { get; set; } = [];
+    public List<SelectListItem> ClientOptions { get; set; } = [];
+
+    [Display(Name = "Team members", Prompt = "Select team member(s)...")]
+    [Required(ErrorMessage ="Required")]
+    public string SelectedTeamMemberIds { get; set; } = null!;
     // For handling multiple employee selections Claude AI
+
+    public List<TeamMemberDto> PreselectedTeamMembers { get; set; } = [];
+  
+
 
     public static implicit operator ProjectDto(AddProjectViewModel model)
     {
-        return model == null
-            ? null!
-            : new ProjectDto
-            {
-                ProjectName = model.ProjectName,
-                ClientId = model.ClientId,
-                Description = model.Description,
-                StartDate = model.StartDate,
-                EndDate = model.EndDate,
-                Budget = model.Budget,
-                StatusId = 1,
-                SelectedTeamMemberIds = model.SelectedTeamMemberIds,
-            };
+        var projectDto = new ProjectDto
+        {
+            ProjectName = model.ProjectName,
+            ClientId = model.ClientId,
+            Description = model.Description,
+            StartDate = model.StartDate,
+            EndDate = model.EndDate,
+            Budget = model.Budget,
+            StatusId = 1,
+            SelectedTeamMemberIds = string.IsNullOrEmpty(model.SelectedTeamMemberIds) 
+            ? [] 
+            : JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds)
+        };
+
+        return projectDto;    
     }
 }
 

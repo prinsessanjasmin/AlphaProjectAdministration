@@ -2,6 +2,7 @@
 using Data.Entities;
 using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Linq.Expressions;
 
 namespace Data.Repositories;
@@ -26,5 +27,30 @@ public class EmployeeRepository(DataContext context) : BaseRepository<EmployeeEn
             .FirstOrDefaultAsync(expression);
 
         return employee ?? new EmployeeEntity();
+    }
+
+    public async Task<IEnumerable<EmployeeEntity>> SearchByTermAsync(string searchTerm)
+    {
+        if (string.IsNullOrEmpty(searchTerm))
+        {
+            return Enumerable.Empty<EmployeeEntity>();
+        }
+
+        searchTerm = searchTerm.Trim().ToLower();
+
+        try
+        {
+            return await _context.Employees
+                .Where(e => e.FirstName.ToLower().Contains(searchTerm) ||
+                    e.LastName.ToLower().Contains(searchTerm) ||
+                    (e.FirstName + " " + e.LastName).ToLower().Contains(searchTerm) ||
+                    e.Email.ToLower().Contains(searchTerm))
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error searching employees: {ex.Message}");
+            return Enumerable.Empty<EmployeeEntity>();
+        }
     }
 }
