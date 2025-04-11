@@ -11,13 +11,14 @@ using System.Reflection.Metadata;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Components;
 using System.Text.Json;
+using Microsoft.Identity.Client;
 
 namespace WebApp_MVC.Models;
 
 
 public class AddProjectViewModel() : IProjectViewModel
 {
-        [Display(Name = "Project Image", Prompt = "Upload a project image")]
+    [Display(Name = "Project Image", Prompt = "Upload a project image")]
     [DataType(DataType.Upload)]
     public IFormFile? ProjectImage { get; set; }
 
@@ -34,11 +35,11 @@ public class AddProjectViewModel() : IProjectViewModel
 
     [Display(Name = "Start Date")]
     [Required(ErrorMessage = "Required")]
-    public DateOnly StartDate { get; set; }
+    public DateOnly StartDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
 
     [Display(Name = "End Date")]
     [Required(ErrorMessage = "Required")]
-    public DateOnly EndDate { get; set; }
+    public DateOnly EndDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
 
     public decimal? Budget { get; set; }
 
@@ -65,8 +66,8 @@ public class AddProjectViewModel() : IProjectViewModel
             Budget = model.Budget,
             StatusId = 1,
             SelectedTeamMemberIds = string.IsNullOrEmpty(model.SelectedTeamMemberIds) 
-            ? [] 
-            : JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds)
+                ? [] 
+                : JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds)
         };
 
         return projectDto;    

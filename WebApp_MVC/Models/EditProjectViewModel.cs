@@ -2,17 +2,13 @@
 using Data.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using WebApp_MVC.Interfaces;
 
 namespace WebApp_MVC.Models;
 
 public class EditProjectViewModel : IProjectViewModel
 {
-
-    public List<SelectListItem> MemberOptions { get; set; } = new();
-
-    public List<SelectListItem> ClientOptions { get; set; } = new();
-
     public int ProjectId { get; set; }
 
     [Display(Name = "Project Image", Prompt = "Update project image")]
@@ -22,30 +18,34 @@ public class EditProjectViewModel : IProjectViewModel
     public string? ProjectImagePath { get; set; } 
 
     [Display(Name = "Project Title", Prompt = "Enter project name")]
-    [Required(ErrorMessage = "You must name the project.")]
+    [Required(ErrorMessage = "Required")]
     public string ProjectName { get; set; } 
 
     [Display(Name = "Client", Prompt = "Select a client")]
-    [Required(ErrorMessage = "You must select a client.")]
+    [Required(ErrorMessage = "Required")]
     public int ClientId { get; set; } 
 
-    [Display(Name = "Description", Prompt = "Describe the aims of the project.")]
+    [Display(Name = "Description", Prompt = "Required")]
     public string? Description { get; set; } 
 
     [Display(Name = "Start Date")]
-    [Required(ErrorMessage = "You need to select a start date.")]
+    [Required(ErrorMessage = "Required")]
     public DateOnly StartDate { get; set; }
 
     [Display(Name = "End Date")]
-    [Required(ErrorMessage = "You need to select an end date.")]
+    [Required(ErrorMessage = "Required")]
     public DateOnly EndDate { get; set; }
 
     public decimal? Budget { get; set; }
 
-    [Display(Name = "Team members", Prompt = "Select one or more team members")]
-    [Required(ErrorMessage = "You must select at least one team member.")]
-    public List<int> SelectedTeamMemberIds { get; set; } = [];
+    public List<SelectListItem> ClientOptions { get; set; } = new();
+
+    [Display(Name = "Team members", Prompt = "Select team member(s)...")]
+    [Required(ErrorMessage = "Required")]
+    public string SelectedTeamMemberIds { get; set; } = null!;
     // For handling multiple employee selections Claude AI
+
+    public List<TeamMemberDto> PreselectedTeamMembers { get; set; } = [];
 
     public static implicit operator ProjectDto(EditProjectViewModel model)
     {
@@ -60,16 +60,10 @@ public class EditProjectViewModel : IProjectViewModel
                 EndDate = model.EndDate,
                 Budget = model.Budget,
                 StatusId = 1,
-                SelectedTeamMemberIds = model.SelectedTeamMemberIds,
+                SelectedTeamMemberIds = string.IsNullOrEmpty(model.SelectedTeamMemberIds)
+                    ? []
+                    : JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds)
             };
-    }
-
-    public EditProjectViewModel()
-    {
-        // Suggestion from Claude AI 
-        MemberOptions = new List<SelectListItem>();
-        ClientOptions = new List<SelectListItem>();
-        SelectedTeamMemberIds = new List<int>();
     }
 
     public EditProjectViewModel(ProjectEntity project)
@@ -82,6 +76,15 @@ public class EditProjectViewModel : IProjectViewModel
         EndDate = project.EndDate;
         Budget = project.Budget;
         ProjectImagePath = project.ProjectImagePath;
-        SelectedTeamMemberIds = project.TeamMembers.Select(tm => tm.EmployeeId).ToList();
+
+        var teamMemberIds = project.TeamMembers?.Select(tm => tm.EmployeeId).ToList() ?? new List<int>();
+        SelectedTeamMemberIds = JsonSerializer.Serialize(teamMemberIds);
+    }
+
+    public EditProjectViewModel()
+    {
+        // Suggestion from Claude AI 
+        ClientOptions = new List<SelectListItem>();
+
     }
 }

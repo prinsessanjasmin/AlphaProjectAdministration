@@ -1,5 +1,7 @@
-﻿//This js is created from teacher Hans Mattin-Lasseis video instructions, then I got help from Claude AI to fix some issues 
-//because of how my poroject is built. 
+﻿//This js is created from teacher Hans Mattin-Lasseis video instructions, then I got help from Claude AI to fix some issues
+//because of how my poroject is built.
+
+
 
 function initMemberSelector(config) {
     let activeIndex = -1; 
@@ -26,6 +28,43 @@ function initMemberSelector(config) {
             memberContainer, input, results, selectedIds
         });
         return;
+    }
+
+    const existingMembers = memberContainer.querySelectorAll('.' + (config.memberClass || 'member'));
+    existingMembers.forEach(el => el.remove());
+
+    if (Array.isArray(config.preselected) && config.preselected.length > 0) {
+        // We're starting fresh - clear selectedIds array
+        selectedIds = [];
+
+        config.preselected.forEach(item => {
+            // Create visual element AND update selectedIds array
+            addMemberElement(item);
+        });
+
+        // Update the hidden input after adding all preselected members
+        updateSelectedIdsInput();
+    } else {
+        // Try to load IDs from hidden input
+        try {
+            if (selectedIdsInput.value) {
+                selectedIds = JSON.parse(selectedIdsInput.value);
+            }
+        } catch (e) {
+            console.error("Error parsing selected IDs", e);
+            selectedIds = [];
+        }
+    }
+
+    if (selectedIds.length === 0 && selectedIdsInput && selectedIdsInput.value) {
+        try {
+            const existingIds = JSON.parse(selectedIdsInput.value);
+            if (Array.isArray(existingIds)) {
+                selectedIds = existingIds;
+            }
+        } catch (e) {
+            console.error("Error parsing selected IDs", e);
+        }
     }
 
     input.addEventListener('focus', () => {
@@ -124,12 +163,6 @@ function initMemberSelector(config) {
 
         const itemsArray = response.data || [];
 
-        if (itemsArray.length > 0) {
-            console.log("First item properties:", Object.keys(itemsArray[0]));
-            console.log("First item full data:", itemsArray[0]);
-            console.log("Looking for property:", config.displayProperty);
-        }
-
         if (itemsArray.length === 0) {
             const noResult = document.createElement('div');
             noResult.classList.add('no-results');
@@ -159,7 +192,7 @@ function initMemberSelector(config) {
 
                     resultItem.innerHTML =
                         `
-                        <img class="user-avatar" src="${imagePath} onerror="this.src='/ProjectImages/Icons/Avatar.svg'"/>
+                        <img class="user-avatar" src="${imagePath}" onerror="this.src='/ProjectImages/Icons/Avatar.svg'" />
                         <span>${displayText}</span>
                     `;
                 } else {
@@ -175,60 +208,88 @@ function initMemberSelector(config) {
         activeIndex = -1;
     }
 
-    function addMember(item) {
-        const id = typeof item.Id === 'string' ? item.id : item.id.toString();
-        const numericId = parseInt(id);
+    function addMemberElement(item) {
 
-        if (selectedIds.includes(numericId) || selectedIds.includes(id)) {
+        // Get the ID (handle different case variations)
+        const itemId = item.Id || item.id;
+        if (!itemId) {
+            console.error("Cannot add member without ID:", item);
             return;
         }
 
-        if (!isNaN(numericId)) {
-            selectedIds.push(numericId);
-        } else {
-            selectedIds.push(id);
+        const numericId = parseInt(itemId);
+
+        // For preselected items, we want to add even if they're in the array
+        // But for user-selected items, we want to avoid duplicates
+        if (!item._isPreselected &&
+            (selectedIds.includes(numericId) || selectedIds.includes(itemId))) {
+            return;
         }
+
+        // Add to selectedIds array
+        if (!isNaN(numericId)) {
+            if (!selectedIds.includes(numericId)) {
+                selectedIds.push(numericId);
+            }
+        } else {
+            if (!selectedIds.includes(itemId)) {
+                selectedIds.push(itemId);
+            }
+        }
+
+        // Create the visual element
+        const selectedMemberDisplay = document.getElementById('selected-member-display'); 
 
         const member = document.createElement('div');
         member.classList.add(config.memberClass || 'member');
-        member.dataset.id = id;
+        member.dataset.id = itemId;
 
-        const displayText = item[config.displayProperty] || item.name || 'Unknown';
+        // Get display text and image path
+        const displayProperty = config.displayProperty;
+        const displayText = item[displayProperty] ||
+            item[displayProperty.toLowerCase()] ||
+            item[displayProperty.charAt(0).toUpperCase() + displayProperty.slice(1)] ||
+            'Unknown';
 
-        if (config.memberClass === 'member' && item[config.imageProperty]) {
-            const imagePath = item[config.imageProperty].startsWith('http')
-                ? item[config.imageProperty]
-                : (config.avatarFolder || '') + item[config.imageProperty];
+        const imageProperty = config.imageProperty;
+        const imagePath = item[imageProperty] ||
+            item[imageProperty.toLowerCase()] ||
+            item[imageProperty.charAt(0).toUpperCase() + imageProperty.slice(1)] ||
+            '/ProjectImages/Icons/Avatar.svg';
 
-            member.innerHTML =
-                `
-                        <img class="user-avatar" src="${imagePath} onerror="this.src='/ProjectImages/Icons/Avatar.svg'"/>
-                        <span>${displayText}</span>
-                    `;
+        if (config.memberClass === 'member') {
+            member.innerHTML = `
+                <img class="user-avatar" src="${imagePath}" onerror="this.src='/ProjectImages/Icons/Avatar.svg'" />
+                <span>${displayText}</span>
+            `;
         } else {
             member.innerHTML = `<span>${displayText}</span>`;
         }
 
+        // Add remove button
         const removeBtn = document.createElement('span');
-        removeBtn.textContent = 'x';
+        removeBtn.textContent = '×';
         removeBtn.classList.add('btn-remove');
         removeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectedIds = selectedIds.filter(i => i !== numericId && i !== id);
+            selectedIds = selectedIds.filter(i => i !== numericId && i !== itemId);
             member.remove();
             updateSelectedIdsInput();
-            
         });
 
         member.appendChild(removeBtn);
-        memberContainer.insertBefore(member, input); 
+        selectedMemberDisplay.appendChild(member);
+    }
 
+    function addMember(item) {
+        addMemberElement(item);
+
+        // Clear input and hide results
         input.value = '';
         results.style.display = 'none';
 
+        // Update hidden input
         updateSelectedIdsInput();
-
-        input.focus();
     }
 
     function removeLastMember() {
@@ -248,7 +309,6 @@ function initMemberSelector(config) {
 
         if (selectedIdsInput) {
             selectedIdsInput.value = JSON.stringify(selectedIds);
-
             validateField(selectedIdsInput);
         }
     }

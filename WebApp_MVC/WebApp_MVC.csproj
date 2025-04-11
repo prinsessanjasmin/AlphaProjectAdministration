@@ -78,6 +78,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Shared\Partials\Sections\" />
+    <Folder Include="wwwroot\css\SCSS\fontAwesome\" />
   </ItemGroup>
 
 </Project>

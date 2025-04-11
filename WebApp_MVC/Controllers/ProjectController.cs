@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using WebApp_MVC.Models;
 using Data.Contexts;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace WebApp_MVC.Controllers;
 
@@ -54,10 +55,10 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     {
         if (ViewData["AddProjectViewModel"] is AddProjectViewModel viewModel)
         {
+            await PopulateClientsAsync(viewModel);
+            await PopulateMembersAsync(viewModel);
             return PartialView("_AddProject", viewModel);
         }
-
-
 
         // Fallback if ViewData is null
         var fallbackModel = new AddProjectViewModel();
@@ -68,11 +69,11 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     }
 
 
-
     [HttpPost]
     public async Task<IActionResult> AddProject(AddProjectViewModel form)
     {
         await PopulateClientsAsync(form);
+        await PopulateMembersAsync(form);
 
         if (!ModelState.IsValid)
         {
@@ -169,7 +170,24 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
 
             var viewModel = new EditProjectViewModel(project);
 
-            //await PopulateMembersAsync(viewModel);
+            if (project.TeamMembers?.Count > 0)
+            {
+                viewModel.PreselectedTeamMembers = project.TeamMembers.Select(tm => new TeamMemberDto
+                {
+                    Id = tm.EmployeeId.ToString(),
+                    MemberFullName = $"{tm.Employee.FirstName} {tm.Employee.LastName}",
+                    ProfileImage = tm.Employee.ProfileImagePath?.Replace("~", "") ?? "Avatar.svg"
+                }).ToList();
+
+                var teamMemberIds = project.TeamMembers.Select(tm => tm.EmployeeId).ToList();
+                viewModel.SelectedTeamMemberIds = JsonSerializer.Serialize(teamMemberIds);
+            }
+            else
+            {
+                viewModel.PreselectedTeamMembers = new List<TeamMemberDto>();
+                viewModel.SelectedTeamMemberIds = "[]";
+            }
+
             await PopulateClientsAsync(viewModel);
 
             return PartialView("_EditProject", viewModel);
@@ -218,6 +236,19 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             projectDto.ProjectImagePath = "/Images/Uploads/ProjectImages/" + uniqueFileName;
         }
 
+        if (!string.IsNullOrEmpty(model.SelectedTeamMemberIds))
+        {
+            try
+            {
+                var memberIds = JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds);
+                projectDto.SelectedTeamMemberIds = memberIds;
+            }
+            catch (JsonException ex)
+            {
+                ModelState.AddModelError("SelectedTeamMemberIds", "Invalid team member selection");
+                return PartialView("_EditProject", model);
+            }
+        }
 
         ProjectEntity projectEntity = ProjectFactory.Create(projectDto); 
 
@@ -257,18 +288,47 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
         }
     }
 
-    public async Task PopulateMembersAsync(AddProjectViewModel viewModel, int? projectId = null)
+    public async Task<IActionResult> Details(int id)
+    {
+        var result = await _projectService.GetProjectById(id);
+
+        if (!result.Success)
+        {
+            return View("Index");
+        }
+        
+        var projectResult = result as Result<ProjectEntity>;
+        ProjectEntity project = projectResult?.Data ?? new();
+
+        var viewModel = new ProjectDetailsViewModel
+        {
+            Id = project.ProjectId,
+            ProjectName = project.ProjectName,
+            ProjectImagePath = project.ProjectImagePath,
+            Description = (project.Description ??  "No description has been added"),
+            Client = project.Client.ClientName,
+            Status = project.Status.StatusName,
+            StartDate = project.StartDate,
+            EndDate = project.EndDate,
+            Budget = project.Budget,
+            TeamMembers = project.TeamMembers.ToList()
+        };  
+        
+        return View(viewModel);
+    }
+
+    public async Task PopulateMembersAsync(IProjectViewModel viewModel, int? projectId = null)
     {
         if (projectId.HasValue)
         {
             var project = await _projectService.GetProjectById(projectId.Value);
             IResult<ProjectEntity>? projectResult = project as IResult<ProjectEntity>;
-            if (projectResult != null && projectResult?.Data?.TeamMembers?.Count < 0 == true)
+            if (projectResult != null && projectResult?.Data?.TeamMembers?.Count > 0)
             {
                 viewModel.PreselectedTeamMembers = projectResult.Data.TeamMembers.Select(tm => new TeamMemberDto
                 {
                     Id = tm.EmployeeId.ToString(),
-                    MemberFullName = (tm.Employee.FirstName + tm.Employee.LastName).ToString(),
+                    MemberFullName = (tm.Employee.FirstName + ' ' + tm.Employee.LastName).ToString(),
                     ProfileImage = tm.Employee.ProfileImagePath ?? "Avatar.svg"
                 }).ToList();
 

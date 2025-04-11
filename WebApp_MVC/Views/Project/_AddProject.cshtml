@@ -77,10 +77,12 @@
                 </div>
                 <div class="form-input">
                     <label asp-for="SelectedTeamMemberIds">Team members</label>
+                    <div class="selected-member-display" id="selected-member-display"></div>
                     <div class="input-group member-selector" id="tagged-members">
                         <input type="text" id="input-member-search" placeholder="Add team member(s)..." />
-                        <input type="hidden" asp-for="SelectedTeamMemberIds" id="selectedTeamMemberIds" 
-                        data-val="true" data-val-required="Required" />
+                        <input type="hidden" asp-for="SelectedTeamMemberIds" id="selected-team-member-ids"
+                               data-val="true" data-val-required="Required" />
+                               
                         @* <label for="search-icon" class="search-icon"></label> *@
                         <div id="member-search-results" class="member-search-results"></div>
                         <span asp-validation-for="SelectedTeamMemberIds"></span>
@@ -104,14 +106,13 @@
 @await Html.PartialAsync("Partials/Components/_QuillScript")
 
 <script>
-
-    console.log("Member selector script loaded successfully");
      document.addEventListener('DOMContentLoaded', function() {
+
          initMemberSelector({
             containerId: 'tagged-members',
             inputId: 'input-member-search',
             resultsId: 'member-search-results',
-            selectedIds: 'selectedTeamMemberIds',
+            selectedIds: 'selected-team-member-ids',
             searchUrl: '@Url.Action("SearchMembers", "Employee")',
             displayProperty: 'memberFullName',
             imageProperty: 'profileImage',

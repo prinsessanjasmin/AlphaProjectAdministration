@@ -77,10 +77,13 @@
             </div>
             <div class="form-input">
                 <label asp-for="SelectedTeamMemberIds">Team members</label>
-                <div class="input-group">
-                    <select data-val="true" asp-for="SelectedTeamMemberIds" asp-items="Model.MemberOptions" multiple>
-                        <option value="">-- Select Team Member --</option>
-                    </select>
+                <div class="selected-member-display" id="selected-member-display"></div>
+                <div class="input-group member-selector" id="edit-tagged-members">
+                    <input type="text" id="edit-input-member-search" placeholder="Add team member(s)..." />
+                    <input type="hidden" asp-for="SelectedTeamMemberIds" id="edit-selected-team-member-ids"
+                           data-val="true" data-val-required="Required" />
+                    @* <label for="search-icon" class="search-icon"></label> *@
+                    <div id="edit-member-search-results" class="member-search-results"></div>
                     <span asp-validation-for="SelectedTeamMemberIds"></span>
                 </div>
             </div>
@@ -100,3 +103,47 @@
 </div>
 @await Html.PartialAsync("Partials/Components/_ValidationScript")
 @await Html.PartialAsync("Partials/Components/_QuillScript")
+
+<script>
+        // Function to initialize when ready
+        function initializeMemberSelector() {
+
+            if (typeof initMemberSelector !== 'function') {
+                console.error("initMemberSelector function not found!");
+                return;
+            }
+
+            var preselectedMembers = @Html.Raw(Json.Serialize(Model.PreselectedTeamMembers ?? new List<TeamMemberDto>()));
+
+            initMemberSelector({
+                containerId: 'edit-tagged-members',
+                inputId: 'edit-input-member-search',
+                resultsId: 'edit-member-search-results',
+                selectedIds: 'edit-selected-team-member-ids',
+                searchUrl: '@Url.Action("SearchMembers", "Employee")',
+                displayProperty: 'memberFullName',
+                imageProperty: 'profileImage',
+                memberClass: 'member',
+                avatarFolder: '/Images/Uploads/ProfileImages/',
+                emptyMessage: 'No team member found.',
+                preselected: @Html.Raw(Json.Serialize(Model.PreselectedTeamMembers ?? new List<TeamMemberDto>()))
+            });
+        }
+
+        // Try both immediate execution and DOM ready event
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            // Document already ready
+            setTimeout(initializeMemberSelector, 100);
+        } else {
+            // Wait for document to be ready
+            document.addEventListener('DOMContentLoaded', initializeMemberSelector);
+        }
+
+        // Also try a fallback with window.onload
+        window.addEventListener('load', function() {
+            if (typeof initMemberSelector === 'function') {
+                initializeMemberSelector();
+            }
+        });
+</script>
+

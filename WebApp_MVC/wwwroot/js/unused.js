@@ -1,13 +1,6 @@
 ﻿//<script src="https://kit.fontawesome.com/584828937d.js" crossorigin="anonymous"></script>
 
-//<script>
-//  var quill = new Quill('#editor', {
-//    theme: 'snow' // 'bubble' is another option
-//  });
-//</script>
-////Suggestion from ChatGPT 4o
 
-//<script>
 //document.addEventListener("DOMContentLoaded", function () {
 //    let daySelect = document.getElementById("day");
 //    let monthSelect = document.getElementById("month");

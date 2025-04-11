@@ -1,6 +1,10 @@
 ﻿<div class="top-bar">
-    <div class="search-input">
-        <p>Search anything...</p>
+    <div class="search-function" id="search-bar-top">
+        <div class="search-input">
+            <label class="Looking-glass"><i class="fa-solid fa-magnifying-glass"></i></label>
+            <input type="text" id="free-text-search" placeholder="Search anything..." />
+        </div>
+        <div id="free-text-search-results" class="free-text-search-results"></div>
     </div>
     <a id="btn-notifications">
         <img src="~/ProjectImages/Icons/bell-ringing.svg" alt="Notification bell icon." />
@@ -12,3 +16,17 @@
         <img src="~/ProjectImages/Icons/Avatar.svg" alt="Avatar icon." />
     </a>
 </div>
+
+<script>
+     document.addEventListener('DOMContentLoaded', function() {
+         initSearch({
+            containerId: 'search-bar-top',
+            inputId: 'free-text-search',
+            resultsId: 'free-text-search-results',
+            searchUrl: '@Url.Action("Search", "Search")',
+            emptyMessage: 'No results found.',
+            displayProperty: 'displayText'
+        });
+     });
+
+</script>

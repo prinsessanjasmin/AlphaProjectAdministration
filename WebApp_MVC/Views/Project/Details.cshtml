@@ -1,0 +1,44 @@
+﻿@model ProjectDetailsViewModel
+@{
+    ViewData["Title"] = "Project Details";
+}
+
+<div>
+    <h2>@Model.ProjectName</h2>
+    <img class="details-image" src="@Model.ProjectImagePath"/>
+    <div class="project-details">
+        <div class="info-group">
+            <h6>>Description:</h6>
+            <p>@Model.Description</p>
+        </div>
+        <div class="info-group">
+            <h6>Client:</h6>
+            <p>@Model.Client</p>
+        </div>
+        <div class="info-group">
+            <h6>Status:</h6>
+            <p>@Model.Status</p>
+        </div>
+        <div class="info-group">
+            <h6>Start date:</h6>
+            <p>@Model.StartDate</p>
+        </div>
+        <div class="info-group">
+            <h6>End date:</h6>
+            <p>@Model.EndDate</p>
+        </div>
+        <div class="info-group">
+            <h6>Budget:</h6>
+            <p>@Model.Budget</p>
+        </div>
+        <div class="info-group">
+            <h6>Team members:</h6>
+            @foreach (var member in Model.TeamMembers)
+            {
+                <p>Test team member</p>
+            }
+            
+        </div>
+
+    </div>
+</div>

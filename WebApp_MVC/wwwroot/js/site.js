@@ -15,15 +15,12 @@
             }
             if (!modal) return;
 
-            if (!modal) return;
-
             // Get the ID if present (for edit and delete modals)
             const projectId = button.getAttribute('data-id');
 
             if (modalTarget === '#delete-modal' && projectId) {
                 try {
                     const url = `/Project/ConfirmDelete?id=${projectId}`;
-                    console.log("Fetching delete confirmation URL:", url);
 
                     const response = await fetch(url);
                     if (!response.ok) throw new Error("Failed to load delete confirmation");
@@ -47,9 +44,7 @@
                     return;
                 }
 
-
                 const url = `/${controller}/${action}?id=${projectId}`;
-                console.log("Fetching URL:", url);
 
                 try {
                     const response = await fetch(url);
@@ -57,6 +52,18 @@
 
                     const data = await response.text();
                     modal.querySelector('.modal-content').innerHTML = data;
+
+                    //Claude AI generated this for me to make sure the script is loading 
+                    const scripts = modal.querySelectorAll('script');
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        Array.from(oldScript.attributes).forEach(attr =>
+                            newScript.setAttribute(attr.name, attr.value)
+                        );
+                        newScript.textContent = oldScript.textContent;
+                        oldScript.parentNode.replaceChild(newScript, oldScript);
+                    });
+
                 }
                 catch (error) {
                     console.error("Error loading modal content:", error);
@@ -65,6 +72,7 @@
             }
 
             modal.style.display = 'flex';
+
         });
     });
 });
@@ -83,6 +91,20 @@ document.addEventListener('click', (event) => {
 
                 const imagePreviewer = form.querySelector('.image-previewer');
                 if (imagePreviewer) imagePreviewer.classList.remove('selected');
+
+                const existingMemberContainer = form.querySelector('#selected-member-display');
+
+                if (existingMemberContainer) {
+                    while (existingMemberContainer.hasChildNodes()) {
+                        existingMemberContainer.removeChild(existingMemberContainer.firstChild)
+                    }
+                }
+
+                const selectedIdsInput = form.querySelector('#selected-team-member-ids');
+                if (selectedIdsInput) {
+                    selectedIdsInput.value = '[]';
+                }
+
             });
         }
     }

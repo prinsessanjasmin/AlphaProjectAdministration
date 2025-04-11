@@ -1,4 +1,5 @@
 ﻿@import "../abstracts/mixins";
+@import "../fontAwesome/mixins"; 
 
 .btn {
     @include button;
@@ -34,70 +35,49 @@
     background-size: 18px;
 }
 
-.btn-menu-views-active {
+
+//Knappar till sidopanelen
+.btn-sidebar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+    background-color: $clr-background;
+    color: $clr-heading;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: left;
+    margin: 0 .5rem;
+    padding: 0 1rem 0 1rem;
+
+    i {
+        font-family: 'Font Awesome 6 Free';
+        flex: 1;
+    }
+
+    p {
+        flex: 6;
+    }
+}
+
+.btn-sidebar.active
+.btn-sidebar:active,
+.btn.btn-sidebar:hover {
     background-color: $clr-accent-opacity;
     color: $clr-accent;
-    font-weight: 600;
-    text-align: left;
-    padding: 0 2.7rem;
-    margin: 0 .5rem;
-    background-image: url("/ProjectImages/Icons/suitcase-blue.svg");
-    background-position: 16px 15px;
-    background-repeat: no-repeat;
-    background-size: 18px;
 }
 
-.btn-menu-views-not-active {
-    background-color: $clr-background;
-    color: $clr-heading;
-    font-weight: 600;
-    text-align: left;
-    padding: 0 2.7rem;
-    margin: 0 .5rem;
-    background-image: url("/ProjectImages/Icons/suitcase-blue.svg");
-    background-position: 16px 15px;
-    background-repeat: no-repeat;
-    background-size: 18px;
+
+#sidebar-clients {
+    display: none; 
 }
 
-#btn-projects-grey {
-    background-image: url("/ProjectImages/Icons/suitcase-grey.svg");
+#sidebar-members {
+    display: none;
 }
 
-#btn-members-blue {
-    background-image: url("/ProjectImages/Icons/members-blue.svg");
-}
-
-#btn-members-grey {
-    background-image: url("/ProjectImages/Icons/members-grey.svg");
-}
-
-#btn-statuses-blue {
-    background-image: url("/ProjectImages/Icons/traffic-light-solid.svg");
-    background-size: 12px;
-    background-position: 17px 14px;
-}
-
-#btn-statuses-grey {
-    background-color: $clr-background;
-    color: $clr-heading;
-    background-image: url("/ProjectImages/Icons/traffic-light-solid-grey.svg");
-    background-size: 12px;
-    background-position: 17px 14px;
-}
-
-#btn-clients-blue {
-    background-image: url("/ProjectImages/Icons/building-solid-blue.svg");
-    background-size: 12px;
-    background-position: 17px 14px;
-}
-
-#btn-clients-grey {
-    background-color: $clr-background;
-    color: $clr-heading;
-    background-image: url("/ProjectImages/Icons/building-solid.svg");
-    background-size: 12px;
-    background-position: 17px 14px;
+#sidebar-statuses {
+    display: none;
 }
 
 .btn-upload-image {
@@ -226,13 +206,14 @@
 .btn-remove {
     @include button;
     border: none;
+    padding: .2rem;
     background-color: transparent;
-    color: $clr-grey-200;
+    color: $clr-body-light;
     transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out, color 0.1s ease-in-out;
     //Font awesome ?
 
     &:hover {
-        background-color: $clr-grey-400;
+        background-color: $clr-grey-300;
     }
 }
 

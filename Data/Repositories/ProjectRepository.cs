@@ -13,6 +13,8 @@ public class ProjectRepository(DataContext context) : BaseRepository<ProjectEnti
     public override async Task<IEnumerable<ProjectEntity>> GetAsync()
     {
         return await _context.Set<ProjectEntity>()
+            .Include(p => p.Client)     
+            .Include(p => p.Status)    
             .Include(p => p.TeamMembers)
             .ThenInclude(te => te.Employee) // Include Employee details if needed
             .ToListAsync();
@@ -21,6 +23,8 @@ public class ProjectRepository(DataContext context) : BaseRepository<ProjectEnti
     public override async Task<ProjectEntity> GetAsync(Expression<Func<ProjectEntity, bool>> expression)
     {
         var project = await _context.Set<ProjectEntity>()
+            .Include(p => p.Client)     
+            .Include(p => p.Status)    
             .Include(p => p.TeamMembers)
             .ThenInclude(te => te.Employee) // Include Employee details if needed
             .FirstOrDefaultAsync(expression);

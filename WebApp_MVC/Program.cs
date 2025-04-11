@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 // In Program.cs
-builder.Services.AddDbContext<DataContext>(options =>
+builder.Services.AddDbContextFactory<DataContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     
@@ -76,6 +76,7 @@ builder.Services.AddTransient<IProjectService, ProjectService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddTransient<IAddressService, AddressService>();
 builder.Services.AddTransient<IClientService, ClientService>();
+builder.Services.AddTransient<ISearchService, SearchService>();
 
 builder.Services.AddScoped<ClientDto>(); 
 builder.Services.AddScoped<MemberDto>();
@@ -89,6 +90,7 @@ builder.Services.AddScoped<HomeController>();
 builder.Services.AddScoped<ClientController>();
 builder.Services.AddScoped<EmployeeController>();
 builder.Services.AddScoped<ProjectController>();
+builder.Services.AddScoped<SearchController>();
 
 builder.Services.AddScoped<ProjectViewModel>();
 builder.Services.AddScoped<AppUserViewModel>();
