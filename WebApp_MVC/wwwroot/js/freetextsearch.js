@@ -53,7 +53,7 @@
 
             case 'ArrowUp':
                 e.preventDefault();
-                activeIndex = (activeIndex - 1) % items.length;
+                activeIndex = (activeIndex - 1 + items.length) % items.length;
                 updateActiveItem(items);
                 break;
 
@@ -116,19 +116,24 @@
 
         } else {
             itemsArray.forEach(item => {
-                const itemId = item.Id;
-                const entityType = item.EntityType;
-                const detailsUrl = item.DetailsUrl;
+                const itemId = item.id;
+                const entityType = item.entityType;
+                const detailsUrl = item.detailsUrl;
 
                 const resultItem = document.createElement('div');
                 resultItem.classList.add('search-item');
-                resultItem.dataset.id = item.Id;
+                resultItem.dataset.id = item.id;
+                resultItem.dataset.detailsUrl = detailsUrl; 
 
                 const displayText = item[config.displayProperty] || item.DisplayText;
 
                 resultItem.innerHTML = `<span>${displayText}</span>`;
 
-                resultItem.addEventListener('click', () => openDetails(itemId, entityType, detailsUrl)); 
+                resultItem.addEventListener('click', () => {
+                    console.log("Item clicked: id = " + itemId + "entitytype = " + entityType + "detailsUrl = " + detailsUrl + "full item: " + item);
+
+                    openDetails(itemId, entityType, detailsUrl);
+                });
                 results.appendChild(resultItem);
             });
         }

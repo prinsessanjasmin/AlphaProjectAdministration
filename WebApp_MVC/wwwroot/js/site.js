@@ -1,5 +1,33 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
 
+    const controller = document.body.dataset.controller;
+    const sidebarProjects = document.querySelector('#sidebar-projects');
+    const sidebarMembers = document.querySelector('#sidebar-members');
+    const sidebarClients = document.querySelector('#sidebar-clients');
+
+    [sidebarProjects, sidebarMembers, sidebarClients].forEach(navButton => navButton?.classList.remove('active-controller'));
+
+    if (controller === "Project" && sidebarProjects) {
+        sidebarProjects.classList.add('active-controller');
+    } else if (controller === "Employee" && sidebarMembers) {
+        sidebarMembers.classList.add('active-controller');
+    } else if (controller === "Client" && sidebarClients) {
+        sidebarClients.classList.add('active-controller');
+    }
+
+    sidebarProjects?.addEventListener('click', () => {
+        window.location.href = '/Project/Projects';
+    });
+
+    sidebarClients?.addEventListener('click', () => {
+        window.location.href = '/Client/Index';
+    });
+
+    sidebarMembers?.addEventListener('click', () => {
+        window.location.href = '/Members/Index';
+    });
+
+
     const previewSize = 150
     const modalButtons = document.querySelectorAll('[data-modal="true"]')
     modalButtons.forEach(button => {
@@ -147,6 +175,8 @@ document.querySelectorAll("#btn-delete-project").forEach(button => {
         openModal("#delete-modal"); // Open the delete confirmation modal
     });
 });
+
+
 
 //handle img previewer 
 document.querySelectorAll('.image-previewer').forEach(previewer => {

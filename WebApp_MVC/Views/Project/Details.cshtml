@@ -3,13 +3,14 @@
     ViewData["Title"] = "Project Details";
 }
 
-<div>
+<div class="search-item-details">
+    <p>Project Name:</p>
     <h2>@Model.ProjectName</h2>
-    <img class="details-image" src="@Model.ProjectImagePath"/>
+    <img class="details-image" src="@Model.ProjectImagePath" alt="Project image."/>
     <div class="project-details">
         <div class="info-group">
-            <h6>>Description:</h6>
-            <p>@Model.Description</p>
+            <h6>Description:</h6>
+            @Html.Raw(@Model.Description)
         </div>
         <div class="info-group">
             <h6>Client:</h6>
@@ -37,8 +38,7 @@
             {
                 <p>Test team member</p>
             }
-            
         </div>
-
     </div>
 </div>
+

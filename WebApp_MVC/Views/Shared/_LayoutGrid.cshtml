@@ -7,20 +7,20 @@
     <script type="importmap"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="~/js/search.js" asp-append-version="true"></script>
-    <script src="~/js/freetextsearch.js" asp-append-version="true"></script>'
-    <script src="https://kit.fontawesome.com/584828937d.js" crossorigin="anonymous"></script>'
-    <link rel="stylesheet" href="~/css/SCSS/site.css" asp-append-version="true" />
+    <script src="~/js/freetextsearch.js" asp-append-version="true"></script>
+    <script src="https://kit.fontawesome.com/584828937d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApp_MVC.styles.css" asp-append-version="true" />
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 </head>
-<body>
+<body data-controller="@ViewContext.RouteData.Values["controller"]" data-action="@ViewContext.RouteData.Values["action"]">
     <section class="page-projects">
         <div class="wrapper">          
             @await Html.PartialAsync("Partials/Components/_Header")           
             @await Html.PartialAsync("Partials/Components/_Sidebar")        
             @await Html.PartialAsync("Partials/Components/_Topbar")
-            <main class="main-view">
+            <main class="main-view container">
                 @RenderBody()
             </main>
             @await Html.PartialAsync("Partials/Components/_Footer")

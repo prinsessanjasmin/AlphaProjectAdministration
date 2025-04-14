@@ -60,7 +60,6 @@
     }
 }
 
-.btn-sidebar.active
 .btn-sidebar:active,
 .btn.btn-sidebar:hover {
     background-color: $clr-accent-opacity;
@@ -68,17 +67,25 @@
 }
 
 
+//button.btn-sidebar.active-controller {
+//    background-color: $clr-accent-opacity !important;
+//    color: $clr-accent !important;
+//}
+
+button.btn-sidebar.active-controller {
+    background-color: $clr-accent-opacity !important;
+    color: $clr-accent !important;
+    /* TEMP CHANGE TO FORCE COMPILATION */
+}
+
 #sidebar-clients {
-    display: none; 
+    display: none;
 }
 
 #sidebar-members {
     display: none;
 }
 
-#sidebar-statuses {
-    display: none;
-}
 
 .btn-upload-image {
     position: relative;
@@ -221,3 +228,4 @@
     display: flex;
     flex-direction: column;
 }
+

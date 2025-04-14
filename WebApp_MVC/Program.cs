@@ -13,7 +13,6 @@ using Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // In Program.cs
