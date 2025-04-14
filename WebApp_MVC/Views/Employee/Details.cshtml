@@ -1,0 +1,76 @@
+﻿@model EmployeeDetailsViewModel
+@{
+    ViewData["Title"] = "Employee Details";
+    List<ProjectEntity> activeProjects = [];
+    List<ProjectEntity> otherProjects = [];
+    foreach (var project in Model.EmployeeProjects)
+    {
+        if (project.Project.StatusId == 2)
+        {
+            activeProjects.Add(project.Project);
+        }
+        else
+        {
+            otherProjects.Add(project.Project);
+        }
+    }
+}
+<div class="search-item-details">
+    <p>Employee:</p>
+    <h2>@Model.DisplayName</h2>
+    <img class="details-image" src="@Model.ProfileImagePath" alt="Employee profile image." />
+    <div class="project-details">
+        <div class="info-group">
+            <h6>Job Title:</h6>
+            <p>@Model.JobTitle</p>
+        </div>
+        <div class="info-group">
+            <h6>Email:</h6>
+            <p>@Model.Email</p>
+        </div>
+        <div class="info-group">
+            <h6>Phone Number:</h6>
+            <p>@Model.PhoneNumber</p>
+        </div>
+        <div class="info-group">
+            <h6>Date of Birth:</h6>
+            <p>@Model.DateOfBirth</p>
+        </div>
+        <div class="info-group">
+            <h6>Address:</h6>
+            <p>@Model.StreetAddress</p>
+            <p>@Model.PostCode</p>
+            <p>@Model.City</p>
+        </div>
+        <div class="project-details">
+            <h6>Active Projects:</h6>
+            <div class="info-group">
+                @if (activeProjects.Count > 0)
+                {
+                    @foreach (var project in activeProjects)
+                    {
+                        <p>@project.ProjectName</p>
+                    }
+                }
+                else
+                {
+                    <p>No active projects.</p>
+                }
+            </div>
+            <div class="info-group">
+                <h6>Other Projects:</h6>
+                @if (otherProjects.Count > 0)
+                {
+                    @foreach (var project in otherProjects)
+                    {
+                        <p>@project.ProjectName - [@project.Status.StatusName]</p>
+                    }
+                }
+                else
+                {
+                    <p>No other projects.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

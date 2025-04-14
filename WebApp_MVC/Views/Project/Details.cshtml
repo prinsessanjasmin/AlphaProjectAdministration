@@ -36,7 +36,7 @@
             <h6>Team members:</h6>
             @foreach (var member in Model.TeamMembers)
             {
-                <p>Test team member</p>
+                <p>@member.Employee.FirstName @member.Employee.LastName - @member.Employee.JobTitle </p>
             }
         </div>
     </div>

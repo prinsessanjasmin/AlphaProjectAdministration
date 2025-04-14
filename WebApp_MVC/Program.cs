@@ -93,7 +93,7 @@ builder.Services.AddScoped<SearchController>();
 
 builder.Services.AddScoped<ProjectViewModel>();
 builder.Services.AddScoped<AppUserViewModel>();
-builder.Services.AddScoped<ClientFormViewModel>();
+builder.Services.AddScoped<AddClientViewModel>();
 builder.Services.AddScoped<LoginFormViewModel>();
 builder.Services.AddScoped<MemberFormViewModel>();
 builder.Services.AddScoped<SignUpViewModel>();
@@ -107,6 +107,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

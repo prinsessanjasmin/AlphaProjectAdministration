@@ -1,0 +1,53 @@
+﻿@model ClientDetailsViewModel
+@{
+    ViewData["Title"] = "Client Details";
+    List<ProjectEntity> activeProjects = [];
+    List<ProjectEntity> otherProjects = [];
+    foreach (var project in Model.Projects)
+    {
+        if (project.StatusId == 2)
+        {
+            activeProjects.Add(project);
+        } 
+        else
+        {
+            otherProjects.Add(project);
+        }
+    }
+}
+<div class="search-item-details">
+    <p>Client Name:</p>
+    <h2>@Model.ClientName</h2>
+
+
+    <div class="project-details">
+        <h6>Active Projects:</h6>
+        <div class="info-group">
+            @if (activeProjects.Count > 0)
+            {
+                @foreach (var project in activeProjects)
+                {
+                    <p>@project.ProjectName</p>
+                }
+            }
+            else
+            {
+                <p>No active projects.</p>
+            }
+        </div>
+        <div class="info-group">
+            <h6>Other Projects:</h6>
+            @if (otherProjects.Count > 0)
+            {
+                @foreach (var project in otherProjects)
+                {
+                    <p>@project.ProjectName - [@project.Status.StatusName]</p>
+                }
+            }
+            else
+            {
+                <p>No other projects.</p>
+            }
+        </div>
+    </div>
+</div>

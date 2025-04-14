@@ -1,12 +1,20 @@
 .header {
-    grid-column: 1; 
+    grid-column: 1;
     grid-row: 1;
-    display: flex;
-    flex-direction: row;
-    gap: .5rem; 
-    align-items: center;
-    justify-content: left; 
-    border-right: 1px solid $clr-border-200; 
-    height: 80px; 
-    padding: 1rem; 
+    border-right: 1px solid $clr-border-200;
+    height: 80px;
+
+
+    .header-link {
+        display: flex;
+        flex-direction: row;
+        align-self: flex-end;
+        width: min-content;
+        gap: .5rem;
+        align-items: center;
+        justify-content: left;
+        margin: 1rem;
+        text-decoration: none;
+        color: $clr-body-dark;
+    }
 }

@@ -130,6 +130,7 @@
                 resultItem.innerHTML = `<span>${displayText}</span>`;
 
                 resultItem.addEventListener('click', () => {
+                    event.stopPropagation();
                     console.log("Item clicked: id = " + itemId + "entitytype = " + entityType + "detailsUrl = " + detailsUrl + "full item: " + item);
 
                     openDetails(itemId, entityType, detailsUrl);
@@ -154,7 +155,9 @@
         console.log("Opening details:", { itemId, entityType, detailsUrl });
 
         if (detailsUrl) {
-            window.location.href = detailsUrl;
+            setTimeout(() => {
+                window.location.href = detailsUrl;
+            }, 50);
         } else {
             console.error("Details URL is undefined", { itemId, entityType });
         }

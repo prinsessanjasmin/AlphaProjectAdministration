@@ -200,14 +200,20 @@ a {
 .header {
   grid-column: 1;
   grid-row: 1;
+  border-right: 1px solid #E3E5E8;
+  height: 80px;
+}
+.header .header-link {
   display: flex;
   flex-direction: row;
+  align-self: flex-end;
+  width: min-content;
   gap: 0.5rem;
   align-items: center;
   justify-content: left;
-  border-right: 1px solid #E3E5E8;
-  height: 80px;
-  padding: 1rem;
+  margin: 1rem;
+  text-decoration: none;
+  color: #28263B;
 }
 
 .sidebar {

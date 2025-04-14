@@ -5,6 +5,22 @@
 @{
     var addProjectViewModel = ViewData["AddProjectViewModel"] as AddProjectViewModel;
     var editProjectViewModel = ViewData["EditProjectViewModel"] as EditProjectViewModel;
+
+    int allProjects = Model.Projects.Count(); 
+    int startedProjects = 0; 
+    int completedProjects = 0; 
+
+    foreach (var project in Model.Projects)
+    {
+        if (project.StatusId == 2)
+        {
+            startedProjects++;
+        } 
+        else if (project.StatusId == 3)
+        {
+            completedProjects++;
+        }
+    }
 }
 
 
@@ -24,9 +40,9 @@
     </div>
 
     <div class="project-categories">
-        <a>All [9]</a>
-        <a>STARTED [8]</a>
-        <a>COMPLETED [1]</a>
+        <a class="project-status-menu" id="all-projects">All [@allProjects]</a>
+        <a class="project-status-menu" id="started-projects">STARTED [@startedProjects]</a>
+        <a class="project-status-menu" id="completed-projects">COMPLETED [@completedProjects]</a>
     </div>
     <div class="project-view">
         @if (!Model.Projects.Any())

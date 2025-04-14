@@ -16,6 +16,6 @@ public class EmployeeSearchResult
     
     public string DetailsUrl
     {
-        get { return $"/Employees/Details/{Id}"; }
+        get { return $"/Employee/Details/{Id}"; }
     }
 }

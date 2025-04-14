@@ -1,20 +1,10 @@
-﻿using Azure.Core;
-using Business.Interfaces;
-using Business.Models;
-using Data.Entities;
+﻿using Business.Models;
 using WebApp_MVC.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.Metrics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Reflection.Metadata;
-using System.Xml.Linq;
-using Microsoft.AspNetCore.Components;
 using System.Text.Json;
-using Microsoft.Identity.Client;
 
 namespace WebApp_MVC.Models;
-
 
 public class AddProjectViewModel() : IProjectViewModel
 {

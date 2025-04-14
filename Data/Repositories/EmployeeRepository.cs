@@ -16,14 +16,17 @@ public class EmployeeRepository(DataContext context) : BaseRepository<EmployeeEn
         return await _context.Set<EmployeeEntity>()
             .Include(e => e.EmployeeProjects)
             .ThenInclude(ep => ep.Project) 
+            .ThenInclude(p => p.Status)
             .ToListAsync();
     }
 
     public override async Task<EmployeeEntity> GetAsync(Expression<Func<EmployeeEntity, bool>> expression)
     {
         var employee = await _context.Set<EmployeeEntity>()
+            .Include (e => e.Address)
             .Include(e => e.EmployeeProjects)
             .ThenInclude(ep => ep.Project)
+            .ThenInclude(p => p.Status)
             .FirstOrDefaultAsync(expression);
 
         return employee ?? new EmployeeEntity();
