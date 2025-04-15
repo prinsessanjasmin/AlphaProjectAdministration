@@ -1,104 +1,112 @@
-﻿@model AddEmployeeViewModel 
-
+﻿@* @model AddEmployeeViewModel 
 @{
 	ViewData["Title"] = "Add Employee";
 }
 
-<div class="modal" id="addEmployeeModal">
-    <div class="modal-content add-employeet-container" id="addEmployeeForm">
-        <form class="form form-employee" method="post" asp-action="AddEmployee" asp-controller="Employee" enctype="multipart/form-data" novalidate>
-            <header class="side-by-side">
-                <h2>New Member</h2>
-                <button class="btn-close" type="button" data-close="true"></button>
-            </header>
-            <div class="form-content">
-                <div class="upload-image">
-                    <button class="btn-upload-image">
-                        <img src="~/ProjectImages/Icons/Camera.png" alt="Camera icon.">
-                        <input asp-for="ProfileImage" accept="image/*" class="hidden" />
-                    </button>
-                </div>
-                <div class="horizontal-form">
-                    <div class="form-input">
-                    <label asp-for="FirstName"></label>
-                    <div class="input-group">
-                            <input data-val="true" asp-for="FirstName" />
-                            <span asp-validation-for="FirstName" class=""></span>
-                    </div>
-                </div>
-                    <div class="form-input">
-                        <label asp-for="LastName"></label>
-                        <div class="input-group">
-                            <input data-val="true" asp-for="LastName" />
-                            <span asp-validation-for="LastName" class=""></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-input">
-                    <label asp-for="Email"></label>
-                    <div class="input-group">
-                        <input data-val="true" asp-for="Email" />
-                        <span asp-validation-for="Email" class=""></span>
-                    </div>
-                </div>
-                <div class="form-input">
-                    <label asp-for="PhoneNumber"></label>
-                    <div class="input-group">
-                        <input data-val="true" asp-for="PhoneNumber" />
-                        <span asp-validation-for="PhoneNumber" class=""></span>
-                    </div>
-                </div>
-                <div class="form-input">
-                    <label asp-for="JobTitle"></label>
-                    <div class="input-group">
-                        <input data-val="true" asp-for="JobTitle" />
-                        <span asp-validation-for="JobTitle" class=""></span>
-                    </div>
-                </div>
-                <div class="form-input">
-                    <label asp-for="StreetAddress"></label>
-                    <div class="input-group">
-                        <input data-val="true" asp-for="StreetAddress" />
-                        <span asp-validation-for="StreetAddress" class=""></span>
-                    </div>
-                </div>
-                <div class="horizontal-form">
-                    <div class="form-input">
-                        <label asp-for="PostCode"></label>
-                        <div class="input-group">
-                            <input data-val="true" asp-for="PostCode" />
-                            <span asp-validation-for="PostCode" class=""></span>
-                        </div>
-                    </div>
-                    <div class="form-input">
-                        <label asp-for="City"></label>
-                        <div class="input-group">
-                            <input data-val="true" asp-for="City" />
-                            <span asp-validation-for="City" class=""></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="horizontal-form">
-                    <label asp-for="Day"></label>
-                    <div class="form-input">
-                        <select data-val="true" asp-for="Day">
-                            <option value="">Day</option>
-                        </select>
-                        <select data-val="true" asp-for="Month">
-                            <option value="">Month</option>/option>
-                        </select>
-                        <select data-val="true" asp-for="Year">
-                            <option value="">Year</option>
-                        </select>
-                        <span asp-validation-for="Day"></span>
-                    </div>
-                </div>
-            </div>
-            <footer>
-                <button type="submit" class="btn btn-popup">Add Member</button>
-            </footer>
-        </form>
-    </div>
-</div>
-@await Html.PartialAsync("Partials/Components/_ValidationScript")
-@await Html.PartialAsync("Partials/Components/_QuillScript")
+<div class="modal" id="addEmployeeModal"> 
+     <div class="modal-content add-member-container" id="addEmployeeForm"> 
+         <form class="form form-employee" method="post" asp-action="AddEmployee" asp-controller="Employee" enctype="multipart/form-data" novalidate>
+             <header class="side-by-side"> 
+                 <h2>New Member</h2> 
+                 <button class="btn-close" type="button" data-close="true"></button> 
+             </header> 
+             <div class="form-content"> 
+                 <div class="upload-image"> 
+                     <button class="btn-upload-image"> 
+                         <img src="~/ProjectImages/Icons/Camera.png" alt="Camera icon."> 
+                         <input asp-for="ProfileImage" accept="image/*" class="hidden" /> 
+                     </button>
+                 </div>
+                 <div class="horizontal-form">
+                     <div class="form-input">
+                     <label asp-for="FirstName"></label>
+                     <div class="input-group">
+                             <input data-val="true" asp-for="FirstName" />
+                             <span asp-validation-for="FirstName" class=""></span>
+                     </div>
+                 </div>
+                     <div class="form-input">
+                         <label asp-for="LastName"></label>
+                         <div class="input-group">
+                             <input data-val="true" asp-for="LastName" />
+                             <span asp-validation-for="LastName" class=""></span>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="form-input">
+                     <label asp-for="Email"></label>
+                     <div class="input-group">
+                         <input data-val="true" asp-for="Email" />
+                         <span asp-validation-for="Email" class=""></span>
+                     </div>
+                 </div>
+                 <div class="form-input">
+                     <label asp-for="PhoneNumber"></label>
+                     <div class="input-group">
+                         <input data-val="true" asp-for="PhoneNumber" />
+                         <span asp-validation-for="PhoneNumber" class=""></span>
+                     </div>
+                 </div>
+                 <div class="form-input">
+                     <label asp-for="JobTitle"></label>
+                     <div class="input-group">
+                         <input data-val="true" asp-for="JobTitle" />
+                         <span asp-validation-for="JobTitle" class=""></span>
+                     </div>
+                 </div>
+                 <div class="form-input">
+                     <label asp-for="StreetAddress"></label>
+                     <div class="input-group">
+                         <input data-val="true" asp-for="StreetAddress" />
+                         <span asp-validation-for="StreetAddress" class=""></span>
+                     </div>
+                 </div> 
+                 <div class="horizontal-form">
+                     <div class="form-input">
+                         <label asp-for="PostCode"></label>
+                         <div class="input-group">
+                             <input data-val="true" asp-for="PostCode" />
+                             <span asp-validation-for="PostCode" class=""></span>
+                         </div>
+                     </div>
+                     <div class="form-input">
+                         <label asp-for="City"></label>
+                         <div class="input-group">
+                             <input data-val="true" asp-for="City" />
+                             <span asp-validation-for="City" class=""></span>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="form-input"> 
+                     <label for="dateOfBirth"></label>
+                     <div class="horizontal-form"> 
+                         <div class="input-group">
+                             <select class="padding-1" data-val="true" id="day"  asp-for="Day"> 
+                                 <option value="">Day</option>
+                             </select>
+                             <span asp-validation-for="Day"></span>
+                         </div>
+                         <div class="input-group">
+                             <select class="padding-1" data-val="true" id="month" asp-for="Month">
+                                 <option value="">Month</option>/option>
+                             </select>
+                             <span asp-validation-for="Month"></span>
+                         </div>
+                         <div class="input-group">
+                            <select class="padding-1" data-val="true" id="year" asp-for="Year">
+                                 <option value="">Year</option>
+                             </select>
+                             <span asp-validation-for="Year"></span>
+                         </div> 
+                     </div> 
+                 </div> 
+             </div> 
+             <footer> 
+                 <button type="submit" class="btn btn-popup">Add Member</button> 
+             </footer> 
+        </form> 
+     </div> 
+</div> 
+@await Html.PartialAsync("Partials/Components/_ValidationScript") 
+@await Html.PartialAsync("Partials/Components/_QuillScript") 
+<script src="~/js/dob-options.js" asp-append-version="true"></script> *@

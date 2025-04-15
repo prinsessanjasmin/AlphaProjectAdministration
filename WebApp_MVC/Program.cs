@@ -84,8 +84,8 @@ builder.Services.AddScoped<AppUserDto>();
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<AuthController>();
 builder.Services.AddScoped<HomeController>();
+builder.Services.AddScoped<AuthController>();
 builder.Services.AddScoped<ClientController>();
 builder.Services.AddScoped<EmployeeController>();
 builder.Services.AddScoped<ProjectController>();
@@ -132,7 +132,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Project}/{action=Index}/{id?}")
+    pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.Run();

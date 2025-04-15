@@ -12,6 +12,6 @@ public class ClientSearchResult
     }
     public string DetailsUrl
     {
-        get { return $"/Client/Details/{Id}"; }
+        get { return $"/client/details/{Id}"; }
     }
 }

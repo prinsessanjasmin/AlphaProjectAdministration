@@ -24,7 +24,6 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault()
             e.stopPropagation();
-            alert('Form submit prevented');
 
             let isValid = true;
             fields.forEach(field => {

@@ -143,12 +143,6 @@ a {
   margin: 2rem 0 1rem 0;
 }
 
-.member-title {
-  background-color: #F0F1F5;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-}
-
 .field.validation-error {
   color: #FF6640;
   font-size: 10px;
@@ -293,7 +287,7 @@ a {
   transition: height 0.4s ease-in-out 0.2s, padding 0.4s ease-in-out 0.2s, opacity 0.4s ease-in-out 0.2s;
 }
 .free-text-search-results .search-item {
-  padding: 0.5rem 0;
+  padding: 0.5rem 1rem;
   cursor: pointer;
 }
 .free-text-search-results .search-item:hover {
@@ -615,15 +609,14 @@ section {
 button.btn-sidebar.active-controller {
   background-color: rgba(26, 142, 255, 0.1) !important;
   color: #2D99FF !important;
-  /* TEMP CHANGE TO FORCE COMPILATION */
 }
 
 #sidebar-clients {
-  display: none;
+  display: flex;
 }
 
 #sidebar-members {
-  display: none;
+  display: flex;
 }
 
 .btn-upload-image {
@@ -938,6 +931,7 @@ select {
   z-index: 1;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 .member-card #btn-2-dots {
   align-self: flex-end;
@@ -959,7 +953,19 @@ select {
 .contact-info {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 0.5rem;
+}
+
+.member-title {
+  display: flex;
+  justify-content: center;
+  font-size: 12px;
+  background-color: #F0F1F5;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  width: auto;
 }
 
 .options-pop-up {
@@ -1062,6 +1068,10 @@ select {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.padding-1 {
+  padding: 0 1rem;
 }
 
 .modal {

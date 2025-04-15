@@ -66,24 +66,17 @@
     color: $clr-accent;
 }
 
-
-//button.btn-sidebar.active-controller {
-//    background-color: $clr-accent-opacity !important;
-//    color: $clr-accent !important;
-//}
-
 button.btn-sidebar.active-controller {
     background-color: $clr-accent-opacity !important;
     color: $clr-accent !important;
-    /* TEMP CHANGE TO FORCE COMPILATION */
 }
 
 #sidebar-clients {
-    display: none;
+    display: flex;
 }
 
 #sidebar-members {
-    display: none;
+    display: flex;
 }
 
 
@@ -135,7 +128,7 @@ button.btn-sidebar.active-controller {
     align-self: start;
     justify-self: end;
     position: relative;
-    top: -.5rem; 
+    top: -.5rem;
     right: -.5rem;
 }
 

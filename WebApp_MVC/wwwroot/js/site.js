@@ -16,19 +16,18 @@
     }
 
     sidebarProjects?.addEventListener('click', () => {
-        window.location.href = '/Project/Projects';
+        window.location.href = '/projects';
     });
 
     sidebarClients?.addEventListener('click', () => {
-        window.location.href = '/Client/Index';
+        window.location.href = '/clients';
     });
 
     sidebarMembers?.addEventListener('click', () => {
-        window.location.href = '/Members/Index';
+        window.location.href = '/members';
     });
 
 
-    const previewSize = 150
     const modalButtons = document.querySelectorAll('[data-modal="true"]')
     modalButtons.forEach(button => {
         button.addEventListener('click', async () => {
@@ -167,16 +166,8 @@ document.addEventListener("click", function(event) {
     });
 });
 
-document.querySelectorAll("#btn-delete-project").forEach(button => {
-    button.addEventListener("click", function () {
-        const projectCard = this.closest(".project-card");
-        const projectId = this.getAttribute("data-id"); // Get project ID
-        document.getElementById("deleteProjectId").value = projectId; // Set it in the form
-        openModal("#delete-modal"); // Open the delete confirmation modal
-    });
-});
 
-
+const previewSize = 150
 
 //handle img previewer 
 document.querySelectorAll('.image-previewer').forEach(previewer => {

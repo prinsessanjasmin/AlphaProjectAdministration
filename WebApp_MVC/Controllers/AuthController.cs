@@ -9,7 +9,6 @@ using System.Security.Claims;
 
 namespace WebApp_MVC.Controllers;
 
-//[Route("auth")]
 public class AuthController(IUserService userService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager) : Controller
 {
     private readonly IUserService _userService = userService;
@@ -24,7 +23,6 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
         return View();
     }
 
- 
     [HttpPost]
     public async Task<IActionResult> SignIn(LoginFormViewModel form, string returnUrl = "/")
     {
@@ -64,8 +62,6 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
             }
         }
     }
-
-    //[Route("signup")]
     public IActionResult SignUp()
     {
         return View();
@@ -104,7 +100,6 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
         }
     }
 
-    //[Route("signout")]
     public new async Task<IActionResult> SignOut()
     {
         await _signInManager.SignOutAsync();

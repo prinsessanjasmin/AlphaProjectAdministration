@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace WebApp_MVC.Controllers;
 
-//[Route("clients")]
 public class ClientController(IClientService clientService) : Controller
 {
     private readonly IClientService _clientService = clientService;
@@ -71,7 +70,7 @@ public class ClientController(IClientService clientService) : Controller
             }
         }
 
-        ClientDto clientDto = form; 
+        ClientDto clientDto = form;
         var result = await _clientService.CreateClient(clientDto);
         if (result.Success)
         {
@@ -83,7 +82,7 @@ public class ClientController(IClientService clientService) : Controller
             {
                 return RedirectToAction("Index", "Client");
             }
-           
+
         }
         else
         {
@@ -160,7 +159,6 @@ public class ClientController(IClientService clientService) : Controller
     }
 
     [HttpPost]
-    //[Route("delete")]
     public async Task<IActionResult> DeleteClient(int id)
     {
         var result = await _clientService.DeleteClient(id);

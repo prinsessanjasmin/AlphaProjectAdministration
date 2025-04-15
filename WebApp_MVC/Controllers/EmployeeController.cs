@@ -1,20 +1,24 @@
-﻿using Business.Interfaces;
+﻿using Business.Factories;
+using Business.Interfaces;
 using Business.Models;
 using Business.Services;
 using Data.Contexts;
 using Data.Entities;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using WebApp_MVC.Models;
 
 namespace WebApp_MVC.Controllers;
 
-//[Route("teammembers")]
-public class EmployeeController(DataContext dataContext, IEmployeeService employeeService) : Controller
+public class EmployeeController(DataContext dataContext, IWebHostEnvironment webHostEnvironment, IEmployeeService employeeService) : Controller
 {
     private readonly IEmployeeService _employeeService = employeeService;
+    private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
     private readonly DataContext _dataContext = dataContext;
 
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         var employees = await _employeeService.GetAllEmployees();
@@ -37,30 +41,183 @@ public class EmployeeController(DataContext dataContext, IEmployeeService employ
     }
 
     [HttpGet]
-    public async Task<JsonResult> SearchMembers(string term)
+    public async Task<IActionResult> AddEmployee()
     {
-        if (string.IsNullOrWhiteSpace(term))
+        if (ViewData["AddEmployeeViewModel"] is AddEmployeeViewModel viewModel)
         {
-            return Json(new List<object>());
+            return PartialView("_AddEmployee", viewModel);
         }
 
-        var result = await _employeeService.GetEmployeesBySearchTerm(term);
+        // Fallback if ViewData is null
+        var fallbackModel = new AddEmployeeViewModel();
+
+        return PartialView("_AddEmployee", fallbackModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddEmployee(AddEmployeeViewModel form)
+    {
+        if (!ModelState.IsValid)
+        {
+            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
+            {
+                var errors = ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
+                .ToList()
+                );
+
+                return BadRequest(new { success = false, errors });
+            }
+            else
+            {
+                return View("_AddEmployee", form);
+            }
+        }
+
+        MemberDto memberDto = form;
+
+        if (form.ProfileImage != null && form.ProfileImage.Length > 0)
+        {
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + form.ProfileImage.FileName;
+            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Uploads", "ProjectImages");
+
+            // Ensure directory exists
+            Directory.CreateDirectory(uploadsFolder);
+
+            // Save the file
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await form.ProfileImage.CopyToAsync(fileStream);
+            }
+
+            // Set the image path in the DTO
+            memberDto.ProfileImagePath = "/Images/Uploads/ProfileImages/" + uniqueFileName;
+        }
+
+        var result = await _employeeService.CreateEmployee(memberDto);
+
         if (result.Success)
         {
-            var mappedResults = result as IResult<IEnumerable<EmployeeEntity>>;
-            var employeeList = mappedResults?.Data?.Select(e => new
+            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
             {
-                Id = e.Id.ToString(),
-                MemberFullName = $"{e.FirstName} {e.LastName}",
-                ProfileImage = e.ProfileImagePath?.Replace("~", "") ?? "/ProjectImages/Icons/Avatar.svg"
-            }).ToList();
+                return Ok(new { success = true, message = "Team member created successfully" });
+            }
+            else
+            {
+                return RedirectToAction("Index", "Employee");
+            }
+        }
+        else
+        {
+            ModelState.AddModelError("", "Something went wrong when creating the team member");
+            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
+            {
+                return BadRequest(new { success = false, message = "Failed to create team member" });
+            }
+            else
+            {
+                return PartialView("_AddEmployee", "Employee");
+            }
+        }
+    }
 
-            Console.WriteLine($"Found {employeeList.Count} employees for term: {term}");
+    [HttpGet]
+    public async Task<IActionResult> EditEmployee(int id)
+    {
+        var result = await _employeeService.GetEmployeeById(id);
 
-            return Json(new { data = employeeList } );
+        if (result.Success)
+        {
+            var employeeResult = result as Result<EmployeeEntity>;
+            EmployeeEntity employee = employeeResult?.Data ?? new EmployeeEntity();
+
+            var viewModel = new EditEmployeeViewModel(employee);
+
+            return PartialView("_EditEmployee", viewModel);
+        }
+        else
+        {
+            ViewBag.ErrorMessage("No team member found");
+            return RedirectToAction("Index", "Employee");
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditEmployee(EditEmployeeViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState
+                .Where(x => x.Value?.Errors.Count > 0)
+                .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
+                .ToList()
+                );
+
+            return PartialView("_EditProject", model);
         }
 
-        return Json(new List<object>());
+        MemberDto memberDto = model;
+
+        if (model.ProfileImage != null && model.ProfileImage.Length > 0)
+        {
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProfileImage.FileName;
+            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Uploads", "ProfileImages");
+
+            // Ensure directory exists
+            Directory.CreateDirectory(uploadsFolder);
+
+            // Save the file
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await model.ProfileImage.CopyToAsync(fileStream);
+            }
+
+            // Set the image path in the DTO
+            memberDto.ProfileImagePath = "/Images/Uploads/ProfileImages/" + uniqueFileName;
+        }
+
+        EmployeeEntity employeeEntity = EmployeeFactory.Create(memberDto, model.Id);
+
+        var result = await _employeeService.UpdateEmployee(model.Id, employeeEntity);
+
+        if (result.Success)
+        {
+            return RedirectToAction("Index", "Employee");
+        }
+        else
+        {
+            ViewBag.ErrorMessage("Something went wrong.");
+            return PartialView("_EditEmployee", model);
+        }
+    }
+
+    public IActionResult ConfirmDelete(int id)
+    {
+        return PartialView("_DeleteProject", id);
+    }
+
+    [HttpPost]
+    [Route("delete/{id}")]
+    public async Task<IActionResult> DeleteEmployee(int id)
+    {
+        var result = await _employeeService.DeleteEmployee(id);
+
+        if (result.Success)
+        {
+            return RedirectToAction("Index", "Employee");
+        }
+        else
+        {
+            ViewBag.ErrorMessage("Something went wrong.");
+            return RedirectToAction("Index", "Employee");
+        }
     }
 
     public async Task<IActionResult> Details(int id)
@@ -93,5 +250,32 @@ public class EmployeeController(DataContext dataContext, IEmployeeService employ
         };
 
         return View(viewModel);
+    }
+
+    [HttpGet]
+    public async Task<JsonResult> SearchMembers(string term)
+    {
+        if (string.IsNullOrWhiteSpace(term))
+        {
+            return Json(new List<object>());
+        }
+
+        var result = await _employeeService.GetEmployeesBySearchTerm(term);
+        if (result.Success)
+        {
+            var mappedResults = result as IResult<IEnumerable<EmployeeEntity>>;
+            var employeeList = mappedResults?.Data?.Select(e => new
+            {
+                Id = e.Id.ToString(),
+                MemberFullName = $"{e.FirstName} {e.LastName}",
+                ProfileImage = e.ProfileImagePath?.Replace("~", "") ?? "/ProjectImages/Icons/Avatar.svg"
+            }).ToList();
+
+            Console.WriteLine($"Found {employeeList.Count} employees for term: {term}");
+
+            return Json(new { data = employeeList });
+        }
+
+        return Json(new List<object>());
     }
 }

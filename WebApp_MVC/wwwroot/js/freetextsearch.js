@@ -1,6 +1,6 @@
 ﻿function initSearch(config) {
     let activeIndex = -1;
-   
+    let debounceTimer;
     const searchContainer = document.getElementById(config.containerId);
     const input = document.getElementById(config.inputId);
     const results = document.getElementById(config.resultsId);
@@ -32,9 +32,12 @@
         const query = input.value.trim();
         activeIndex = -1;
 
-        if (query.length > 0) {
-            performSearch(query);
+        clearTimeout(debounceTimer);
 
+        if (query.length >= 3) {
+            debounceTimer = setTimeout(() => {
+                performSearch(query);
+            }, 200);
         } else {
             clearResults();
         }
@@ -48,13 +51,13 @@
             case 'ArrowDown':
                 e.preventDefault();
                 activeIndex = (activeIndex + 1) % items.length;
-                updateActiveItem(items);
+                updateSelectedItem(items);
                 break;
 
             case 'ArrowUp':
                 e.preventDefault();
                 activeIndex = (activeIndex - 1 + items.length) % items.length;
-                updateActiveItem(items);
+                updateSelectedItem(items);
                 break;
 
             case 'Enter':
@@ -66,7 +69,7 @@
         }
     });
 
-    function updateActiveItem(items) {
+    function updateSelectedItem(items) {
         items.forEach(item => item.classList.remove('active'));
         if (items[activeIndex]) {
             items[activeIndex].classList.add('active');
@@ -95,7 +98,7 @@
             })
             .then(data => {
                 console.log("Response data:", data);  // Add this line
-                renderSearchResults(data);
+                generateSearchResults(data);
             })
             .catch(error => {
                 console.error('Error fetching search results:', error);
@@ -104,8 +107,10 @@
             });
     }
 
-    function renderSearchResults(response) {
+    function generateSearchResults(response) {
         const itemsArray = response.data || [];
+        const limitedArray = itemsArray.slice(0, 10);
+
         results.innerHTML = '';       
 
         if (itemsArray.length === 0) {
@@ -115,7 +120,7 @@
             results.appendChild(noResult);
 
         } else {
-            itemsArray.forEach(item => {
+            limitedArray.forEach(item => {
                 const itemId = item.id;
                 const entityType = item.entityType;
                 const detailsUrl = item.detailsUrl;
@@ -129,7 +134,7 @@
 
                 resultItem.innerHTML = `<span>${displayText}</span>`;
 
-                resultItem.addEventListener('click', () => {
+                resultItem.addEventListener('click', (event) => {
                     event.stopPropagation();
                     console.log("Item clicked: id = " + itemId + "entitytype = " + entityType + "detailsUrl = " + detailsUrl + "full item: " + item);
 

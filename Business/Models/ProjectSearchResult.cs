@@ -14,6 +14,6 @@ public class ProjectSearchResult
     }
     public string DetailsUrl
     {
-        get { return $"/Project/Details/{Id}"; }
+        get { return $"/project/details/{Id}"; }
     }
 }

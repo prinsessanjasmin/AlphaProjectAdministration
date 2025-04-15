@@ -1,10 +1,8 @@
 ﻿//This js is created from teacher Hans Mattin-Lasseis video instructions, then I got help from Claude AI to fix some issues
 //because of how my poroject is built.
 
-
-
 function initMemberSelector(config) {
-    let activeIndex = -1; 
+    let activeMemberIndex = -1; 
     let selectedIds = [];
     const selectedIdsInput = document.getElementById(config.selectedIds);
 
@@ -20,12 +18,12 @@ function initMemberSelector(config) {
     }
 
     const memberContainer = document.getElementById(config.containerId);
-    const input = document.getElementById(config.inputId);
-    const results = document.getElementById(config.resultsId);
+    const memberInput = document.getElementById(config.inputId);
+    const memberResults = document.getElementById(config.resultsId);
 
-    if (!memberContainer || !input || !results || !selectedIdsInput) {
+    if (!memberContainer || !memberInput || !memberResults || !selectedIdsInput) {
         console.error("Member selector initialization failed: Missing elements", {
-            memberContainer, input, results, selectedIds
+            memberContainer, memberInput, memberResults, selectedIds
         });
         return;
     }
@@ -67,72 +65,72 @@ function initMemberSelector(config) {
         }
     }
 
-    input.addEventListener('focus', () => {
+    memberInput.addEventListener('focus', () => {
         memberContainer.classList.add('focused');
-        results.classList.add('focused');
-        if (input.value.trim().length > 0) {
-            searchMember(input.value.trim());
+        memberResults.classList.add('focused');
+        if (memberInput.value.trim().length > 0) {
+            searchMember(memberInput.value.trim());
         }
     });
 
-    input.addEventListener('blur', () => {
+    memberInput.addEventListener('blur', () => {
         setTimeout(() => {
             memberContainer.classList.remove('focused');
-            results.classList.remove('focused');
+            memberResults.classList.remove('focused');
         }, 100);
     });
 
 
-    input.addEventListener('input', () => {
-        const query = input.value.trim();
-        activeIndex = -1;
+    memberInput.addEventListener('input', () => {
+        const memberQuery = memberInput.value.trim();
+        activeMemberIndex = -1;
 
-        if (query.length > 0) {
-            searchMember(query);
+        if (memberQuery.length > 0) {
+            searchMember(memberQuery);
 
         } else {
-            results.style.display = 'none';
-            results.innerHTML = '';
+            memberResults.style.display = 'none';
+            memberResults.innerHTML = '';
         }
     });
 
-    input.addEventListener('keydown', (e) => {
-        const items = results.querySelectorAll('.search-item');
-        if (items.length === 0) return;
+    memberInput.addEventListener('keydown', (e) => {
+        const memberItems = memberResults.querySelectorAll('.search-item');
+        if (memberItems.length === 0) return;
 
         switch (e.key) {
             case 'ArrowDown':
                 e.preventDefault();
-                activeIndex = (activeIndex + 1) % items.length;
-                updateActiveItem(items);
+                activeMemberIndex = (activeMemberIndex + 1) % memberItems.length;
+                updateActiveItem(memberItems);
                 break;
 
             case 'ArrowUp':
                 e.preventDefault();
-                activeIndex = (activeIndex - 1) % items.length;
-                updateActiveItem(items);
+                activeMemberIndex = (activeMemberIndex - 1) % memberItems.length;
+                updateActiveItem(memberItems);
                 break;
 
             case 'Enter':
                 e.preventDefault();
-                if (activeIndex >= 0 && items[activeIndex]) {
-                    items[activeIndex].click();
+                if (activeMemberIndex >= 0 && memberItems[activeMemberIndex]) {
+                    memberItems[activeMemberIndex].click();
                 }
                 break;
 
             case 'Backspace':
-                if (input.value === '') {
+                if (memberInput.value === '') {
                     removeLastMember();
                 }
                 break;
         }
     });
 
-    function updateActiveItem(items) {
-        items.forEach(item => item.classList.remove('active'));
-        if (items[activeIndex]) {
-            items[activeIndex].classList.add('active');
-            items[activeIndex].scrollIntoView({ block: 'nearest' });
+    function updateActiveItem(memberItems) {
+        memberItems.forEach(item => item.classList.remove('active'));
+        if (memberItems[activeMemberIndex]) {
+            memberItems[activeMemberIndex].classList.add('active');
+            memberItems[activeMemberIndex].scrollIntoView({ block: 'nearest' });
         }
     }
 
@@ -153,13 +151,13 @@ function initMemberSelector(config) {
             .then(data => renderSearchResults(data))
             .catch(error => {
                 console.error('Error fetching search results:', error);
-                results.innerHTML = `<div class="search-error">Error loading results</div>`
-                results.style.display = 'block';
+                memberResults.innerHTML = `<div class="search-error">Error loading results</div>`
+                memberResults.style.display = 'block';
             });
     }
 
     function renderSearchResults(response) {
-        results.innerHTML = ''; 
+        memberResults.innerHTML = ''; 
 
         const itemsArray = response.data || [];
 
@@ -167,7 +165,7 @@ function initMemberSelector(config) {
             const noResult = document.createElement('div');
             noResult.classList.add('no-results');
             noResult.textContent = config.emptyMessage || 'No results found';
-            results.appendChild(noResult);
+            memberResults.appendChild(noResult);
         } else {
 
             itemsArray.forEach(item => {
@@ -200,12 +198,12 @@ function initMemberSelector(config) {
                 }
                    
                 resultItem.addEventListener('click', () => addMember(item));
-                results.appendChild(resultItem);
+                memberResults.appendChild(resultItem);
 
             });
         }
-        results.style.display = 'block';
-        activeIndex = -1;
+        memberResults.style.display = 'block';
+        activeMemberIndex = -1;
     }
 
     function addMemberElement(item) {
@@ -285,8 +283,8 @@ function initMemberSelector(config) {
         addMemberElement(item);
 
         // Clear input and hide results
-        input.value = '';
-        results.style.display = 'none';
+        memberInput.value = '';
+        memberResults.style.display = 'none';
 
         // Update hidden input
         updateSelectedIdsInput();

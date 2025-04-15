@@ -12,6 +12,7 @@
     z-index: 1; 
     justify-content: space-between;
     align-items: center;
+    position: relative; 
 
     #btn-2-dots {
         align-self: flex-end;
@@ -34,5 +35,17 @@
 .contact-info {
     display: flex; 
     flex-direction: column;
+    justify-content: center; 
+    align-items: center;
     gap: .5rem;
+}
+
+.member-title {
+    display: flex; 
+    justify-content: center; 
+    font-size: 12px; 
+    background-color: $clr-grey-200;
+    padding: .5rem 1rem;
+    border-radius: 8px;
+    width: auto; 
 }

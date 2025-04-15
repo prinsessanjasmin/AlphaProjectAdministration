@@ -6,7 +6,7 @@
     <div class="horizontal">
         <button type="button" class="btn btn-message" data-close="true">Cancel</button>
         <form method="post" asp-controller="Project" asp-action="DeleteProject">
-            <input type="hidden" name="id" value="@Model" />
+            <input type="hidden" name="id" class="deleteProjectId" value="@Model" />
             <button type="submit" class="btn btn-confirm-delete">Delete</button>
         </form>
     </div>

@@ -1,0 +1,40 @@
+﻿@* @model EmployeeEntity
+@{
+    var editEmployeeViewModel = ViewData["EditEmployeeViewModel"] as EditEmployeeViewModel;
+}
+
+<div class="card member-card">
+    <button type="button" data-modal="true" class="btn-2-dots" id="btn-2-dots"></button>
+    <div class="mini-modal" id="projectOptionsModal">
+        <div class="modal-content options-pop-up" id="memberOptionsForm">
+            <button type="button" data-controller="Employee" data-action="EditEmployee" data-modal="true" data-target="#editEmployeeModal" data-id=@Model.Id class="btn btn-options" id="btn-edit-project">Edit</button>
+            <div class="single-line"></div>
+            <button type="button" data-modal="true" data-target="#delete-modal-members" data-id="@Model.Id" class="btn btn-options" id="btn-delete-member">Delete team member</button>
+        </div>
+    </div>
+    <div class="img-container-big-avatar">
+        @if (!string.IsNullOrEmpty(@Model.ProfileImagePath))
+        {
+            <img class="img-big-avatar" src="@Url.Content(Model.ProfileImagePath)" alt="@Model.FirstName @Model.LastName" />
+        }
+        else
+        {
+            <img class="img-big-avatar" src="~/ProjectImages/Icons/Avatar.svg" alt="Profile Image Placeholder" />
+        }
+    </div>
+    <h4>@Model.FirstName @Model.LastName</h4>
+    <p class="member-title">@Model.JobTitle</p>
+    <div class="contact-info">
+        <p>@Model.Email</p>
+        @if (Model.PhoneNumber != "")
+        {
+            <p>@Model.PhoneNumber</p>
+        } else
+        {
+            <p class="grey-out">No phone number available</p>
+        }
+    </div>
+    <button class="btn btn-message">Message</button>
+</div>
+
+ *@

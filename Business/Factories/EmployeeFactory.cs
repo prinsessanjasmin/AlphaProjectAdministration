@@ -12,7 +12,7 @@ public static class EmployeeFactory
             FirstName = form.FirstName,
             LastName = form.LastName,
             Email = form.Email,
-            PhoneNumber = form.PhoneNumber,
+            PhoneNumber = form.PhoneNumber ?? "",
             JobTitle = form.JobTitle,
             ProfileImagePath = form.ProfileImagePath,
             DateOfBirth = form.DateOfBirth,

@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace WebApp_MVC.Controllers;
 
-//[Route("projects")]
 public class ProjectController(IEmployeeService employeeService, IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext) : Controller
 {
 
@@ -24,8 +23,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     private readonly DataContext _dataContext = dataContext;
 
 
-
-    //[Route("")]
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         var projects = await _projectService.GetAllProjects();
@@ -50,7 +48,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
         return View(model);
     }
 
-    //[Route("add")]
+    [HttpGet]
     public async Task<IActionResult> AddProject()
     {
         if (ViewData["AddProjectViewModel"] is AddProjectViewModel viewModel)
@@ -67,7 +65,6 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
 
         return PartialView("_AddProject", fallbackModel);  
     }
-
 
     [HttpPost]
     public async Task<IActionResult> AddProject(AddProjectViewModel form)
@@ -157,8 +154,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
         }
     }
 
-
-    //[Route("edit")]
+    [HttpGet]
     public async Task<IActionResult> EditProject(int id)
     {
         var result = await _projectService.GetProjectById(id);
@@ -236,21 +232,25 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             projectDto.ProjectImagePath = "/Images/Uploads/ProjectImages/" + uniqueFileName;
         }
 
-        if (!string.IsNullOrEmpty(model.SelectedTeamMemberIds))
-        {
-            try
-            {
-                var memberIds = JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds);
-                projectDto.SelectedTeamMemberIds = memberIds;
-            }
-            catch (JsonException ex)
-            {
-                ModelState.AddModelError("SelectedTeamMemberIds", "Invalid team member selection");
-                return PartialView("_EditProject", model);
-            }
-        }
+        //if (!string.IsNullOrEmpty(model.SelectedTeamMemberIds))
+        //{
+        //    try
+        //    {
+        //        var memberIds = JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds);
+        //        projectDto.SelectedTeamMemberIds = memberIds;
+        //    }
+        //    catch (JsonException ex)
+        //    {
+        //        ModelState.AddModelError("SelectedTeamMemberIds", "Invalid team member selection");
+        //        return PartialView("_EditProject", model);
+        //    }
+        //}
+        //else
+        //{
+        //    projectDto.SelectedTeamMemberIds = new List<int>();
+        //}
 
-        ProjectEntity projectEntity = ProjectFactory.Create(projectDto); 
+            ProjectEntity projectEntity = ProjectFactory.Create(projectDto); 
 
         var result = await _projectService.UpdateProject(model.ProjectId, projectEntity);
 
@@ -272,7 +272,6 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     }
 
     [HttpPost]
-    //[Route("delete")]
     public async Task<IActionResult> DeleteProject(int id)
     {
         var result = await _projectService.DeleteProject(id);
@@ -305,7 +304,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             Id = project.ProjectId,
             ProjectName = project.ProjectName,
             ProjectImagePath = project.ProjectImagePath,
-            Description = (project.Description ??  "No description has been added"),
+            Description = project.Description ??  "No description has been added",
             Client = project.Client.ClientName,
             Status = project.Status.StatusName,
             StartDate = project.StartDate,
