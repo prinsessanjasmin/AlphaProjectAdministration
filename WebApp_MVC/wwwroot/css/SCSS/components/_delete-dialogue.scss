@@ -1,4 +1,10 @@
-﻿.delete-dialogue {
+﻿.confirm-delete-modal {
+    height: 15rem;
+    width: 30rem;
+    padding: 2rem;
+}
+
+.delete-dialogue {
     display: flex; 
     flex-direction: column; 
     gap: 1rem; 

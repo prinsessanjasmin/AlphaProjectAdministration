@@ -1,24 +1,60 @@
-﻿@* @model ClientEntity
-
-<div class="card client-card">
-	<div class="side-by-side">
-		<h6>@Model.ClientName</h6>
-		<button asp-controller="Client" asp-action="EditClient" data-modal="true" data-target="#editClientModal" data-project-id="@Model.Id" id="btn-2-dots"></button>
-	</div>
-	<div>
-        @if (Model.Projects != null && Model.Projects.Any())
+﻿@model ClientEntity
+@{
+    List<ProjectEntity> activeProjects = [];
+    List<ProjectEntity> otherProjects = [];
+    foreach (var project in Model.Projects)
+    {
+        if (project.StatusId == 2)
         {
-            <p>Current projects:</p>
-            <ul>
-            @foreach (ProjectEntity project in Model.Projects)
-            {
-                <li>project.ProjectName</li>
-            }
-            </ul>
+            activeProjects.Add(project);
         }
         else
         {
-            <p class="small-text">No current projects.</p>
+            otherProjects.Add(project);
         }
+    }
+}
+
+<div class="card client-card">
+	<div class="side-by-side">
+		<h4>@Model.ClientName</h4>
+        <button type="button" data-modal="true" class="btn-2-dots" id="btn-2-dots"></button>
+        <div class="mini-modal" id="clientOptionsModal">
+            <div class="modal-content options-pop-up" id="clientOptionsForm">
+                <button type="button" data-controller="Client" data-action="EditClient" data-modal="true" data-target="#editClientModal" data-id=@Model.Id class="btn btn-options" id="btn-edit-client">Edit</button>
+                <div class="single-line"></div>
+                <button type="button" data-modal="true" data-target="#delete-client-modal" data-id="@Model.Id" class="btn btn-options btn-options-delete" id="btn-delete-client">Delete client</button>
+            </div>
+        </div>
 	</div>
-</div> *@
+	<div>
+        <h6>Active Projects:</h6>
+        <div class="project-group">
+            @if (activeProjects.Count > 0)
+            {
+                @foreach (var project in activeProjects)
+                {
+                    <p>@project.ProjectName</p>
+                }
+            }
+            else
+            {
+                <p>No active projects.</p>
+            }
+        </div>
+        <div class="project-group">
+            <h6>Other Projects:</h6>
+            @if (otherProjects.Count > 0)
+            {
+                @foreach (var project in otherProjects)
+                {
+                    <p>@project.ProjectName - [@project.Status.StatusName]</p>
+                }
+            }
+            else
+            {
+                <p>No other projects.</p>
+            }
+        </div>
+	</div>
+</div>

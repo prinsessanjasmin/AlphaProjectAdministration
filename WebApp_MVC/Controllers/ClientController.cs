@@ -16,6 +16,7 @@ public class ClientController(IClientService clientService) : Controller
 {
     private readonly IClientService _clientService = clientService;
 
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         var clients = await _clientService.GetAllClients();
@@ -32,13 +33,13 @@ public class ClientController(IClientService clientService) : Controller
         }
         var viewModel = new AddClientViewModel();
 
-        ViewData["ClientFormViewModel"] = viewModel;
-        return View(viewModel);
+        ViewData["AddClientViewModel"] = viewModel;
+        return View(model);
     }
 
     public async Task<IActionResult> AddClient()
     {
-        if (ViewData["AddProjectViewModel"] is AddClientViewModel viewModel)
+        if (ViewData["AddClientViewModel"] is AddClientViewModel viewModel)
         {
             return PartialView("_AddClient", viewModel);
         }

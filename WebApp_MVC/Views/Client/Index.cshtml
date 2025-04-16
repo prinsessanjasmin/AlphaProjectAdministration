@@ -4,11 +4,18 @@
 }
 @{
     var addClientViewModel = ViewData["AddClientViewModel"] as AddClientViewModel;
+    var editClientViewModel = ViewData["EditClientViewModel"] as EditClientViewModel;
 }
 
 
 
-<partial name="_AddClients" model="addClientViewModel" />
+<partial name="_AddClient" model="addClientViewModel" />
+<div id="delete-client-modal" class="modal">
+    <div class="modal-content confirm-delete-modal"></div>
+</div>
+<div id="editClientModal" class="modal">
+    <div class="modal-content add-client-container"></div>
+</div>
 <div class="projects-container">
     <div class="side-by-side">
         <h2>Clients</h2>

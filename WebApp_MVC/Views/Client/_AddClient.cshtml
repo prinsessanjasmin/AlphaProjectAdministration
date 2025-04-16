@@ -1,6 +1,29 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model AddClientViewModel
 @{
+    ViewData["Title"] = "Add Client";
 }
-@await Html.PartialAsync("_ValidationScript")
+
+<div class="modal" id="addClientModal">
+    <div class="modal-content add-client-container" id="addClientForm">
+        <form class="form form-client" method="post" asp-action="AddClient" asp-controller="Client" novalidate>
+            <header class="side-by-side">
+                <h2>New Client</h2>
+                <button class="btn-close" type="button" data-close="true"></button>
+            </header>
+            <div class="form-content">
+                <div class="form-input">
+                    <label asp-for="ClientName"></label>
+                    <div class="input-group">
+                        <input data-val="true" asp-for="ClientName" />
+                        <span asp-validation-for="ClientName" class=""></span>
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <button type="submit" class="btn btn-popup">Add Client</button>
+            </footer>
+        </form>
+    </div>
+</div>
+@await Html.PartialAsync("Partials/Components/_ValidationScript")
+

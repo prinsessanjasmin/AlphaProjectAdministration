@@ -1,0 +1,29 @@
+﻿@model EditClientViewModel
+@{
+    ViewData["Title"] = "Edit Client";
+}
+
+<div class="modal-content add-client-container" id="editClientForm">
+    <form class="form form-client" method="post" asp-action="AddClient" asp-controller="Client" novalidate>
+        <header class="side-by-side">
+            <h2>Edit Client</h2>
+            <button class="btn-close" type="button" data-close="true"></button>
+        </header>
+        <div class="form-content">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-input">
+                <label asp-for="ClientName"></label>
+                <div class="input-group">
+                    <input data-val="true" asp-for="ClientName" />
+                    <span asp-validation-for="ClientName" class=""></span>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <button type="submit" class="btn btn-popup">Save</button>
+        </footer>
+    </form>
+</div>
+
+@await Html.PartialAsync("Partials/Components/_ValidationScript")
+
