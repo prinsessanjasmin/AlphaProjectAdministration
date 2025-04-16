@@ -5,11 +5,11 @@
 
 <div class="card member-card">
     <button type="button" data-modal="true" class="btn-2-dots" id="btn-2-dots"></button>
-    <div class="mini-modal" id="projectOptionsModal">
+    <div class="mini-modal" id="memberOptionsModal">
         <div class="modal-content options-pop-up" id="memberOptionsForm">
             <button type="button" data-controller="Employee" data-action="EditEmployee" data-modal="true" data-target="#editEmployeeModal" data-id=@Model.Id class="btn btn-options" id="btn-edit-project">Edit</button>
             <div class="single-line"></div>
-            <button type="button" data-modal="true" data-target="#delete-modal-members" data-id="@Model.Id" class="btn btn-options" id="btn-delete-member">Delete team member</button>
+            <button type="button" data-modal="true" data-target="#delete-modal-members" data-id="@Model.Id" class="btn btn-options btn-options-delete" id="btn-delete-member">Delete team member</button>
         </div>
     </div>
     <div class="img-container-big-avatar">

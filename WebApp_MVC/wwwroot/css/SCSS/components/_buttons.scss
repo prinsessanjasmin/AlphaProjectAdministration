@@ -138,6 +138,7 @@ button.btn-sidebar.active-controller {
     background-color: $clr-surface;
     color: $clr-heading;
     width: 100%; 
+    align-items: center;
     background-position: 14px 14px; 
     background-repeat: no-repeat;
     background-size: 20px;
@@ -148,7 +149,10 @@ button.btn-sidebar.active-controller {
     }
 }
 
-
+.btn-options-delete {
+    background-image: url("/ProjectImages/Icons/Delete.svg");
+    color: $clr-red;
+}
 
 .btn-message {
     background-color: $clr-grey-100;
@@ -172,10 +176,7 @@ button.btn-sidebar.active-controller {
     background-image: url("/ProjectImages/Icons/Add\ User.svg");
 }
 
-#btn-delete-project {
-    background-image: url("/ProjectImages/Icons/Delete.svg");
-    color: $clr-red;
-}
+
 
 .btn-add-new {
     padding: .5rem 1.5rem .5rem 2.5rem;

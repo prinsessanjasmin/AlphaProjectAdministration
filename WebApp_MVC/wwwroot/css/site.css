@@ -676,6 +676,7 @@ button.btn-sidebar.active-controller {
   background-color: #FFFFFF;
   color: #1A1926;
   width: 100%;
+  align-items: center;
   background-position: 14px 14px;
   background-repeat: no-repeat;
   background-size: 20px;
@@ -683,6 +684,11 @@ button.btn-sidebar.active-controller {
 }
 .btn-options:hover {
   background-color: #F5F7FA;
+}
+
+.btn-options-delete {
+  background-image: url("/ProjectImages/Icons/Delete.svg");
+  color: #FF6640;
 }
 
 .btn-message {
@@ -705,11 +711,6 @@ button.btn-sidebar.active-controller {
 
 #btn-add-member {
   background-image: url("/ProjectImages/Icons/Add User.svg");
-}
-
-#btn-delete-project {
-  background-image: url("/ProjectImages/Icons/Delete.svg");
-  color: #FF6640;
 }
 
 .btn-add-new {

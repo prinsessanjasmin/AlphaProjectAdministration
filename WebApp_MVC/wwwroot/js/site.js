@@ -144,7 +144,7 @@ document.querySelectorAll(".btn-2-dots").forEach(button => {
 
         document.querySelectorAll(".mini-modal").forEach(modal => modal.style.display = "none");
 
-        const card = this.closest(".project-card" || ".member-card");
+        const card = this.closest(".card");
         const optionsModal = card.querySelector(".mini-modal");
 
         optionsModal.style.display = optionsModal.style.display === "flex" ? "none" : "flex";
