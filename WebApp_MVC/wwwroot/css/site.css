@@ -702,7 +702,14 @@ button.btn-sidebar.active-controller {
   background-color: #FF6640;
   color: #FFFFFF;
   padding: 0.5rem 2rem;
-  width: 100%;
+  width: 12rem;
+}
+
+.btn-cancel-delete {
+  background-color: #F5F7FA;
+  color: #1A1926;
+  padding: 0.5rem 2rem;
+  width: 12rem;
 }
 
 #btn-edit-project {
@@ -1045,6 +1052,7 @@ select {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .vertical {
@@ -1120,7 +1128,9 @@ select {
   width: 6px;
 }
 
-#delete-modal .modal-content {
+.confirm-delete-modal {
+  height: 15rem;
+  width: 30rem;
   padding: 2rem;
 }
 
@@ -1243,4 +1253,16 @@ select {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.delete-dialogue {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  align-items: stretch;
+  text-align: center;
+}
+.delete-dialogue .horizontal {
+  justify-content: center;
 }

@@ -1,13 +1,13 @@
 ﻿@model int
 
-<div class="delete-dialogue" id="delete-project-dialogue">
+<div class="delete-dialogue" id="delete-employee-dialogue">
     <h4>Are you sure?</h4>
-    <p>Do you really want to delete this project?</p>
+    <p>Do you really want to delete this member?</p>
     <p>This action cannot be undone.</p>
     <div class="horizontal">
         <button type="button" class="btn btn-cancel-delete" data-close="true">Cancel</button>
-        <form method="post" asp-controller="Project" asp-action="DeleteProject">
-            <input type="hidden" name="id" class="deleteProjectId" value="@Model" />
+        <form method="post" asp-controller="Employee" asp-action="DeleteEmployee">
+            <input type="hidden" name="id" class="deleteEmployeeId" value="@Model" />
             <button type="submit" class="btn btn-confirm-delete">Delete</button>
         </form>
     </div>

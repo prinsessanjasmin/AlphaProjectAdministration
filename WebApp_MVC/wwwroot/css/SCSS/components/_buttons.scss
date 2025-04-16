@@ -165,7 +165,14 @@ button.btn-sidebar.active-controller {
     background-color: $clr-red;
     color: $clr-surface;
     padding: .5rem 2rem;
-    width: 100%;
+    width: 12rem;
+}
+
+.btn-cancel-delete {
+    background-color: $clr-grey-100;
+    color: $clr-heading;
+    padding: .5rem 2rem;
+    width: 12rem;
 }
 
 #btn-edit-project {

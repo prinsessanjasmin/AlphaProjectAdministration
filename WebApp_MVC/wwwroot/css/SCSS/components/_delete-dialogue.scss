@@ -1,0 +1,12 @@
+﻿.delete-dialogue {
+    display: flex; 
+    flex-direction: column; 
+    gap: 1rem; 
+    justify-content: center; 
+    align-items: stretch;
+    text-align: center;
+
+    .horizontal {
+        justify-content: center; 
+    }
+}

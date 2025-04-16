@@ -200,11 +200,10 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
 
     public IActionResult ConfirmDelete(int id)
     {
-        return PartialView("_DeleteProject", id);
+        return PartialView("_DeleteEmployee", id);
     }
 
     [HttpPost]
-    [Route("delete/{id}")]
     public async Task<IActionResult> DeleteEmployee(int id)
     {
         var result = await _employeeService.DeleteEmployee(id);

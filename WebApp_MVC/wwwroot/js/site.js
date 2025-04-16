@@ -43,11 +43,16 @@
             if (!modal) return;
 
             // Get the ID if present (for edit and delete modals)
-            const projectId = button.getAttribute('data-id');
+            const itemId = button.getAttribute('data-id');
 
-            if (modalTarget === '#delete-modal' && projectId) {
+            if ((modalTarget === '#delete-project-modal' ||
+                modalTarget === '#delete-employee-modal' ||
+                modalTarget === '#delete-client-modal') && itemId) {
+
                 try {
-                    const url = `/Project/ConfirmDelete?id=${projectId}`;
+                    const url = `/${controller}/ConfirmDelete?id=${itemId}`;
+
+                    console.log(url); 
 
                     const response = await fetch(url);
                     if (!response.ok) throw new Error("Failed to load delete confirmation");
@@ -62,7 +67,7 @@
             }
 
             // Check if we need to load content dynamically (edit modal)
-            else if (projectId) {
+            else if (itemId) {
                 const action = button.getAttribute('data-action');
                 const controller = button.getAttribute('data-controller');
 
@@ -71,7 +76,7 @@
                     return;
                 }
 
-                const url = `/${controller}/${action}?id=${projectId}`;
+                const url = `/${controller}/${action}?id=${itemId}`;
 
                 try {
                     const response = await fetch(url);
