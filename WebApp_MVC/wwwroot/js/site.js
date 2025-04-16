@@ -16,15 +16,15 @@
     }
 
     sidebarProjects?.addEventListener('click', () => {
-        window.location.href = '/projects';
+        window.location.href = '/project';
     });
 
     sidebarClients?.addEventListener('click', () => {
-        window.location.href = '/clients';
+        window.location.href = '/client';
     });
 
     sidebarMembers?.addEventListener('click', () => {
-        window.location.href = '/members';
+        window.location.href = '/employee';
     });
 
 
@@ -144,8 +144,8 @@ document.querySelectorAll(".btn-2-dots").forEach(button => {
 
         document.querySelectorAll(".mini-modal").forEach(modal => modal.style.display = "none");
 
-        const projectCard = this.closest(".project-card");
-        const optionsModal = projectCard.querySelector(".mini-modal");
+        const card = this.closest(".project-card" || ".member-card");
+        const optionsModal = card.querySelector(".mini-modal");
 
         optionsModal.style.display = optionsModal.style.display === "flex" ? "none" : "flex";
     });
