@@ -69,8 +69,12 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     [HttpPost]
     public async Task<IActionResult> AddProject(AddProjectViewModel form)
     {
+        string originalSelectedTeamMembers = form.SelectedTeamMemberIds;
+
         await PopulateClientsAsync(form);
         await PopulateMembersAsync(form);
+
+        form.SelectedTeamMemberIds = originalSelectedTeamMembers;
 
         if (!ModelState.IsValid)
         {
@@ -113,20 +117,6 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             projectDto.ProjectImagePath = "/Images/Uploads/ProjectImages/" + uniqueFileName;
         }
 
-        if (string.IsNullOrEmpty(form.SelectedTeamMemberIds))
-        {
-            try
-            {
-                var memberIds = JsonSerializer.Deserialize<List<int>>(form.SelectedTeamMemberIds);
-                projectDto.SelectedTeamMemberIds = memberIds;
-            }
-            catch (JsonException ex)
-            {
-                ModelState.AddModelError("SelectedTeamMemberIds", "Invalid team member selection");
-                return PartialView("_AddProject", form); 
-            }
-        }
-
         var result = await _projectService.CreateProject(projectDto);
 
         if (result.Success)
@@ -153,6 +143,24 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             }
         }
     }
+
+
+    //if (!string.IsNullOrEmpty(form.SelectedTeamMemberIds))
+    //{
+    //    try
+    //    {
+    //        var memberIds = JsonSerializer.Deserialize<List<int>>(form.SelectedTeamMemberIds);
+    //        Console.WriteLine($"Manually deserialized: {string.Join(", ", memberIds)}");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Console.WriteLine($"Deserialization error: {ex.Message}");
+    //    }
+    //}
+
+
+
+
 
     [HttpGet]
     public async Task<IActionResult> EditProject(int id)
@@ -334,11 +342,12 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
                 var teamMemberIds = projectResult.Data.TeamMembers.Select(tm => tm.EmployeeId).ToList();
                 viewModel.SelectedTeamMemberIds = JsonSerializer.Serialize(teamMemberIds);
             }
-        }
-        else
-        {
-            viewModel.PreselectedTeamMembers = [];
-            viewModel.SelectedTeamMemberIds = "[]"; 
+            else if (string.IsNullOrEmpty(viewModel.SelectedTeamMemberIds) ||
+             viewModel.SelectedTeamMemberIds == "[]")
+            {
+                viewModel.PreselectedTeamMembers = [];
+                viewModel.SelectedTeamMemberIds = "[]";
+            }
         }
     }
 

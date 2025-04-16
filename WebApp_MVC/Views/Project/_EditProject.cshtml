@@ -77,7 +77,7 @@
             </div>
             <div class="form-input">
                 <label asp-for="SelectedTeamMemberIds">Team members</label>
-                <div class="selected-member-display" id="selected-member-display"></div>
+                <div class="selected-member-display" id="edit-selected-member-display"></div>
                 <div class="input-group member-selector" id="edit-tagged-members">
                     <input type="text" id="edit-input-member-search" placeholder="Add team member(s)..." />
                     <input type="hidden" asp-for="SelectedTeamMemberIds" id="edit-selected-team-member-ids"
@@ -120,6 +120,7 @@
                 inputId: 'edit-input-member-search',
                 resultsId: 'edit-member-search-results',
                 selectedIds: 'edit-selected-team-member-ids',
+                displayContainerId: 'edit-selected-member-display',
                 searchUrl: '@Url.Action("SearchMembers", "Employee")',
                 displayProperty: 'memberFullName',
                 imageProperty: 'profileImage',

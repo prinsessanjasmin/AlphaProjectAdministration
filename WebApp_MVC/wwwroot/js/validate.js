@@ -23,6 +23,7 @@
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault()
+            console.log("Form submitting with team members:", document.getElementById('selected-team-member-ids')?.value);
             e.stopPropagation();
 
             let isValid = true;
@@ -44,6 +45,11 @@
 
             clearErrorMessages(form)
             const formData = new FormData(form)
+
+            console.log("Form data before submission:");
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
 
             try {
                 const res = await fetch(form.action, {
@@ -119,7 +125,7 @@ function validateField(field) {
 
     let errorSpan = document.querySelector(`span[data-valmsg-for='${fieldName}']`);
     if (!errorSpan)
-        errorSpan = formElement.querySelector(`span[for="$fieldName"]`);
+        errorSpan = formElement.querySelector(`span[for="${fieldName}"]`);
 
     if (!errorSpan) {
         return true;
@@ -130,7 +136,7 @@ function validateField(field) {
     let value = field.value.trim();
 
     if (field.hasAttribute('required') || field.getAttribute('data-val-required')) {
-        if (field === "") {
+        if (value === "") {
             errorMessage = field.getAttribute("data-val-required") || "Required";
         } 
     }
@@ -178,44 +184,49 @@ function validateField(field) {
         return true;
     }
 
-    function validateMemberSelection(field) {
-        const fieldName = field.name || field.id; 
-        const formElement = field.closest('form');
+    
+}  
 
-        let errorSpan = document.querySelector(`span[data-valmsg-for='${fieldName}']`);
-        if (!errorSpan) {
-            errorSpan = formElement.querySelector(`span[for='${fieldName}']`);
-        }
+function validateMemberSelection(field) {
+    
 
-        if (!errorSpan) {
-            return true;
-        }
+    const fieldName = field.name || field.id;
+    const formElement = field.closest('form');
 
-        let value = field.value.trim(); 
-        let errorMessage = "";
+    let errorSpan = document.querySelector(`span[data-valmsg-for='${fieldName}']`);
+    if (!errorSpan) {
+        errorSpan = formElement.querySelector(`span[for='${fieldName}']`);
+    }
 
-        try {
-            const selectedMembers = JSON.parse(value || "[]");
-            if (!Array.isArray(selectedMembers) || selectedMembers.length === 0) {
-                errorMessage = "Please select at least one member";
-            }
-        }
-        catch (e) {
-            errorMessage = "Invalid team member selection"; 
-        }
-        
-        if (errorMessage) {
-            field.classList.add("input-validation-error");
-            errorSpan.classList.remove("field-validation-valid");
-            errorSpan.classList.add("field-validation-error");
-            errorSpan.textContent = errorMessage;
-            return false;
-        } else {
-            field.classList.remove("input-validation-error");
-            errorSpan.classList.remove("field-validation-error");
-            errorSpan.classList.add("field-validation-valid");
-            errorSpan.textContent = "";
-            return true;
+    if (!errorSpan) {
+        return true;
+    }
+
+    let value = field.value.trim();
+    console.log("Validating team members:", value);
+    let errorMessage = "";
+
+    try {
+        const selectedMembers = JSON.parse(value || "[]");
+        if (!Array.isArray(selectedMembers) || selectedMembers.length === 0) {
+            errorMessage = "Please select at least one member";
         }
     }
-}  
+    catch (e) {
+        errorMessage = "Invalid team member selection";
+    }
+
+    if (errorMessage) {
+        field.classList.add("input-validation-error");
+        errorSpan.classList.remove("field-validation-valid");
+        errorSpan.classList.add("field-validation-error");
+        errorSpan.textContent = errorMessage;
+        return false;
+    } else {
+        field.classList.remove("input-validation-error");
+        errorSpan.classList.remove("field-validation-error");
+        errorSpan.classList.add("field-validation-valid");
+        errorSpan.textContent = "";
+        return true;
+    }
+}

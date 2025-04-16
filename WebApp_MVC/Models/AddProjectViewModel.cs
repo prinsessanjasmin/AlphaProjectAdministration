@@ -46,6 +46,21 @@ public class AddProjectViewModel() : IProjectViewModel
 
     public static implicit operator ProjectDto(AddProjectViewModel model)
     {
+        List<int> teamMembers = [];
+        try
+        {
+            if (!string.IsNullOrEmpty(model.SelectedTeamMemberIds))
+            {
+                teamMembers = JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deserializing team members: {ex.Message}");
+            // Log the error, but continue with an empty list
+        }
+
+
         var projectDto = new ProjectDto
         {
             ProjectName = model.ProjectName,
