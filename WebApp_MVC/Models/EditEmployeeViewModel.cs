@@ -72,7 +72,7 @@ public class EditEmployeeViewModel
                 StreetAddress = model.StreetAddress,
                 PostCode = model.PostCode,
                 City = model.City,
-                DateOfBirth = DateConverter(model.Day, model.Month, model.Year),
+                DateOfBirth = DateConverter(model.Year, model.Month, model.Day),
             };
     }
 
@@ -88,16 +88,35 @@ public class EditEmployeeViewModel
         StreetAddress = entity.Address.StreetAddress;
         PostCode = entity.Address.PostCode;
         City = entity.Address.City;
-        Day = DateConverterDay(entity.DateOfBirth);
-        Month = DateConverterMonth(entity.DateOfBirth);
         Year = DateConverterYear(entity.DateOfBirth);
-        
+        Month = DateConverterMonth(entity.DateOfBirth);
+        Day = DateConverterDay(entity.DateOfBirth);
+
     }
 
     public static DateOnly DateConverter(int year, int month, int day)
     {
-        DateOnly date = new DateOnly(year, month, day);
-        return date;
+
+        // Get the last day of the selected month in the selected year
+        int maxDay = DateTime.DaysInMonth(year, month);
+
+        // If the selected day is greater than the maximum days in the month, adjust it
+        if (day > maxDay)
+        {
+            day = maxDay;
+        }
+
+        try
+        {
+            
+            DateOnly date = new DateOnly(year, month, day);
+            return date;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error creating DateOnly: {ex.Message}");
+            throw; 
+        }
     }
 
     public static int DateConverterDay(DateOnly dateOfBirth)
@@ -114,5 +133,8 @@ public class EditEmployeeViewModel
         return dateOfBirth.Year;
     }
 
-
+    public EditEmployeeViewModel()
+    {
+        
+    }
 }

@@ -56,4 +56,50 @@ public class EmployeeRepository(DataContext context) : BaseRepository<EmployeeEn
             return Enumerable.Empty<EmployeeEntity>();
         }
     }
+
+    public override async Task<EmployeeEntity> UpdateAsync(Expression<Func<EmployeeEntity, bool>> expression, EmployeeEntity updatedEntity)
+    {
+        try
+        {
+            var existingEntity = await _context.Employees
+                .Include(e => e.Address) 
+                .FirstOrDefaultAsync(expression);
+
+            if (existingEntity == null)
+                return null!;
+
+            var updatedValues = _context.Entry(updatedEntity).CurrentValues;
+            var existingEntry = _context.Entry(existingEntity);
+
+            var keyName = existingEntry.Metadata?.FindPrimaryKey()?.Properties
+                .Select(p => p.Name).SingleOrDefault();
+
+            foreach (var property in updatedValues.Properties)
+            {
+                if (property.Name != keyName)
+                {
+                    var value = updatedValues[property.Name];
+                    existingEntry.Property(property.Name).CurrentValue = value;
+                }
+            }
+
+            // Update navigation properties like Address if needed
+            if (updatedEntity.Address != null)
+            {
+                if (existingEntity.Address == null)
+                {
+                    existingEntity.Address = new AddressEntity();
+                }
+                _context.Entry(existingEntity.Address).CurrentValues.SetValues(updatedEntity.Address);
+            }
+
+            return existingEntity;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error updating employee :: {ex.Message}");
+            return null!;
+        }
+    }
+
 }

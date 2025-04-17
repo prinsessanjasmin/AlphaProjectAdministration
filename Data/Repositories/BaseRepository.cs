@@ -94,6 +94,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
 
     public virtual async Task<TEntity> UpdateAsync(Expression<Func<TEntity, bool>> expression, TEntity updatedEntity)
     {
+        //Got some help here from Claude AI with excluding the primary key property from updating. 
         if (updatedEntity == null)
             return null!;
         try
@@ -102,7 +103,21 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
             if (existingEntity == null)
                 return null!;
 
-            _context.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
+            var propertyValues = _context.Entry(updatedEntity).CurrentValues;
+            var existingEntry = _context.Entry(existingEntity);
+
+            var keyName = existingEntry.Metadata?.FindPrimaryKey()?.Properties
+                .Select(p => p.Name).SingleOrDefault();
+
+            foreach (var property in propertyValues.Properties)
+            {
+                if (property.Name != keyName)
+                {
+                    var value = propertyValues[property.Name];
+                    existingEntry.Property(property.Name).CurrentValue = value;
+                }
+            }
+
             return existingEntity;
         }
         catch (Exception ex)

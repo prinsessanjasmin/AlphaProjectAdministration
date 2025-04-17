@@ -1,8 +1,16 @@
 .client-card {
     height: 400px; 
     width: 350px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 1rem; 
+    position: relative;
 }
 
 .project-group {
+    
+}
 
+.projects-empty {
+    color: $clr-body-light;
 }

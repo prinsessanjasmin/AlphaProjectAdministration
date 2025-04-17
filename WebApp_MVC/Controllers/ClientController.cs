@@ -136,7 +136,6 @@ public class ClientController(IClientService clientService) : Controller
         }
 
         ClientDto clientDto = model;
-
         
         ClientEntity clientEntity = ClientFactory.Create(clientDto);
 

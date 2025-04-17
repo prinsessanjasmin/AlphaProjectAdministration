@@ -144,24 +144,6 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
         }
     }
 
-
-    //if (!string.IsNullOrEmpty(form.SelectedTeamMemberIds))
-    //{
-    //    try
-    //    {
-    //        var memberIds = JsonSerializer.Deserialize<List<int>>(form.SelectedTeamMemberIds);
-    //        Console.WriteLine($"Manually deserialized: {string.Join(", ", memberIds)}");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Console.WriteLine($"Deserialization error: {ex.Message}");
-    //    }
-    //}
-
-
-
-
-
     [HttpGet]
     public async Task<IActionResult> EditProject(int id)
     {
@@ -240,25 +222,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             projectDto.ProjectImagePath = "/Images/Uploads/ProjectImages/" + uniqueFileName;
         }
 
-        //if (!string.IsNullOrEmpty(model.SelectedTeamMemberIds))
-        //{
-        //    try
-        //    {
-        //        var memberIds = JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds);
-        //        projectDto.SelectedTeamMemberIds = memberIds;
-        //    }
-        //    catch (JsonException ex)
-        //    {
-        //        ModelState.AddModelError("SelectedTeamMemberIds", "Invalid team member selection");
-        //        return PartialView("_EditProject", model);
-        //    }
-        //}
-        //else
-        //{
-        //    projectDto.SelectedTeamMemberIds = new List<int>();
-        //}
-
-            ProjectEntity projectEntity = ProjectFactory.Create(projectDto); 
+        ProjectEntity projectEntity = ProjectFactory.Create(projectDto); 
 
         var result = await _projectService.UpdateProject(model.ProjectId, projectEntity);
 

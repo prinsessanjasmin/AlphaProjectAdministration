@@ -75,7 +75,7 @@ public class ClientService(IClientRepository clientRepository) : IClientService
         await _clientRepository.BeginTransactionAsync();
         try
         {
-            ClientEntity client = await _clientRepository.UpdateAsync(e => e.Id == id, updatedClient);
+            ClientEntity client = await _clientRepository.UpdateAsync(c => c.Id == id, updatedClient);
             if (client == null)
                 return Result.NotFound("Could not find the client in the database.");
 

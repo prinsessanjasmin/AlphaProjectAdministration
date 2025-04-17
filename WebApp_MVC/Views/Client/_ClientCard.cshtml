@@ -27,34 +27,35 @@
             </div>
         </div>
 	</div>
-	<div>
-        <h6>Active Projects:</h6>
-        <div class="project-group">
-            @if (activeProjects.Count > 0)
+    <div class="project-group">
+        <div>
+            <h6>Active Projects:</h6>
+        @if (activeProjects.Count > 0)
+        {
+            @foreach (var project in activeProjects)
             {
-                @foreach (var project in activeProjects)
-                {
-                    <p>@project.ProjectName</p>
-                }
+                <p>@project.ProjectName</p>
             }
-            else
-            {
-                <p>No active projects.</p>
-            }
+        }
+        else
+        {
+                <p class="projects-empty">No active projects.</p>
+        }
         </div>
-        <div class="project-group">
-            <h6>Other Projects:</h6>
-            @if (otherProjects.Count > 0)
+    </div>
+    <div class="project-group">
+        <h6>Other Projects:</h6>
+        @if (otherProjects.Count > 0)
+        {
+            @foreach (var project in otherProjects)
             {
-                @foreach (var project in otherProjects)
-                {
-                    <p>@project.ProjectName - [@project.Status.StatusName]</p>
-                }
+                <p>@project.ProjectName - [@project.Status.StatusName]</p>
             }
-            else
-            {
-                <p>No other projects.</p>
-            }
-        </div>
-	</div>
+        }
+        else
+        {
+            <p class="projects-empty">No other projects.</p>
+        }
+    </div>
+	
 </div>

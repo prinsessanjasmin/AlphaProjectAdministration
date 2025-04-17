@@ -82,19 +82,19 @@
                 <div class="horizontal-form">
                     <div class="input-group">
                         <select class="padding-1" data-val="true" id="day" asp-for="Day">
-                            <option value="">Day</option>
+                            <option value="@Model.Day">@Model.Day</option>
                         </select>
                         <span asp-validation-for="Day"></span>
                     </div>
                     <div class="input-group">
                         <select class="padding-1" data-val="true" id="month" asp-for="Month">
-                            <option value="">Month</option>/option>
+                            <option value="@Model.Month">@Model.Month</option>
                         </select>
                         <span asp-validation-for="Month"></span>
                     </div>
                     <div class="input-group">
                         <select class="padding-1" data-val="true" id="year" asp-for="Year">
-                            <option value="">Year</option>
+                           <option value="@Model.Year">@Model.Year</option>
                         </select>
                         <span asp-validation-for="Year"></span>
                     </div>
@@ -108,4 +108,21 @@
 </div>
 
 @await Html.PartialAsync("Partials/Components/_ValidationScript")
-<script src="~/js/dob-options.js" asp-append-version="true"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const daySelect = document.getElementById('day');
+        const monthSelect = document.getElementById('month');
+        const yearSelect = document.getElementById('year');
+
+        if (daySelect && monthSelect && yearSelect) {
+            populateDateDropdowns(
+                daySelect,
+                monthSelect,
+                yearSelect,
+                @Model.Day,
+                @Model.Month,
+                @Model.Year
+            );
+        }
+    });
+</script>

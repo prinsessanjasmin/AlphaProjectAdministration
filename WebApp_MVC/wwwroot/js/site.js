@@ -27,6 +27,14 @@
         window.location.href = '/employee';
     });
 
+    const daySelect = document.getElementById("day");
+    const monthSelect = document.getElementById("month");
+    const yearSelect = document.getElementById("year");
+
+    if (daySelect && monthSelect && yearSelect) {
+        populateDateDropdowns(daySelect, monthSelect, yearSelect);
+    }
+
 
     const modalButtons = document.querySelectorAll('[data-modal="true"]')
     modalButtons.forEach(button => {
@@ -96,6 +104,15 @@
                         oldScript.parentNode.replaceChild(newScript, oldScript);
                     });
 
+                    const daySelect = modal.querySelector('#day');
+                    const monthSelect = modal.querySelector('#month');
+                    const yearSelect = modal.querySelector('#year');
+
+                    if (daySelect && monthSelect && yearSelect) {
+                        // For edit modals, the selected values will be set by the script in the modal
+                        // content if it includes the Model values
+                        populateDateDropdowns(daySelect, monthSelect, yearSelect);
+                    }
                 }
                 catch (error) {
                     console.error("Error loading modal content:", error);
@@ -204,7 +221,7 @@ async function loadImage(file) {
     })
 }
 
-    async function processImage(file, imagePreview, previewer, previewSize = 150) {
+async function processImage(file, imagePreview, previewer, previewSize = 150) {
         try {
             const img = await loadImage(file)
             const canvas = document.createElement('canvas')
@@ -219,4 +236,41 @@ async function loadImage(file) {
         catch (error) {
             console.error('Failed on image processing:', error)
         }
+}
+
+function populateDateDropdowns(daySelect, monthSelect, yearSelect, selectedDay, selectedMonth, selectedYear) {
+    if (!daySelect || !monthSelect || !yearSelect) return;
+
+    while (daySelect.options.length > 1) {
+        daySelect.remove(1);
     }
+    while (monthSelect.options.length > 1) {
+        monthSelect.remove(1);
+    }
+    while (yearSelect.options.length > 1) {
+        yearSelect.remove(1);
+    }
+
+    // Populate Day (1-31)
+    for (let i = 1; i <= 31; i++) {
+        let option = new Option(i, i);
+        daySelect.add(option);
+    }
+
+    // Populate Month (January - December)
+    let monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    monthNames.forEach((month, index) => {
+        let option = new Option(month, index + 1);
+        monthSelect.add(option);
+    });
+
+    // Populate Year (From 1900 to Current Year)
+    let currentYear = new Date().getFullYear();
+    for (let i = currentYear; i >= 1900; i--) {
+        let option = new Option(i, i);
+        yearSelect.add(option);
+    }
+}

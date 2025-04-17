@@ -159,7 +159,7 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
                 .ToList()
                 );
 
-            return PartialView("_EditProject", model);
+            return PartialView("_EditEmployee", model);
         }
 
         MemberDto memberDto = model;
