@@ -300,30 +300,6 @@ a {
   opacity: 1;
 }
 
-#btn-notifications {
-  grid-column: 2;
-  align-self: center;
-  justify-self: center;
-  cursor: pointer;
-}
-
-#btn-settings {
-  grid-column: 3;
-  align-self: center;
-  justify-self: center;
-  border-right: 1px solid #E3E5E8;
-  padding-right: 1rem;
-  cursor: pointer;
-}
-
-#btn-account {
-  grid-column: 4;
-  align-self: center;
-  justify-self: center;
-  cursor: pointer;
-  padding-right: 1rem;
-}
-
 footer {
   grid-row: 3/4;
   grid-column: 2/5;
@@ -772,6 +748,30 @@ button.btn-sidebar.active-controller {
   flex-direction: column;
 }
 
+#btn-notifications {
+  grid-column: 2;
+  align-self: center;
+  justify-self: center;
+  cursor: pointer;
+}
+
+#btn-settings {
+  grid-column: 3;
+  align-self: center;
+  justify-self: center;
+  border-right: 1px solid #E3E5E8;
+  padding-right: 1rem;
+  cursor: pointer;
+}
+
+#btn-account {
+  grid-column: 4;
+  align-self: center;
+  justify-self: center;
+  cursor: pointer;
+  padding-right: 1rem;
+}
+
 .form {
   width: 490px;
 }
@@ -1028,7 +1028,7 @@ select {
   font-weight: 700;
 }
 
-#notification-row {
+#notification-line {
   padding-bottom: 0.5rem;
 }
 

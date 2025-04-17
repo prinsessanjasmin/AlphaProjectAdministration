@@ -15,4 +15,6 @@ public class ApplicationUser : IdentityUser
     [PersonalData]
     [Column(TypeName = "nvarchar(50)")]
     public string LastName { get; set; } = null!;
+
+    public ICollection<NotificationDismissedEntity> DismissedNotifications { get; set; } = []; 
 }

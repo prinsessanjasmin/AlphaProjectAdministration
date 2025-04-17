@@ -1,5 +1,7 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
 
+    initializeDropdowns();
+
     const controller = document.body.dataset.controller;
     const sidebarProjects = document.querySelector('#sidebar-projects');
     const sidebarMembers = document.querySelector('#sidebar-members');
@@ -273,4 +275,76 @@ function populateDateDropdowns(daySelect, monthSelect, yearSelect, selectedDay, 
         let option = new Option(i, i);
         yearSelect.add(option);
     }
+}
+
+//Dropdowns
+function closeAllDropdowns(exceptDropdown, dropdownElements) {
+    dropdownElements.forEach(dropdown => {
+        if (dropdown !== exceptDropdown) {
+            dropdown.classList.remove('show');
+        }
+    });
+}
+function initializeDropdowns() {
+    const dropdownTriggers = document.querySelectorAll('[data-type="dropdown"]');
+    const dropdownElements = new Set()
+    dropdownTriggers.forEach(trigger => {
+        const targetSelector = trigger.getAttribute('data-target');
+        if (targetSelector) {
+            const dropdown = document.querySelector(targetSelector);
+            if (dropdown) {
+                dropdownElements.add(dropdown)
+            }
+        }
+    });
+
+    dropdownTriggers.forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const targetSelector = trigger.getAttribute('data-target');
+            if (!targetSelector) return;
+            const dropdown = document.querySelector(targetSelector);
+            if (!dropdown) return;
+
+            closeAllDropdowns(dropdown, dropdownElements)
+            dropdown.classList.toggle('show');
+        });
+    });
+
+    dropdownElements.forEach(dropdown => {
+        dropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        })
+    })
+
+    document.addEventListener('click', () => {
+        closeAllDropdowns(null, dropdownElements);
+    });
+}
+
+//SignalR
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/chathub")
+    .build(); 
+
+connection.on("ReceiveMessage", (userName, message) => {
+    const div = document.createElement('div'); 
+    div.innerHTML = 
+    `
+    <div class="item">
+        <div class="name">${userName}</div>
+        <div class="chat-message"${message}</div>
+    </div>
+    `
+    document.getElemementById("chat-messages").appendChild(div);
+})
+
+connection.start().catch(error => console.error(error.toString()));
+
+function sendMessage() {
+    const username = document.getElementById("username").value; 
+    const message = document.getElementById("message").value; 
+
+    connection.invoke("SendMessage", username, message).catch(error => console.error(error.toString()));
+    document.getElementById("message").value = ""; 
 }

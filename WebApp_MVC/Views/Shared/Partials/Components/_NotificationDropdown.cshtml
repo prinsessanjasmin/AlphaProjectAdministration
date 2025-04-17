@@ -1,0 +1,42 @@
+﻿<div class="notification-dropdown-container">
+	<button id="notification-dropdown" data-type="dropdown" data-target="#notification-dropdown" class="btn-notifications fa-solid fa-bell">
+		<div class="dot red-dot"></div>
+	</button>
+	<div id="notification-dropdown" class="notification-dropdown">
+		<div class="notification-header">
+			<h3>Notifications</h3>
+			<span class="notification-number">1</span>
+		</div>
+		<div class="notification-line"></div>
+		<div class="notifications">
+			<div class="notification-item" data-id="">
+				<img class="image" src="~/ProjectImages/Icons/avatar2.svg" />
+				<div class="notification-message">Test</div>
+				<div class="time-stamp">1 day ago</div>
+				<button class="btn-x" onclick="dismissNotification()"></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	const connection = new SignalR.HubConnectionBuilder()
+		.withUrl("/notificationhub")
+		.build(); 
+
+	connection.on("AllReceiveNotification", function(notification) {
+		const container = document.querySelector('.notifications'); 
+		const item = document.createElement('div'); 
+		item.className = 'notification-item'; 
+		item.setAttribute('data-id', notification.id)
+		item.innerHTML = 
+		`
+		<img class="icon" src="${notification.icon}" />
+		<div class="notification-message">${notification.message}</div>
+		<div class="time-stamp" data-created="${new Date(notification.created).toISOString()}">${notification.created}</div>
+		<button class="btn-x" onclick="dismissNotification('${notification.id}')"></button>
+		` 
+	}
+</script>
+
+//OBS fortsätt följa tutorial 50.33

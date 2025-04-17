@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Data.Repositories;
 using Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using WebApp_MVC.Hubs;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -98,6 +99,8 @@ builder.Services.AddScoped<LoginFormViewModel>();
 builder.Services.AddScoped<MemberFormViewModel>();
 builder.Services.AddScoped<SignUpViewModel>();
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -112,6 +115,9 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHub<ChatHub>("/chathub");
+app.MapHub<NotificationHub>("/notificationhub"); 
 
 using (var scope = app.Services.CreateScope())
 {

@@ -1,4 +1,4 @@
-.notification-box {
+.notification-dropdown {
     background-color: $clr-surface; 
     width: 380px; 
     z-index: 10; 
@@ -24,7 +24,7 @@
     
 }
 
-#notification-row {
+.notification-line {
     padding-bottom: .5rem; 
 }
 
@@ -47,13 +47,3 @@
     }
 }
 
-.btn-x {
-    height: 2rem;
-    width: 2rem;
-    background-color: $clr-grey-100;
-    border: none;
-    background-image: url("/ProjectImages/Icons/X.svg");
-    background-position: 8px 8px;
-    background-repeat: no-repeat;
-    background-size: 12px;
-}

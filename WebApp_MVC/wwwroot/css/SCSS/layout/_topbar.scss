@@ -78,27 +78,5 @@
     opacity: 1;
 }
 
-#btn-notifications {
-    grid-column: 2;
-    align-self: center;
-    justify-self: center;
-    cursor: pointer;
-}
 
-#btn-settings {
-    grid-column: 3;
-    align-self: center;
-    justify-self: center;
-    border-right: 1px solid $clr-border-200;
-    padding-right: 1rem;
-    cursor: pointer;
-}
-
-#btn-account {
-    grid-column: 4;
-    align-self: center;
-    justify-self: center;
-    cursor: pointer;
-    padding-right: 1rem;
-}
 
