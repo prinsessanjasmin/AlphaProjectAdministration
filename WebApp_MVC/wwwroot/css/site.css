@@ -753,6 +753,14 @@ button.btn-sidebar.active-controller {
   align-self: center;
   justify-self: center;
   cursor: pointer;
+  border: none;
+  justify-content: center;
+  align-content: center;
+}
+#btn-notifications i {
+  border: none;
+  font-size: 16px;
+  color: #637085;
 }
 
 #btn-settings {
@@ -770,6 +778,17 @@ button.btn-sidebar.active-controller {
   justify-self: center;
   cursor: pointer;
   padding-right: 1rem;
+}
+
+.btn-x {
+  height: 2rem;
+  width: 2rem;
+  background-color: #F5F7FA;
+  border: none;
+  background-image: url("/ProjectImages/Icons/X.svg");
+  background-position: 8px 8px;
+  background-repeat: no-repeat;
+  background-size: 12px;
 }
 
 .form {
@@ -1005,12 +1024,13 @@ select {
   padding: 0.5rem;
 }
 
-.notification-box {
+.notification-dropdown {
   background-color: #FFFFFF;
   width: 380px;
   z-index: 10;
   border-radius: 16px;
   padding: 1.5rem;
+  display: none;
 }
 
 .notification-number {
@@ -1028,7 +1048,7 @@ select {
   font-weight: 700;
 }
 
-#notification-line {
+.notification-line {
   padding-bottom: 0.5rem;
 }
 
@@ -1047,17 +1067,6 @@ select {
 .notification span {
   font-size: 14px;
   color: #637085;
-}
-
-.btn-x {
-  height: 2rem;
-  width: 2rem;
-  background-color: #F5F7FA;
-  border: none;
-  background-image: url("/ProjectImages/Icons/X.svg");
-  background-position: 8px 8px;
-  background-repeat: no-repeat;
-  background-size: 12px;
 }
 
 .single-line {

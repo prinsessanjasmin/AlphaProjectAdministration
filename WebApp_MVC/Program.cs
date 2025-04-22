@@ -70,6 +70,8 @@ builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IAddressRepository, AddressRepository>();
 builder.Services.AddTransient<IClientRepository, ClientRepository>();
+builder.Services.AddTransient<INotificationRepository, NotificationRepository>();
+builder.Services.AddTransient<INotificationDismissedRepository, NotificationDismissedRepository>();
 
 builder.Services.AddTransient<IEmployeeService, EmployeeService>();
 builder.Services.AddTransient<IProjectService, ProjectService>();
@@ -77,6 +79,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddTransient<IAddressService, AddressService>();
 builder.Services.AddTransient<IClientService, ClientService>();
 builder.Services.AddTransient<ISearchService, SearchService>();
+builder.Services.AddTransient<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<ClientDto>(); 
 builder.Services.AddScoped<MemberDto>();

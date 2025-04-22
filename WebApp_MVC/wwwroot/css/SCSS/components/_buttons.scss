@@ -235,6 +235,15 @@ button.btn-sidebar.active-controller {
     align-self: center;
     justify-self: center;
     cursor: pointer;
+    border: none;
+    justify-content: center; 
+    align-content: center;
+
+    i {
+        border: none;
+        font-size: 16px;
+        color: $clr-body-light;
+    }
 }
 
 #btn-settings {

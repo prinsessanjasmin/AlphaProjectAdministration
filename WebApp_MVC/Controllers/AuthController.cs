@@ -6,14 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebApp_MVC.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.SignalR;
+using WebApp_MVC.Hubs;
 
 namespace WebApp_MVC.Controllers;
 
-public class AuthController(IUserService userService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager) : Controller
+public class AuthController(IUserService userService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IHubContext<NotificationHub> notificationHub, INotificationService notificationService) : Controller
 {
     private readonly IUserService _userService = userService;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly INotificationService _notificationService = notificationService;
+    private readonly IHubContext<NotificationHub> _notificationHub = notificationHub;
 
     [Route("signin")]
     public IActionResult SignIn(string returnUrl = "/")
@@ -33,16 +37,35 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
             return View(form);
         }
 
-        
-
         Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, true, false);
         if (result.Succeeded)
         {
-            //var user = await _userManager.FindByEmailAsync(form.Email);
-            //if (user != null)
-            //{
-            //    await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
-            //}
+            var user = await _userManager.FindByEmailAsync(form.Email);
+            if (user != null)
+            {
+                if (!User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
+                {
+                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
+                }
+
+                await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
+                var notification = new NotificationEntity
+                {
+                    Message = $"{user.FirstName} {user.LastName} signed in.",
+                    NotificationTypeId = 1,
+                    TargetGroupId = 2
+                }; 
+                await _notificationService.AddNotificationAsync(notification);
+                var notifications = await _notificationService.GetAllAsync(user.Id);
+                var newNotification = notifications.OrderByDescending(x => x.Created).FirstOrDefault();
+
+                if (newNotification != null)
+                {
+                    await _notificationHub.Clients.All.SendAsync("ReceiveNotification", newNotification);
+                }
+            }
+            
+
             return RedirectToAction("Index", "Project"); 
         }
             
@@ -159,7 +182,8 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
             var identityResult = await _userManager.CreateAsync(user);
             if (identityResult.Succeeded) 
             {
-                await _userManager.AddLoginAsync(user, externalLoginInfo); 
+                await _userManager.AddLoginAsync(user, externalLoginInfo);
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return LocalRedirect(returnUrl);
             }

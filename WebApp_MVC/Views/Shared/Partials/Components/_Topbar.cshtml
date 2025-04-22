@@ -6,9 +6,7 @@
         </div>
         <div id="free-text-search-results" class="free-text-search-results"></div>
     </div>
-    <a id="btn-notifications">
-        <img src="~/ProjectImages/Icons/bell-ringing.svg" alt="Notification bell icon." />
-    </a>
+    @await Html.PartialAsync("Partials/Components/_NotificationDropdown")
     <a id="btn-settings">
         <img src="~/ProjectImages/Icons/Setting.svg" alt="Settings icon." />
     </a>
