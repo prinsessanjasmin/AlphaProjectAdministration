@@ -234,6 +234,7 @@ a {
   align-content: center;
   justify-content: space-between;
   color: #637085;
+  position: relative;
 }
 
 .search-function {
@@ -748,35 +749,20 @@ button.btn-sidebar.active-controller {
   flex-direction: column;
 }
 
-#btn-notifications {
-  grid-column: 2;
-  align-self: center;
-  justify-self: center;
+.btn-dropdown {
   cursor: pointer;
   border: none;
-  justify-content: center;
-  align-content: center;
-}
-#btn-notifications i {
-  border: none;
-  font-size: 16px;
+  font-size: 18px;
   color: #637085;
+  background-color: #F1F3F7;
+  position: relative;
 }
 
-#btn-settings {
-  grid-column: 3;
-  align-self: center;
-  justify-self: center;
+.btn-settings {
   border-right: 1px solid #E3E5E8;
-  padding-right: 1rem;
-  cursor: pointer;
 }
 
-#btn-account {
-  grid-column: 4;
-  align-self: center;
-  justify-self: center;
-  cursor: pointer;
+.btn-account {
   padding-right: 1rem;
 }
 
@@ -789,6 +775,7 @@ button.btn-sidebar.active-controller {
   background-position: 8px 8px;
   background-repeat: no-repeat;
   background-size: 12px;
+  padding-right: 0.5rem;
 }
 
 .form {
@@ -1024,35 +1011,96 @@ select {
   padding: 0.5rem;
 }
 
-.notification-dropdown {
-  background-color: #FFFFFF;
+.dropdown-container {
+  max-height: 0.1rem;
   width: 380px;
-  z-index: 10;
-  border-radius: 16px;
-  padding: 1.5rem;
-  display: none;
+  position: absolute;
+  top: 3rem;
+  right: 1rem;
+  padding: 1rem;
+  opacity: 0;
+  z-index: 500;
+  overflow: hidden;
+  overflow-y: auto;
+  transition: height 0.2s ease-in-out 0.2s, opacity 0.2s ease-in-out 0.2s;
+}
+
+.dropdown-container.visible {
+  max-height: 30rem;
+  opacity: 1;
+}
+
+.settings-dropdown-container {
+  width: 200px;
+  top: 3rem;
+  overflow: hidden;
+  overflow-y: hidden;
+}
+
+.account-dropdown-container {
+  width: 200px;
+  top: 4rem;
+  overflow: hidden;
+  overflow-y: hidden;
+}
+
+.dropdown-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  padding-right: 1rem;
+}
+.dropdown-header h5 {
+  font-family: Nunito;
+  color: #1A1926;
 }
 
 .notification-number {
-  align-self: center;
-  justify-self: center;
   background-color: #FF6640;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-}
-.notification-number h3 {
   color: #FFFFFF;
-  align-self: center;
-  justify-self: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
   font-weight: 700;
+  justify-content: center;
+  align-items: center;
 }
 
-.notification-line {
+.dropdown-line {
   padding-bottom: 0.5rem;
+  border-bottom: 1px solid #E3E5E8;
 }
 
-.notification {
+.notifications {
+  display: flex;
+  flex-direction: column;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  padding-top: 1rem;
+}
+
+.option-item {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  text-align: left;
+  font-weight: 400;
+  font-family: Nunito;
+  font-size: 15px;
+  color: #1A1926;
+}
+
+.notification-item {
+  display: flex;
+  flex-direction: row;
   background-color: #F5F7FA;
   border: none;
   border-radius: 16px;
@@ -1060,13 +1108,37 @@ select {
   margin-top: 1rem;
   gap: 1rem;
   justify-content: space-between;
+  align-items: center;
 }
-.notification p {
-  font-weight: 700;
+.notification-item .vertical-notification {
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.5rem;
 }
-.notification span {
+.notification-item .notification-message {
+  font-weight: 400;
+  font-family: Nunito;
+  font-size: 15px;
+  color: #1A1926;
+}
+.notification-item .time-stamp {
   font-size: 14px;
+  font-family: Nunito;
   color: #637085;
+  font-weight: 400;
+}
+
+.dot {
+  height: 2px;
+  width: 2px;
+  border-radius: 50%;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.red-dot {
+  color: #FF6640;
 }
 
 .single-line {
@@ -1124,6 +1196,10 @@ select {
   z-index: 100;
 }
 
+.modal.visible {
+  display: flex;
+}
+
 .mini-modal {
   display: none;
   background-color: transparent;
@@ -1133,6 +1209,10 @@ select {
 }
 .mini-modal .modal-content {
   margin: 0;
+}
+
+.mini-modal.visible {
+  display: flex;
 }
 
 .modal-content {

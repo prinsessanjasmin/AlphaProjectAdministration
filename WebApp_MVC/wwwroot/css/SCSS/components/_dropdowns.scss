@@ -1,0 +1,151 @@
+.dropdown-container {
+    max-height: 0.1rem;
+    width: 380px;
+    position: absolute;
+    top: 3rem;
+    right: 1rem;
+    padding: 1rem;
+    opacity: 0;
+    z-index: 500;
+    overflow: hidden;
+    overflow-y: auto;
+    transition: height .2s ease-in-out .2s, opacity .2s ease-in-out .2s;
+}
+
+.dropdown-container.visible {
+    max-height: 30rem;
+    opacity: 1;
+}
+
+.notification-dropdown-container {
+    
+}
+
+.settings-dropdown-container {
+    width: 200px;
+    top: 3rem;
+    overflow: hidden; 
+    overflow-y: hidden;
+}
+
+.account-dropdown-container {
+    width: 200px;
+    top: 4rem;
+    overflow: hidden;
+    overflow-y: hidden;
+}
+
+
+
+.notification-dropdown {
+    
+}
+
+.settings-dropdown {
+
+}
+
+.account-dropdown {
+
+}
+
+.dropdown-header {
+    display: flex; 
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5rem;
+    padding-right: 1rem;
+
+    h5 {
+        font-family: Nunito; 
+        color: $clr-heading; 
+    }
+}
+
+.notification-number {
+    background-color: $clr-red;
+    color: $clr-surface;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    font-weight: 700;
+    justify-content: center;
+    align-items: center;
+}
+
+.dropdown-line {
+    padding-bottom: .5rem; 
+    border-bottom: 1px solid $clr-grey-400;
+}
+
+.notifications {
+    display: flex; 
+    flex-direction: column; 
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding: .5rem; 
+    padding-top: 1rem;
+}
+
+.option-item {
+    display: flex;
+    flex-direction: row; 
+    gap: 1rem; 
+    align-items: center;
+    text-align: left;
+    font-weight: 400;
+    font-family: Nunito;
+    font-size: 15px;
+    color: $clr-heading;
+}
+
+.notification-item {
+    display: flex;
+    flex-direction: row;
+    background-color: $clr-grey-100;
+    border: none;
+    border-radius: 16px;
+    padding: .5rem;
+    margin-top: 1rem;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+
+    .vertical-notification {
+        align-items: flex-start; 
+        justify-content: center; 
+        gap: .5rem; 
+    } 
+    
+    .notification-message {
+        font-weight: 400;
+        font-family: Nunito;
+        font-size: 15px;
+        color: $clr-heading;
+    }
+
+    .time-stamp {
+        font-size: 14px;
+        font-family: Nunito;
+        color: $clr-body-light;
+        font-weight: 400;
+    }
+}
+
+.dot {
+    height: 2px; 
+    width: 2px; 
+    border-radius: 50%;
+    position: absolute; 
+    top: 1rem; 
+    left: 1rem; 
+}
+
+.red-dot {
+    color: $clr-red; 
+}

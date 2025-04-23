@@ -5,14 +5,10 @@
             <input type="text" id="free-text-search" placeholder="Search anything..." />
         </div>
         <div id="free-text-search-results" class="free-text-search-results"></div>
-    </div>
+    </div> 
     @await Html.PartialAsync("Partials/Components/_NotificationDropdown")
-    <a id="btn-settings">
-        <img src="~/ProjectImages/Icons/Setting.svg" alt="Settings icon." />
-    </a>
-    <a id="btn-account">
-        <img src="~/ProjectImages/Icons/Avatar.svg" alt="Avatar icon." />
-    </a>
+    @await Html.PartialAsync("Partials/Components/_SettingsDropdown")
+    @await Html.PartialAsync("Partials/Components/_AccountDropdown")
 </div>
 
 <script>

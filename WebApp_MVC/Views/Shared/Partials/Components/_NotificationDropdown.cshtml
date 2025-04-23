@@ -3,22 +3,20 @@
 	var notifications = await notificationService.GetAllAsync(userId);
 }
 
-<div class="notification-dropdown-container">
-	<button id="notification-dropdown-button" data-type="dropdown" data-target="#notification-dropdown" class="btn-notifications">
-		<i class="fa-solid fa-bell">
-			@if (notifications.Any())
-			{
-				<div class="dot red-dot"></div>
-			}
-		</i>
-		
-	</button>
-	<div id="notification-dropdown" class="notification-dropdown">
-		<div class="notification-header">
-			<h3>Notifications</h3>
-			<span class="notification-number">@notifications.Count()</span>
+<button id="notification-dropdown-button" data-type="dropdown" data-target="#notification-dropdown" class="btn-dropdown btn-notifications fa-solid fa-bell">
+	@if (notifications.Any())
+	{ 
+		<div class="dot red-dot"></div>
+	} 
+</button>
+<div id="notification-dropdown" class="notification-dropdown-container dropdown-container card">
+	<div class="notification-dropdown">
+		<div class="dropdown-header">
+			<h5>Notifications</h5>
+			<div class="notification-number">@notifications.Count()</div>
+			
 		</div>
-		<div class="notification-line"></div>
+		<div class="dropdown-line"></div>
 		<div class="notifications">
 			@foreach (var notification in notifications)
 			{
@@ -26,67 +24,73 @@
 					<img class="image" src="@notification.Icon" />
 					<div class="notification-message">@notification.Message</div>
 					<div class="time-stamp" data-created="@notification.Created.ToString("s")">@notification.Created</div>
-					<button class="btn-x" onclick="dismissNotification('@notification.Id')"></button>
+					<div class="btn-x" onclick="dismissNotification('@notification.Id')"></div>
 				</div>
 			}
 		</div>
 	</div>
 </div>
 
+
+
 <script>
-	const connection = new SignalR.HubConnectionBuilder()
-		.withUrl("/notificationhub")
-		.build(); 
+	if (typeof window.notificationConnection === 'undefined') {
+		window.notificationConnection = new signalR.HubConnectionBuilder()
+			.withUrl("/notificationhub")
+			.build();
 
-	connection.on("AllReceiveNotification", function(notification) {
-		const notifications = document.querySelector('.notifications'); 
-		const item = document.createElement('div'); 
-		item.className = 'notification-item'; 
-		item.setAttribute('data-id', notification.id)
-		item.innerHTML = 
-		`
-		<img class="icon" src="${notification.icon}" />
-		<div class="notification-message">${notification.message}</div>
-		<div class="time-stamp" data-created="${new Date(notification.created).toISOString()}">${notification.created}</div>
-		<button class="btn-x" onclick="dismissNotification('${notification.id}')"></button>
-		` 
-
-		notifications.insertBefore(item, notifications.firstChild);
-		updateRelativeTimes(); 
-		updateNotificationCount(); 
-	})
-
-	connection.on("NotificationDismissed", function(notificationId) {
-		const element = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
-		if (element) {
-			element.remove();
+		window.notificationConnection.on("AllReceiveNotification", function(notification) {
+			const notifications = document.querySelector('.notifications');
+			const item = document.createElement('div');
+			item.className = 'notification-item';
+			item.setAttribute('data-id', notification.id)
+			item.innerHTML =
+			`
+			<img class="image" src="${notification.icon}" />
+			<div class="vertical vertical-notification">
+				<div class="notification-message">${notification.message}</div>
+				<div class="time-stamp" data-created="${new Date(notification.created).toISOString()}">${notification.created}</div>
+			</div>
+			<div class="btn-x" onclick="dismissNotification('${notification.id}')"></div>
+			`
+			notifications.insertBefore(item, notifications.firstChild);
+			updateRelativeTimes();
 			updateNotificationCount();
-		}
-	});
+		});
 
-	connection.start().catch(error => console.error(error))
+		window.notificationConnection.on("NotificationDismissed", function(notificationId) {
+			const element = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
+			if (element) {
+				element.remove();
+				updateNotificationCount();
+			}
+		});
 
-	async function dismissNotification(notificationId) 
+		window.notificationConnection.start().catch(error => console.error(error));
+	}
+
+
+	async function dismissNotification(notificationId)
 	{
-		try 
+		try
 		{
 			const res = await fetch(`/api/notifications/dismiss/${notificationId}`, { method: 'POST' })
-			if (res.ok) 
+			if (res.ok)
 			{
-				removeNotification(notificationId); 
-			} else 
+				removeNotification(notificationId);
+			} else
 			{
-				console.error('Error removing notification', error); 
+				console.error('Error removing notification', error);
 			}
-		} 
+		}
 		catch (error){
-			console.error('Error removing notification.'); 
+			console.error('Error removing notification.');
 		}
 	}
 
 	function removeNotification(notificationId) {
 		const element = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
-		if (element) 
+		if (element)
 		{
 			element.remove();
 			updateNotificationCount();
@@ -94,23 +98,23 @@
 	}
 
 	function updateNotificationCount() {
-		const notifications = document.querySelector('.notifications'); 
-		const notificationNumber = document.querySelector('.notification-number'); 
+		const notifications = document.querySelector('.notifications');
+		const notificationNumber = document.querySelector('.notification-number');
 		const notificationDropdownButton = document.getElementById('notification-dropdown-button');
-		const count = notifications.querySelectorAll('.notification-item').length; 
-		
+		const count = notifications.querySelectorAll('.notification-item').length;
+
 		if (notificationNumber) {
-			notificationNumber.textContent = count; 
+			notificationNumber.textContent = count;
 		}
 
-		let dot = notificationDropdownButton.querySelector('.dot.red-dot'); 
+		let dot = notificationDropdownButton.querySelector('.dot.red-dot');
 		if (count > 0 && !dot) {
-			dot = document.createElement('div'); 
+			dot = document.createElement('div');
 			dot.className = 'dot red-dot';
-			notificationDropdownButton.appendChild(dot); 
-		} 
+			notificationDropdownButton.appendChild(dot);
+		}
 		if (count === 0 && dot) {
-			dot.remove(); 
+			dot.remove();
 		}
 	}
 </script>

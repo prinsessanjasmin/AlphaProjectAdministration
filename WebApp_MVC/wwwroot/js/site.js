@@ -39,7 +39,7 @@
         populateDateDropdowns(daySelect, monthSelect, yearSelect);
     }
 
-
+    //modals
     const modalButtons = document.querySelectorAll('[data-modal="true"]')
     modalButtons.forEach(button => {
         button.addEventListener('click', async () => {
@@ -124,7 +124,7 @@
                 }
             }
 
-            modal.style.display = 'flex';
+            modal.classList.add('visible');
 
         });
     });
@@ -134,7 +134,7 @@ document.addEventListener('click', (event) => {
     if (event.target.matches('[data-close="true"]')) {
         const modal = event.target.closest('.modal');
         if (modal) {
-            modal.style.display = 'none';
+            modal.classList.remove('visible');
 
             modal.querySelectorAll('form').forEach(form => {
                 form.reset();
@@ -168,26 +168,34 @@ document.querySelectorAll(".btn-2-dots").forEach(button => {
     button.addEventListener("click", function (event) {
         event.stopPropagation();
 
-        document.querySelectorAll(".mini-modal").forEach(modal => modal.style.display = "none");
-
         const card = this.closest(".card");
         const optionsModal = card.querySelector(".mini-modal");
 
-        optionsModal.style.display = optionsModal.style.display === "flex" ? "none" : "flex";
+        const isCurrentlyVisible = optionsModal.classList.contains('visible');
+
+        document.querySelectorAll(".mini-modal").forEach(modal =>
+            modal.classList.remove('visible')
+        );
+
+        if (!isCurrentlyVisible) {
+            optionsModal.classList.add('visible');
+        }
     });
 });
 
 document.querySelectorAll(".mini-modal button").forEach(button => {
-    button.addEventListener("click", function () {
-        this.closest(".mini-modal").style.display = "none";
+    button.addEventListener("click", function (event) {
+        event.stopPropagation();
+        this.closest(".mini-modal").classList.remove('visible');
     });
 });
+
 
 //Close project options when clicking outside of project card (had som help from ChatGPT 4o here)
 document.addEventListener("click", function(event) {
     document.querySelectorAll(".mini-modal").forEach(modal => {
         if (!event.target.closest(".project-card")) {
-            modal.style.display = "none";
+            modal.classList.remove('visible');
         }
     });
 });
@@ -283,7 +291,7 @@ function populateDateDropdowns(daySelect, monthSelect, yearSelect, selectedDay, 
 function closeAllDropdowns(exceptDropdown, dropdownElements) {
     dropdownElements.forEach(dropdown => {
         if (dropdown !== exceptDropdown) {
-            dropdown.classList.remove('show');
+            dropdown.classList.remove('visible');
         }
     });
 }
@@ -309,7 +317,7 @@ function initializeDropdowns() {
             if (!dropdown) return;
 
             closeAllDropdowns(dropdown, dropdownElements)
-            dropdown.classList.toggle('show');
+            dropdown.classList.toggle('visible');
         });
     });
 
@@ -325,31 +333,31 @@ function initializeDropdowns() {
 }
 
 //SignalR
-const connection = new signalR.HubConnectionBuilder()
-    .withUrl("/chathub")
-    .build(); 
+//const connection = new signalR.HubConnectionBuilder()
+//    .withUrl("/chathub")
+//    .build(); 
 
-connection.on("ReceiveMessage", (userName, message) => {
-    const div = document.createElement('div'); 
-    div.innerHTML = 
-    `
-    <div class="item">
-        <div class="name">${userName}</div>
-        <div class="chat-message"${message}</div>
-    </div>
-    `
-    document.getElemementById("chat-messages").appendChild(div);
-})
+//connection.on("ReceiveMessage", (userName, message) => {
+//    const div = document.createElement('div'); 
+//    div.innerHTML = 
+//    `
+//    <div class="item">
+//        <div class="name">${userName}</div>
+//        <div class="chat-message"${message}</div>
+//    </div>
+//    `
+//    document.getElemementById("chat-messages").appendChild(div);
+//})
 
-connection.start().catch(error => console.error(error.toString()));
+//connection.start().catch(error => console.error(error.toString()));
 
-function sendMessage() {
-    const username = document.getElementById("username").value; 
-    const message = document.getElementById("message").value; 
+//function sendMessage() {
+//    const username = document.getElementById("username").value; 
+//    const message = document.getElementById("message").value; 
 
-    connection.invoke("SendMessage", username, message).catch(error => console.error(error.toString()));
-    document.getElementById("message").value = ""; 
-}
+//    connection.invoke("SendMessage", username, message).catch(error => console.error(error.toString()));
+//    document.getElementById("message").value = ""; 
+//}
 
 function updateRelativeTimes() {
     const elements = document.querySelectorAll('.notification-item .time');
@@ -385,3 +393,4 @@ function updateRelativeTimes() {
         }
 	});
 }
+
