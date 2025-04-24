@@ -3,7 +3,7 @@
     var editProjectViewModel = ViewData["EditProjectViewModel"] as EditProjectViewModel;
 }
 
-<div class="card project-card">
+<div class="card project-card" data-status-id="@Model.StatusId">
     <div class="horizontal horizontal-project">
         <div class="horizontal horizontal-project">
             @if (!string.IsNullOrEmpty(@Model.ProjectImagePath))

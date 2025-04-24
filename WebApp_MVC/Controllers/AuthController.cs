@@ -8,6 +8,7 @@ using WebApp_MVC.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.SignalR;
 using WebApp_MVC.Hubs;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebApp_MVC.Controllers;
 
@@ -19,7 +20,6 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
     private readonly INotificationService _notificationService = notificationService;
     private readonly IHubContext<NotificationHub> _notificationHub = notificationHub;
 
-    [Route("signin")]
     public IActionResult SignIn(string returnUrl = "/")
     {
         ViewBag.ErrorMessage = "";
@@ -32,45 +32,48 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
     {
         if (!ModelState.IsValid)
         {
-            ViewBag.ErrorMessage = "Incorrect email or password"; ;
-            ViewBag.ReturnUrl = returnUrl;
-            return View(form);
+            return JsonValidationError();
         }
 
-        Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, true, false);
-        if (result.Succeeded)
+        var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, true, false);
+        if (!result.Succeeded)
         {
-            var user = await _userManager.FindByEmailAsync(form.Email);
-            if (user != null)
-            {
-                if (!User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
-                {
-                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
-                }
+            ModelState.AddModelError(string.Empty, "Incorrect email or password");
+            return JsonValidationError();
 
-                await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
-                var notification = new NotificationEntity
-                {
-                    Message = $"{user.FirstName} {user.LastName} signed in.",
-                    NotificationTypeId = 1,
-                    TargetGroupId = 2
-                }; 
-                await _notificationService.AddNotificationAsync(notification);
-                var notifications = await _notificationService.GetAllAsync(user.Id);
-                var newNotification = notifications.OrderByDescending(x => x.Created).FirstOrDefault();
-
-                if (newNotification != null)
-                {
-                    await _notificationHub.Clients.All.SendAsync("ReceiveNotification", newNotification);
-                }
-            }
-            
-
-            return RedirectToAction("Index", "Project"); 
         }
-            
-        ViewBag.ErrorMessage = "Incorrect email or password";
-        return View(form);
+
+        var user = await _userManager.FindByEmailAsync(form.Email);
+        if (user != null)
+        {
+            if (!User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
+            {
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
+            }
+
+            await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
+            var notification = new NotificationEntity
+            {
+                Message = $"{user.FirstName} {user.LastName} signed in.",
+                NotificationTypeId = 1,
+                TargetGroupId = 2
+            };
+            await _notificationService.AddNotificationAsync(notification);
+            var notifications = await _notificationService.GetAllAsync(user.Id);
+            var newNotification = notifications.OrderByDescending(x => x.Created).FirstOrDefault();
+
+            if (newNotification != null)
+            {
+                await _notificationHub.Clients.All.SendAsync("ReceiveNotification", newNotification);
+            }
+        }
+
+        if (!Url.IsLocalUrl(returnUrl))
+        {
+            returnUrl = Url.Action("Index", "Project");
+        }
+        return Json(new { success = true, redirectUrl = returnUrl });
+
     }
 
     public async Task AddClaimByEmailAsync(ApplicationUser user, string typeName, string value)
@@ -91,35 +94,26 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
     }
 
     [HttpPost]
-    public async Task<IActionResult> SignUp(SignUpViewModel model)
+    public async Task<IActionResult> SignUp(SignUpViewModel model, string returnUrl = "/")
     {
-        if (!ModelState.IsValid) 
+        if (!ModelState.IsValid)
         {
-            return View(model);
+            return JsonValidationError();
         }
 
         var result = await _userService.CreateUser(model); 
-        
-        switch (result.StatusCode)
+       
+        if (result.Success)
         {
-            case 201:
-                return RedirectToAction("SignIn", "Auth");
-
-            case 400:
-                ViewBag.ErrorMessage = "Error."; 
-                return View(model);
-
-            case 404:
-                ViewBag.ErrorMessage = "Error.";
-                return View(model);
-
-            case 500:
-                ViewBag.ErrorMessage = "Error.";
-                return View(model);
-
-            default:
-                ViewBag.ErrorMessage = "Error.";
-                return View(model);
+            if (!Url.IsLocalUrl(returnUrl))
+            {
+                returnUrl = Url.Action("SignIn", "Auth");
+            }
+            return Json(new { success = true, redirectUrl = returnUrl });
+        }
+        else
+        {
+            return BadRequest(new { success = false });
         }
     }
 
@@ -195,5 +189,17 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
 
             return View("SignIn");
         }
+    }
+
+    private IActionResult JsonValidationError()
+    {
+        var errors = ModelState
+            .Where(x => x.Value?.Errors.Count > 0)
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToList()
+            );
+
+        return BadRequest(new { success = false, errors });
     }
 }

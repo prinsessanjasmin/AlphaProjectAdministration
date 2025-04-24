@@ -21,7 +21,7 @@
 			@foreach (var notification in notifications)
 			{
 				<div class="notification-item" data-id="@notification.Id">
-					<img class="image" src="@notification.Icon" />
+					<img class="account-img" src="@notification.Icon" />
 					<div class="notification-message">@notification.Message</div>
 					<div class="time-stamp" data-created="@notification.Created.ToString("s")">@notification.Created</div>
 					<div class="btn-x" onclick="dismissNotification('@notification.Id')"></div>
@@ -33,88 +33,4 @@
 
 
 
-<script>
-	if (typeof window.notificationConnection === 'undefined') {
-		window.notificationConnection = new signalR.HubConnectionBuilder()
-			.withUrl("/notificationhub")
-			.build();
 
-		window.notificationConnection.on("AllReceiveNotification", function(notification) {
-			const notifications = document.querySelector('.notifications');
-			const item = document.createElement('div');
-			item.className = 'notification-item';
-			item.setAttribute('data-id', notification.id)
-			item.innerHTML =
-			`
-			<img class="image" src="${notification.icon}" />
-			<div class="vertical vertical-notification">
-				<div class="notification-message">${notification.message}</div>
-				<div class="time-stamp" data-created="${new Date(notification.created).toISOString()}">${notification.created}</div>
-			</div>
-			<div class="btn-x" onclick="dismissNotification('${notification.id}')"></div>
-			`
-			notifications.insertBefore(item, notifications.firstChild);
-			updateRelativeTimes();
-			updateNotificationCount();
-		});
-
-		window.notificationConnection.on("NotificationDismissed", function(notificationId) {
-			const element = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
-			if (element) {
-				element.remove();
-				updateNotificationCount();
-			}
-		});
-
-		window.notificationConnection.start().catch(error => console.error(error));
-	}
-
-
-	async function dismissNotification(notificationId)
-	{
-		try
-		{
-			const res = await fetch(`/api/notifications/dismiss/${notificationId}`, { method: 'POST' })
-			if (res.ok)
-			{
-				removeNotification(notificationId);
-			} else
-			{
-				console.error('Error removing notification', error);
-			}
-		}
-		catch (error){
-			console.error('Error removing notification.');
-		}
-	}
-
-	function removeNotification(notificationId) {
-		const element = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
-		if (element)
-		{
-			element.remove();
-			updateNotificationCount();
-		}
-	}
-
-	function updateNotificationCount() {
-		const notifications = document.querySelector('.notifications');
-		const notificationNumber = document.querySelector('.notification-number');
-		const notificationDropdownButton = document.getElementById('notification-dropdown-button');
-		const count = notifications.querySelectorAll('.notification-item').length;
-
-		if (notificationNumber) {
-			notificationNumber.textContent = count;
-		}
-
-		let dot = notificationDropdownButton.querySelector('.dot.red-dot');
-		if (count > 0 && !dot) {
-			dot = document.createElement('div');
-			dot.className = 'dot red-dot';
-			notificationDropdownButton.appendChild(dot);
-		}
-		if (count === 0 && dot) {
-			dot.remove();
-		}
-	}
-</script>

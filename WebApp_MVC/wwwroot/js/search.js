@@ -59,7 +59,7 @@ function initMemberSelector(config) {
 
         // Create the visual element
 
-        const displayContainerId = config.displayContainerId || 'edit-selected-member-display';
+        const displayContainerId = config.displayContainerId || 'edit-selected-member-display' || 'selected-member-display';
         console.log("Looking for display container with ID:", displayContainerId);
 
         const selectedMemberDisplay = document.getElementById(displayContainerId);

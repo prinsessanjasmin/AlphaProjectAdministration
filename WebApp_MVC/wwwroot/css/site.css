@@ -396,11 +396,18 @@ section {
   margin-top: 2rem;
   border-bottom: 1px solid #E3E5E8;
 }
-.project-categories a {
+
+.project-status-menu {
   font-size: 32px;
   font-weight: 700;
   color: #637085;
   cursor: pointer;
+}
+
+.project-status-menu.active,
+.project-status-menu:active,
+.project-status-menu:hover {
+  color: #2D99FF;
 }
 
 .add-project-container {
@@ -1126,6 +1133,10 @@ select {
   font-family: Nunito;
   color: #637085;
   font-weight: 400;
+}
+.notification-item .account-img {
+  height: 40px;
+  width: 40px;
 }
 
 .dot {

@@ -3,6 +3,7 @@
     initializeDropdowns();
     updateRelativeTimes();
     setInterval(updateRelativeTimes, 6000);
+    
 
     const controller = document.body.dataset.controller;
     const sidebarProjects = document.querySelector('#sidebar-projects');
@@ -13,6 +14,7 @@
 
     if (controller === "Project" && sidebarProjects) {
         sidebarProjects.classList.add('active-controller');
+        initializeProjectFilters();
     } else if (controller === "Employee" && sidebarMembers) {
         sidebarMembers.classList.add('active-controller');
     } else if (controller === "Client" && sidebarClients) {
@@ -332,65 +334,54 @@ function initializeDropdowns() {
     });
 }
 
-//SignalR
-//const connection = new signalR.HubConnectionBuilder()
-//    .withUrl("/chathub")
-//    .build(); 
 
-//connection.on("ReceiveMessage", (userName, message) => {
-//    const div = document.createElement('div'); 
-//    div.innerHTML = 
-//    `
-//    <div class="item">
-//        <div class="name">${userName}</div>
-//        <div class="chat-message"${message}</div>
-//    </div>
-//    `
-//    document.getElemementById("chat-messages").appendChild(div);
-//})
+//Had help with this from Claude AI
+function initializeProjectFilters() {
+    const startedProjects = document.getElementById('started-projects');
+    const completedProjects = document.getElementById('completed-projects');
+    const allProjects = document.getElementById('all-projects');
 
-//connection.start().catch(error => console.error(error.toString()));
+    allProjects.classList.add('active');
 
-//function sendMessage() {
-//    const username = document.getElementById("username").value; 
-//    const message = document.getElementById("message").value; 
+    startedProjects.addEventListener('click', function () {
+        filterProjects('active');
+        setActiveLink(startedProjects);
+    });
 
-//    connection.invoke("SendMessage", username, message).catch(error => console.error(error.toString()));
-//    document.getElementById("message").value = ""; 
-//}
+    completedProjects.addEventListener('click', function () {
+        filterProjects('completed');
+        setActiveLink(completedProjects);
+    });
 
-function updateRelativeTimes() {
-    const elements = document.querySelectorAll('.notification-item .time');
-    const now = new Date();
+    allProjects.addEventListener('click', function() {
+        filterProjects('all');
+        setActiveLink(allProjects);
+    });
 
-    elements.forEach(el => {
-        const created = new Date(el.getAttribute('data-created'));
-        const diff = now - created;
-        const diffSeconds = Math.floor(diff / 1000);
-        const diffMinutes = Math.floor(diffSeconds / 60);
-        const diffHours = Math.floor(diffMinutes / 60);
-        const diffDays = Math.floor(diffHours / 24);
-        const diffWeeks = Math.floor(diffDays / 7);
+    const projectCards = document.querySelectorAll('.project-card');
 
-        let relativeTime = '';
 
-        if (diffMinutes < 1) {
-            relativeTime = '0 min ago';
-        } else if (diffMinutes < 60) {
-            relativeTime = diffMinutes + ' min ago';
-        } else if (diffHours < 2) {
-            relativeTime = diffHours + ' hour ago';
-        } else if (diffHours < 24) {
-            relativeTime = diffhours + ' hours ago';
-        } else if (diffDays < 2) {
-            relativeTime = diffDays + ' day ago';
-        } else if (diffDays < 7) {
-            relativeTime = diffDays + ' days ago';
-        } else if (diffWeeks < 2) {
-            relativeTime = diffWeeks + ' week ago';
-        } else {
-            relativeTime = diffWeeks + ' weeks ago';
-        }
-	});
+    function setActiveLink(activeLink) {
+        allProjects.classList.remove('active');
+        startedProjects.classList.remove('active');
+        completedProjects.classList.remove('active');
+
+        activeLink.classList.add('active');
+    }
+
+    function filterProjects(status) {
+        projectCards.forEach(card => {
+            const statusId = card.getAttribute('data-status-id');
+            if (status === 'all') {
+                card.style.display = 'block';
+            } else if (status === 'active' && statusId === '2') {
+                card.style.display = 'block';
+            } else if (status === 'completed' && statusId === '3') {
+                card.style.display = 'block';
+            }
+            else {
+                card.style.display = 'none';
+            }
+        });
+    }
 }
-

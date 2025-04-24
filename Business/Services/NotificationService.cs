@@ -12,7 +12,7 @@ public class NotificationService(INotificationRepository notificationRepository,
  
     public async Task AddNotificationAsync(NotificationEntity notification)
     {
-        if (string.IsNullOrEmpty(notification.Icon))
+        if (string.IsNullOrWhiteSpace(notification.Icon))
         {
             switch (notification.NotificationTypeId)
             {

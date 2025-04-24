@@ -1,15 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    
     const forms = document.querySelectorAll("form");
-    
-    const form = document.querySelector('form');
-    const submitButtons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
-    submitButtons.forEach(button => {
-        button.addEventListener('click', function (e) {
-
-        });
-    });
-
 
     forms.forEach(form => {
         const fields = form.querySelectorAll("[data-val='true']")
@@ -58,11 +48,22 @@
                 });
 
                 if (res.ok) {
-                    const modal = form.closest('.modal')
-                    if (modal) {
-                        modal.style.display = 'none';
+                    const data = await res.json();
+
+                    if (data.success) {
+                        const modal = form.closest('.modal');
+                        if (modal) {
+                            modal.style.display = 'none';
+                        }
+
+                        // Redirect to the URL from the server (e.g., returnUrl)
+                        if (data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            // fallback, in case redirectUrl is missing
+                            window.location.reload();
+                        }
                     }
-                    window.location.reload()
                 }
                 else if (res.status === 400) {
                     const data = await res.json()
@@ -131,7 +132,6 @@ function validateField(field) {
         return true;
     }
 
-
     let errorMessage = "";
     let value = field.value.trim();
 
@@ -183,13 +183,9 @@ function validateField(field) {
         errorSpan.textContent = "";
         return true;
     }
-
-    
 }  
 
 function validateMemberSelection(field) {
-    
-
     const fieldName = field.name || field.id;
     const formElement = field.closest('form');
 

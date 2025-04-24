@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace WebApp_MVC.Controllers;
 
-public class ProjectController(IEmployeeService employeeService, IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext) : Controller
+public class ProjectController(IEmployeeService employeeService, IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService) : Controller
 {
 
     private readonly IEmployeeService _employeeService = employeeService;
@@ -21,6 +21,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     private readonly IProjectService _projectService = projectService;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
     private readonly DataContext _dataContext = dataContext;
+    private readonly INotificationService _notificationService = notificationService;
 
 
     [HttpGet]
@@ -43,7 +44,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
         await PopulateClientsAsync(viewModel);
         await PopulateMembersAsync(viewModel);
 
-        ViewData["AddProjectViewModel"] = viewModel; 
+        ViewData["AddProjectViewModel"] = viewModel;
 
         return View(model);
     }
@@ -63,7 +64,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
         await PopulateClientsAsync(fallbackModel);
         await PopulateMembersAsync(fallbackModel);
 
-        return PartialView("_AddProject", fallbackModel);  
+        return PartialView("_AddProject", fallbackModel);
     }
 
     [HttpPost]
@@ -78,22 +79,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
 
         if (!ModelState.IsValid)
         {
-            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
-            {
-                var errors = ModelState
-                .Where(x => x.Value?.Errors.Count > 0)
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
-                .ToList()
-                );
-
-                return BadRequest(new { success = false, errors });
-            }
-            else
-            {
-                return View("_AddProject", form);
-            } 
+            return JsonValidationError();
         }
 
         ProjectDto projectDto = form;
@@ -119,8 +105,14 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
 
         var result = await _projectService.CreateProject(projectDto);
 
+
         if (result.Success)
         {
+            string notificationMessage = $"New project '{form.ProjectName}' added.";
+            var notification = NotificationFactory.Create(1, 2, notificationMessage, projectDto.ProjectImagePath ?? "");
+            Console.WriteLine(notification);
+            await _notificationService.AddNotificationAsync(notification);
+
             if (Request.Headers.XRequestedWith == "XMLHttpRequest")
             {
                 return Ok(new { success = true, message = "Project created successfully" });
@@ -175,7 +167,6 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             }
 
             await PopulateClientsAsync(viewModel);
-
             return PartialView("_EditProject", viewModel);
         }
         else
@@ -190,15 +181,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     {
         if (!ModelState.IsValid)
         {
-            var errors = ModelState
-                .Where(x => x.Value?.Errors.Count > 0)
-                .ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
-                .ToList()
-                );
-
-            return PartialView("_EditProject", model);
+            return JsonValidationError();
         }
 
         ProjectDto projectDto = model;
@@ -222,12 +205,17 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             projectDto.ProjectImagePath = "/Images/Uploads/ProjectImages/" + uniqueFileName;
         }
 
-        ProjectEntity projectEntity = ProjectFactory.Create(projectDto); 
+        ProjectEntity projectEntity = ProjectFactory.Create(projectDto);
 
         var result = await _projectService.UpdateProject(model.ProjectId, projectEntity);
 
         if (result.Success)
         {
+            string notificationMessage = $"Project '{model.ProjectName}' has been updated.";
+            var notification = NotificationFactory.Create(1, 2, notificationMessage, projectDto.ProjectImagePath ?? "");
+            Console.WriteLine(notification);
+            await _notificationService.AddNotificationAsync(notification);
+
             return RedirectToAction("Index", "Project");
         }
         else
@@ -246,10 +234,22 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
     [HttpPost]
     public async Task<IActionResult> DeleteProject(int id)
     {
+        var res = await _projectService.GetProjectById(id);
+
+        var projectResult = res as Result<ProjectEntity>;
+        ProjectEntity project = projectResult?.Data ?? new ProjectEntity();
+        var projectName = project.ProjectName;
+        var imagePath = project.ProjectImagePath;
+        
+
         var result = await _projectService.DeleteProject(id);
 
         if (result.Success)
         {
+            string notificationMessage = $"Project '{projectName}' has been deleted.";
+            var notification = NotificationFactory.Create(1, 2, notificationMessage, imagePath ?? "");
+            Console.WriteLine(notification);
+            await _notificationService.AddNotificationAsync(notification);
             return RedirectToAction("Index", "Project");
         }
         else
@@ -267,7 +267,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
         {
             return View("Index");
         }
-        
+
         var projectResult = result as Result<ProjectEntity>;
         ProjectEntity project = projectResult?.Data ?? new();
 
@@ -276,15 +276,15 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             Id = project.ProjectId,
             ProjectName = project.ProjectName,
             ProjectImagePath = project.ProjectImagePath,
-            Description = project.Description ??  "No description has been added",
+            Description = project.Description ?? "No description has been added",
             Client = project.Client.ClientName,
             Status = project.Status.StatusName,
             StartDate = project.StartDate,
             EndDate = project.EndDate,
             Budget = project.Budget,
             TeamMembers = project.TeamMembers.ToList()
-        };  
-        
+        };
+
         return View(viewModel);
     }
 
@@ -332,5 +332,18 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
             viewModel.ClientOptions.Add(new SelectListItem { Text = client.ClientName, Value = client.Id.ToString() });
         }
     }
+
+    private IActionResult JsonValidationError()
+    {
+        var errors = ModelState
+            .Where(x => x.Value?.Errors.Count > 0)
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToList()
+            );
+
+        return BadRequest(new { success = false, errors });
+    }
 }
+    
     
