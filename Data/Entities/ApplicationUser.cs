@@ -15,6 +15,19 @@ public class ApplicationUser : IdentityUser
     [PersonalData]
     [Column(TypeName = "nvarchar(50)")]
     public string LastName { get; set; } = null!;
+ 
+    [Column(TypeName = "nvarchar(50)")]
+    public string? JobTitle { get; set; }
+
+    public string? ProfileImagePath { get; set; }
+
+    [DataType(DataType.Date)]
+    public DateOnly? DateOfBirth { get; set; }
+
+    public ICollection<ProjectEmployeeEntity> EmployeeProjects { get; set; } = [];
+
+    public int? AddressId { get; set; }
+    public AddressEntity Address { get; set; } = null!;
 
     public ICollection<NotificationDismissedEntity> DismissedNotifications { get; set; } = []; 
 }

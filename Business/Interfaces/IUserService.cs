@@ -5,10 +5,13 @@ namespace Business.Interfaces;
 
 public interface IUserService
 {
-    Task<IResult> CreateUser(AppUserDto form);
+    Task<IResult> RegisterUser(AppUserDto dto);
+    Task<IResult> UpdateUserProfile(UpdateUserDto dto);
+    Task<IResult> CreateEmployee(EmployeeDto dto);
     Task<IResult> GetAllUsers();
     Task<IResult> GetUserById(string id);
     Task<IResult> GetUserByEmail(string email);
-    Task<IResult> UpdateUser(string id, ApplicationUser updatedUser); //OBS: använd den andra modellen? 
+    Task<IResult> GetUsersBySearchTerm(string term);
+    Task<IResult> UpdateUser(string id, ApplicationUser updatedUser); 
     Task<IResult> DeleteUser(string id);
 }

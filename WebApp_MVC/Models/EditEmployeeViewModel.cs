@@ -6,7 +6,7 @@ namespace WebApp_MVC.Models;
 
 public class EditEmployeeViewModel
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
 
     [Display(Name = "First Name", Prompt = "Enter first name")]
     [Required(ErrorMessage = "Required")]
@@ -57,11 +57,11 @@ public class EditEmployeeViewModel
     [Required(ErrorMessage = "Required")]
     public string City { get; set; } = null!;
 
-    public static implicit operator MemberDto(EditEmployeeViewModel model)
+    public static implicit operator EmployeeDto(EditEmployeeViewModel model)
     {
         return model == null
             ? null!
-            : new MemberDto
+            : new EmployeeDto
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -76,21 +76,32 @@ public class EditEmployeeViewModel
             };
     }
 
-    public EditEmployeeViewModel(EmployeeEntity entity)
+    public EditEmployeeViewModel(ApplicationUser user)
     {
-        Id = entity.Id;
-        FirstName = entity.FirstName;
-        LastName = entity.LastName;
-        Email = entity.Email;
-        PhoneNumber = entity.PhoneNumber;
-        JobTitle = entity.JobTitle;
-        ProfileImagePath = entity.ProfileImagePath;
-        StreetAddress = entity.Address.StreetAddress;
-        PostCode = entity.Address.PostCode;
-        City = entity.Address.City;
-        Year = DateConverterYear(entity.DateOfBirth);
-        Month = DateConverterMonth(entity.DateOfBirth);
-        Day = DateConverterDay(entity.DateOfBirth);
+        Id = user.Id;
+        FirstName = user.FirstName;
+        LastName = user.LastName;
+        Email = user.Email;
+        PhoneNumber = user.PhoneNumber;
+        JobTitle = user.JobTitle;
+        ProfileImagePath = user.ProfileImagePath;
+        StreetAddress = user.Address.StreetAddress;
+        PostCode = user.Address.PostCode;
+        City = user.Address.City;
+        if (user.DateOfBirth.HasValue)
+        {
+            Year = DateConverterYear(user.DateOfBirth.Value);
+            Month = DateConverterMonth(user.DateOfBirth.Value);
+            Day = DateConverterDay(user.DateOfBirth.Value);
+        }
+        else
+        {
+            // Provide default values or leave them at their default
+            Year = DateTime.Now.Year;
+            Month = 1;
+            Day = 1;
+            // Or you could set them to 0 to indicate no date selected
+        }
 
     }
 
@@ -109,7 +120,7 @@ public class EditEmployeeViewModel
         try
         {
             
-            DateOnly date = new DateOnly(year, month, day);
+            DateOnly date = new(year, month, day);
             return date;
         }
         catch (Exception ex)

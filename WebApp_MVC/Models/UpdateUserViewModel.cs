@@ -1,34 +1,16 @@
 ﻿using Business.Models;
-using Data.Entities;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+
 namespace WebApp_MVC.Models;
 
-public class AddEmployeeViewModel
+public class UpdateUserViewModel
 {
-    [Display(Name = "First Name", Prompt = "Enter first name")]
-    [Required(ErrorMessage = "Required")]
-    public string FirstName { get; set; } = null!;
-
-    [Display(Name = "Last Name", Prompt = "Enter last name")]
-    [Required(ErrorMessage = "Required")]
-    public string LastName { get; set; } = null!;
-
-    [Display(Name = "Email", Prompt = "Enter email address")]
-    [Required(ErrorMessage = "Required")]
-    [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email address")]
-    public string Email { get; set; } = null!;
-
-    [Display(Name = "Phone Number", Prompt = "Enter phone number")]
+    [Display(Name = "Phone number", Prompt = "Enter phone number")]
     public string? PhoneNumber { get; set; }
 
     [Display(Name = "Job Title", Prompt = "Enter job title")]
     [Required(ErrorMessage = "Required")]
     public string JobTitle { get; set; } = null!;
-
-    [Display(Name = "Role", Prompt = "Choose role")]
-    [Required(ErrorMessage = "Required")]
-    public string Role { get; set; } = null!;
 
     [Display(Name = "Profile Image", Prompt = "Upload a profile image")]
     [DataType(DataType.Upload)]
@@ -58,25 +40,20 @@ public class AddEmployeeViewModel
     [Required(ErrorMessage = "Required")]
     public string City { get; set; } = null!;
 
-    public static implicit operator EmployeeDto(AddEmployeeViewModel model)
+    public static implicit operator UpdateUserDto(UpdateUserViewModel model)
     {
         return model == null
             ? null!
-            : new EmployeeDto
+            : new UpdateUserDto
             {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 JobTitle = model.JobTitle,
+                DateOfBirth = DateConverter(model.Day, model.Month, model.Year),
                 StreetAddress = model.StreetAddress,
                 PostCode = model.PostCode,
                 City = model.City,
-                DateOfBirth = DateConverter(model.Day, model.Month, model.Year),
-                Role = model.Role
-            }; 
+            };
     }
-
 
     public static DateOnly DateConverter(int year, int month, int day)
     {
@@ -84,4 +61,3 @@ public class AddEmployeeViewModel
         return date;
     }
 }
-

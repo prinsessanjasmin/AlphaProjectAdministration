@@ -40,7 +40,7 @@ public class SearchService(IDbContextFactory<DataContext> contextFactory) : ISea
     {
         using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
 
-        var result = await context.Employees
+        var result = await context.Users
             .Where(e => e.FirstName.ToLower().Contains(query) ||
                 e.LastName.ToLower().Contains(query) ||
                 e.Email.ToLower().Contains(query) ||

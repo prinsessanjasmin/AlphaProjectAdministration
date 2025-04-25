@@ -7,11 +7,11 @@ public class ProjectEmployeeEntity
     
 
     public int ProjectId { get; set; }
-    public ProjectEntity Project { get; set; } = null!; 
+    public ProjectEntity Project { get; set; } = null!;
 
-  
-    
-    public int EmployeeId { get; set; }
-    public EmployeeEntity Employee { get; set; } = null!;
+
+
+    public string EmployeeId { get; set; } = null!;
+    public ApplicationUser Employee { get; set; } = null!;
 
 }

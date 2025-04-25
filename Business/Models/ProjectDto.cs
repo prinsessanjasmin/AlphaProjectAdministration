@@ -14,5 +14,5 @@ public class ProjectDto
     public DateOnly EndDate { get; set; }
     public int StatusId { get; set; }
     public decimal? Budget { get; set; }
-    public List<int> SelectedTeamMemberIds { get; set; } = [];
+    public List<string> SelectedTeamMemberIds { get; set; } = [];
 }

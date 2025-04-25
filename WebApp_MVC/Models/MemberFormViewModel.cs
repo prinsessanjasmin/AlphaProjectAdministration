@@ -43,11 +43,11 @@ public class MemberFormViewModel
     [Display(Name = "Profile Picture", Prompt = "Upload a profile picture")]
     public IFormFile? ProfileImage { get; set; }
 
-    public static implicit operator MemberDto(MemberFormViewModel model)
+    public static implicit operator EmployeeDto(MemberFormViewModel model)
     {
         return model == null
             ? null!
-            : new MemberDto
+            : new EmployeeDto
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,

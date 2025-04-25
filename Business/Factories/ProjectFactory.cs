@@ -49,7 +49,7 @@ namespace Business.Factories
                 // Convert the ProjectEmployeeEntity collection to a list of employee IDs Claude AI
                 SelectedTeamMemberIds = entity.TeamMembers?
                 .Select(pe => pe.EmployeeId)
-                .ToList() ?? new List<int>()
+                .ToList() ?? new List<string>()
             };
 
            

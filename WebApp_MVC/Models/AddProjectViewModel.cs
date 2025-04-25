@@ -72,7 +72,7 @@ public class AddProjectViewModel() : IProjectViewModel
             StatusId = 1,
             SelectedTeamMemberIds = string.IsNullOrEmpty(model.SelectedTeamMemberIds) 
                 ? [] 
-                : JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds)
+                : JsonSerializer.Deserialize<List<string>>(model.SelectedTeamMemberIds)
         };
 
         return projectDto;    

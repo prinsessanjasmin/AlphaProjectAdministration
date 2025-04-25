@@ -62,7 +62,7 @@ public class EditProjectViewModel : IProjectViewModel
                 StatusId = 1,
                 SelectedTeamMemberIds = string.IsNullOrEmpty(model.SelectedTeamMemberIds)
                     ? []
-                    : JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds)
+                    : JsonSerializer.Deserialize<List<string>>(model.SelectedTeamMemberIds)
             };
     }
 
@@ -77,7 +77,7 @@ public class EditProjectViewModel : IProjectViewModel
         Budget = project.Budget;
         ProjectImagePath = project.ProjectImagePath;
 
-        var teamMemberIds = project.TeamMembers?.Select(tm => tm.EmployeeId).ToList() ?? new List<int>();
+        var teamMemberIds = project.TeamMembers?.Select(tm => tm.EmployeeId).ToList() ?? new List<string>();
         SelectedTeamMemberIds = JsonSerializer.Serialize(teamMemberIds);
     }
 

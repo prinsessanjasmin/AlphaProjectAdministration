@@ -12,21 +12,21 @@ using WebApp_MVC.Models;
 
 namespace WebApp_MVC.Controllers;
 
-public class EmployeeController(DataContext dataContext, IWebHostEnvironment webHostEnvironment, IEmployeeService employeeService) : Controller
+public class EmployeeController(DataContext dataContext, IWebHostEnvironment webHostEnvironment, IUserService userService) : Controller
 {
-    private readonly IEmployeeService _employeeService = employeeService;
+    private readonly IUserService _userService = userService;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
     private readonly DataContext _dataContext = dataContext;
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var employees = await _employeeService.GetAllEmployees();
-        var model = new EmployeeViewModel(_employeeService);
+        var employees = await _userService.GetAllUsers();
+        var model = new EmployeeViewModel(_userService);
 
         if (employees.Success)
         {
-            var employeeResult = employees as Result<IEnumerable<EmployeeEntity>>;
+            var employeeResult = employees as Result<IEnumerable<ApplicationUser>>;
             model.Employees = employeeResult?.Data?.ToList() ?? [];
         }
         else
@@ -59,25 +59,10 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
     {
         if (!ModelState.IsValid)
         {
-            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
-            {
-                var errors = ModelState
-                .Where(x => x.Value?.Errors.Count > 0)
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
-                .ToList()
-                );
-
-                return BadRequest(new { success = false, errors });
-            }
-            else
-            {
-                return View("_AddEmployee", form);
-            }
+            return JsonValidationError();
         }
 
-        MemberDto memberDto = form;
+        EmployeeDto employeeDto = form;
 
         if (form.ProfileImage != null && form.ProfileImage.Length > 0)
         {
@@ -95,45 +80,30 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
             }
 
             // Set the image path in the DTO
-            memberDto.ProfileImagePath = "/Images/Uploads/ProfileImages/" + uniqueFileName;
+            employeeDto.ProfileImagePath = "/Images/Uploads/ProfileImages/" + uniqueFileName;
         }
 
-        var result = await _employeeService.CreateEmployee(memberDto);
+        var result = await _userService.CreateEmployee(employeeDto);
 
         if (result.Success)
         {
-            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
-            {
-                return Ok(new { success = true, message = "Team member created successfully" });
-            }
-            else
-            {
-                return RedirectToAction("Index", "Employee");
-            }
+            return Ok(new { success = true, message = "Team member created successfully" });
         }
         else
         {
-            ModelState.AddModelError("", "Something went wrong when creating the team member");
-            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
-            {
-                return BadRequest(new { success = false, message = "Failed to create team member" });
-            }
-            else
-            {
-                return PartialView("_AddEmployee", "Employee");
-            }
+            return JsonValidationError();
         }
     }
 
     [HttpGet]
-    public async Task<IActionResult> EditEmployee(int id)
+    public async Task<IActionResult> EditEmployee(string id)
     {
-        var result = await _employeeService.GetEmployeeById(id);
+        var result = await _userService.GetUserById(id);
 
         if (result.Success)
         {
-            var employeeResult = result as Result<EmployeeEntity>;
-            EmployeeEntity employee = employeeResult?.Data ?? new EmployeeEntity();
+            var employeeResult = result as Result<ApplicationUser>;
+            ApplicationUser employee = employeeResult?.Data ?? new ApplicationUser();
 
             var viewModel = new EditEmployeeViewModel(employee);
 
@@ -151,18 +121,10 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
     {
         if (!ModelState.IsValid)
         {
-            var errors = ModelState
-                .Where(x => x.Value?.Errors.Count > 0)
-                .ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
-                .ToList()
-                );
-
-            return PartialView("_EditEmployee", model);
+            return JsonValidationError();
         }
 
-        MemberDto memberDto = model;
+        EmployeeDto employeeDto = model;
 
         if (model.ProfileImage != null && model.ProfileImage.Length > 0)
         {
@@ -180,12 +142,12 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
             }
 
             // Set the image path in the DTO
-            memberDto.ProfileImagePath = "/Images/Uploads/ProfileImages/" + uniqueFileName;
+            employeeDto.ProfileImagePath = "/Images/Uploads/ProfileImages/" + uniqueFileName;
         }
 
-        EmployeeEntity employeeEntity = EmployeeFactory.Create(memberDto, model.Id);
+        ApplicationUser employeeEntity = UserFactory.Create(employeeDto);
 
-        var result = await _employeeService.UpdateEmployee(model.Id, employeeEntity);
+        var result = await _userService.UpdateUser(model.Id, employeeEntity);
 
         if (result.Success)
         {
@@ -204,9 +166,9 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
     }
 
     [HttpPost]
-    public async Task<IActionResult> DeleteEmployee(int id)
+    public async Task<IActionResult> DeleteEmployee(string id)
     {
-        var result = await _employeeService.DeleteEmployee(id);
+        var result = await _userService.DeleteUser(id);
 
         if (result.Success)
         {
@@ -219,29 +181,29 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         }
     }
 
-    public async Task<IActionResult> Details(int id)
+    public async Task<IActionResult> Details(string id)
     {
-        var result = await _employeeService.GetEmployeeById(id);
+        var result = await _userService.GetUserById(id);
 
         if (!result.Success)
         {
             return View("Index");
         }
 
-        var employeeResult = result as Result<EmployeeEntity>;
-        EmployeeEntity employee = employeeResult?.Data ?? new();
+        var employeeResult = result as Result<ApplicationUser>;
+        ApplicationUser employee = employeeResult?.Data ?? new();
 
         var viewModel = new EmployeeDetailsViewModel
         {
             Id = employee.Id,
             FirstName = employee.FirstName,
             LastName = employee.LastName,
-            Email = employee.Email,
+            Email = employee.Email ?? "Not provided",
             PhoneNumber = employee.PhoneNumber ?? "No phone number has been added",
-            JobTitle = employee.JobTitle,
+            JobTitle = employee.JobTitle ?? "Not provided",
             ProfileImagePath = employee.ProfileImagePath,
-            DateOfBirth = employee.DateOfBirth,
-            EmployeeProjects = employee.EmployeeProjects.ToList(),
+            DateOfBirth = employee.DateOfBirth ?? default,
+            EmployeeProjects = [.. employee.EmployeeProjects],
             StreetAddress = employee.Address.StreetAddress,
             PostCode = employee.Address.PostCode,
             City = employee.Address.City,
@@ -259,10 +221,10 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
             return Json(new List<object>());
         }
 
-        var result = await _employeeService.GetEmployeesBySearchTerm(term);
+        var result = await _userService.GetUsersBySearchTerm(term);
         if (result.Success)
         {
-            var mappedResults = result as IResult<IEnumerable<EmployeeEntity>>;
+            var mappedResults = result as IResult<IEnumerable<ApplicationUser>>;
             var employeeList = mappedResults?.Data?.Select(e => new
             {
                 Id = e.Id.ToString(),
@@ -276,5 +238,17 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         }
 
         return Json(new List<object>());
+    }
+
+    private BadRequestObjectResult JsonValidationError()
+    {
+        var errors = ModelState
+            .Where(x => x.Value?.Errors.Count > 0)
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToList()
+            );
+
+        return BadRequest(new { success = false, errors });
     }
 }

@@ -101,7 +101,7 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
             return JsonValidationError();
         }
 
-        var result = await _userService.CreateUser(model); 
+        var result = await _userService.RegisterUser(model); 
        
         if (result.Success)
         {
@@ -191,7 +191,7 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
         }
     }
 
-    private IActionResult JsonValidationError()
+    private BadRequestObjectResult JsonValidationError()
     {
         var errors = ModelState
             .Where(x => x.Value?.Errors.Count > 0)

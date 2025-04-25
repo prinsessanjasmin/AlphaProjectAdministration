@@ -55,9 +55,15 @@ namespace Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly?>("DateOfBirth")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -68,6 +74,9 @@ namespace Data.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("JobTitle")
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
@@ -97,6 +106,9 @@ namespace Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfileImagePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -108,6 +120,8 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -135,53 +149,6 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clients");
-                });
-
-            modelBuilder.Entity("Data.Entities.EmployeeEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("JobTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<string>("ProfileImagePath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Data.Entities.NotificationDismissedEntity", b =>
@@ -262,8 +229,8 @@ namespace Data.Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ProjectId", "EmployeeId");
 
@@ -482,13 +449,12 @@ namespace Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Data.Entities.EmployeeEntity", b =>
+            modelBuilder.Entity("Data.Entities.ApplicationUser", b =>
                 {
                     b.HasOne("Data.Entities.AddressEntity", "Address")
                         .WithMany("Employees")
                         .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Address");
                 });
@@ -533,7 +499,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.ProjectEmployeeEntity", b =>
                 {
-                    b.HasOne("Data.Entities.EmployeeEntity", "Employee")
+                    b.HasOne("Data.Entities.ApplicationUser", "Employee")
                         .WithMany("EmployeeProjects")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -628,16 +594,13 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("DismissedNotifications");
+
+                    b.Navigation("EmployeeProjects");
                 });
 
             modelBuilder.Entity("Data.Entities.ClientEntity", b =>
                 {
                     b.Navigation("Projects");
-                });
-
-            modelBuilder.Entity("Data.Entities.EmployeeEntity", b =>
-                {
-                    b.Navigation("EmployeeProjects");
                 });
 
             modelBuilder.Entity("Data.Entities.NotificationEntity", b =>

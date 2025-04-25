@@ -13,10 +13,9 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace WebApp_MVC.Controllers;
 
-public class ProjectController(IEmployeeService employeeService, IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService) : Controller
+public class ProjectController(IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService) : Controller
 {
 
-    private readonly IEmployeeService _employeeService = employeeService;
     private readonly IClientService _clientService = clientService;
     private readonly IProjectService _projectService = projectService;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;

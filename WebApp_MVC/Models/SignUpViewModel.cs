@@ -51,6 +51,7 @@ public class SignUpViewModel
                 LastName = model.LastName,
                 Email = model.Email,
                 Password = model.Password,
+                Role = "User"
             };
     }
 }

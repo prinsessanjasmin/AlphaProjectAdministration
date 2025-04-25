@@ -16,6 +16,6 @@ public class AddressEntity
     [Required]
     public string City { get; set; } = null!;
 
-    public ICollection<EmployeeEntity> Employees { get; set; } = new List<EmployeeEntity>();
+    public ICollection<ApplicationUser> Employees { get; set; } = new List<ApplicationUser>();
 
 }

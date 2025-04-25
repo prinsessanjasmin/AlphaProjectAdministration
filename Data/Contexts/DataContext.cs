@@ -7,7 +7,6 @@ namespace Data.Contexts;
 public class DataContext(DbContextOptions<DataContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<ClientEntity> Clients { get; set; }
-    public DbSet<EmployeeEntity> Employees { get; set; }
     public DbSet<ProjectEmployeeEntity> ProjectEmployees { get; set; }
     public DbSet<ProjectEntity> Projects { get; set; }
     public DbSet<StatusEntity> Statuses { get; set; }
@@ -53,11 +52,7 @@ public class DataContext(DbContextOptions<DataContext> options) : IdentityDbCont
             .Property(p => p.Budget)
             .HasPrecision(18, 2);
 
-        modelBuilder.Entity<EmployeeEntity>()
-            .HasIndex(e => e.Email)
-            .IsUnique();
-
-        modelBuilder.Entity<EmployeeEntity>()
+        modelBuilder.Entity<ApplicationUser>()
             .HasOne(e => e.Address)
             .WithMany(ad => ad.Employees)
             .HasForeignKey(e => e.AddressId)

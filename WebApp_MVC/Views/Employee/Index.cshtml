@@ -28,7 +28,7 @@
         }
         else
         {
-            @foreach (EmployeeEntity employee in Model.Employees)
+            @foreach (ApplicationUser employee in Model.Employees)
             {
                 @await Html.PartialAsync("_MemberCard", employee)
             }

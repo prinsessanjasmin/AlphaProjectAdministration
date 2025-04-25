@@ -4,18 +4,18 @@ using Business.Services;
 using Data.Entities;
 namespace WebApp_MVC.Models;
 
-public class EmployeeViewModel(IEmployeeService employeeService)
+public class EmployeeViewModel(IUserService userService)
 {
-    private readonly IEmployeeService _employeeService = employeeService;
-    public List<EmployeeEntity> Employees { get; set; } = [];
+    private readonly IUserService _userService = userService;
+    public List<ApplicationUser> Employees { get; set; } = [];
 
     public async Task GetEmployees()
     {
-        var result = await _employeeService.GetAllEmployees();
+        var result = await _userService.GetAllUsers();
 
         if (result.Success)
         {
-            var employeeResult = result as Result<IEnumerable<EmployeeEntity>>;
+            var employeeResult = result as Result<IEnumerable<ApplicationUser>>;
             var employees = employeeResult?.Data;
 
             if (employees != null)
