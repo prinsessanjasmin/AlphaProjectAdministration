@@ -20,6 +20,7 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
     private readonly INotificationService _notificationService = notificationService;
     private readonly IHubContext<NotificationHub> _notificationHub = notificationHub;
 
+    [HttpGet]
     public IActionResult SignIn(string returnUrl = "/")
     {
         ViewBag.ErrorMessage = "";
@@ -76,6 +77,64 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
 
     }
 
+    [HttpGet]
+    public IActionResult AdminSignIn(string returnUrl = "/")
+    {
+        ViewBag.ErrorMessage = "";
+        ViewBag.ReturnUrl = returnUrl;
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AdminSignIn(LoginFormViewModel form, string returnUrl = "/")
+    {
+        if (!ModelState.IsValid)
+        {
+            return JsonValidationError();
+        }
+
+        var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, true, false);
+        if (!result.Succeeded)
+        {
+            ModelState.AddModelError(string.Empty, "Incorrect email or password");
+            return JsonValidationError();
+        }
+
+        var user = await _userManager.FindByEmailAsync(form.Email);
+
+        if (user != null)
+        {
+
+            if (!User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
+            {
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
+            }
+
+            await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
+            var notification = new NotificationEntity
+            {
+                Message = $"{user.FirstName} {user.LastName} signed in.",
+                NotificationTypeId = 1,
+                TargetGroupId = 2
+            };
+            await _notificationService.AddNotificationAsync(notification);
+            var notifications = await _notificationService.GetAllAsync(user.Id);
+            var newNotification = notifications.OrderByDescending(x => x.Created).FirstOrDefault();
+
+            if (newNotification != null)
+            {
+                await _notificationHub.Clients.All.SendAsync("ReceiveNotification", newNotification);
+            }
+        }
+
+        if (!Url.IsLocalUrl(returnUrl))
+        {
+            returnUrl = Url.Action("Index", "Project");
+        }
+        return Json(new { success = true, redirectUrl = returnUrl });
+
+    }
+
     public async Task AddClaimByEmailAsync(ApplicationUser user, string typeName, string value)
     {
         if (user != null)
@@ -88,6 +147,8 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
             }
         }
     }
+
+    [HttpGet]
     public IActionResult SignUp()
     {
         return View();
@@ -120,7 +181,7 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
     public new async Task<IActionResult> SignOut()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("SignIn", "Auth");
     }
 
     [HttpPost]
@@ -191,7 +252,7 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
         }
     }
 
-    private IActionResult JsonValidationError()
+    private BadRequestObjectResult JsonValidationError()
     {
         var errors = ModelState
             .Where(x => x.Value?.Errors.Count > 0)

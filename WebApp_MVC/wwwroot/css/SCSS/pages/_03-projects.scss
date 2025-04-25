@@ -1,7 +1,7 @@
 ﻿.page-projects {
     background-color: $clr-background;
-    min-width: 100vw;
-    min-height: 100vh;
+    min-width: 100%;
+    min-height: 100%;
 }
 
 .projects-container {
@@ -11,13 +11,13 @@
 }
 
 .project-view {
-    margin-top: 2rem; 
-    display: grid; 
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr; 
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 2rem;
     align-content: space-evenly;
-    justify-content: space-evenly;
+    justify-content: flex-start;
 }
 
 .project-categories {

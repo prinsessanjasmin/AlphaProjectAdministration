@@ -4,14 +4,18 @@ using Business.Models;
 using Business.Services;
 using Data.Contexts;
 using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update;
 using System.Text.Json;
 using WebApp_MVC.Models;
 
 namespace WebApp_MVC.Controllers;
 
+[Authorize]
 public class EmployeeController(DataContext dataContext, IWebHostEnvironment webHostEnvironment, IEmployeeService employeeService) : Controller
 {
     private readonly IEmployeeService _employeeService = employeeService;
@@ -99,6 +103,10 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         }
 
         var result = await _employeeService.CreateEmployee(memberDto);
+        var employeeResult = result as Result<EmployeeEntity>;
+        EmployeeEntity employee = employeeResult?.Data ?? new EmployeeEntity();
+
+        
 
         if (result.Success)
         {

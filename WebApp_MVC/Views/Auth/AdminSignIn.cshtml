@@ -1,0 +1,51 @@
+﻿@model LoginFormViewModel
+@{
+    ViewData["Title"] = "Sign in - Admin";
+    Layout = "_CleanLayout";
+}
+
+<div class="container container-large">
+    <div class="side-by-side">
+        <div class="admin-left">
+            <div class="admin-text">
+                <h1 class="admin-headline">Welcome to</h1>
+                <h1 class="admin-headline admin-headline2">Admin Panel</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ullamcorper nisl erat, vel convallis elit fermentum pellentesque. Sed mollis velit facilisis facilisis viverra.</p>
+            </div>
+        </div>
+        <div class="admin-right">
+            <div class="popup-container login-container" id="admin-login">
+                <h2 class="center">Login</h2>
+                <div>
+                    @await Html.PartialAsync("Partials/Components/_ExternalAuthentication")
+                </div>
+                <div class="divider">OR</div>
+                <form class="form" id="admin-login-form">
+                    <div class="form-input">
+                        <label asp-for="Email"></label>
+                        <div class="input-group">
+                            <input asp-for="Email">
+                            <span asp-validation-for="Email"></span>
+                        </div>
+                    </div>
+                    <div class="form-input">
+                        <label asp-for="Password"></label>
+                        <div class="input-group">
+                            <input asp-for="Password" id="input-password">
+                            <span asp-validation-for="Password"></span>
+                        </div>
+                    </div>
+                    <div class="horizontal-form">
+                        <div>
+                            <input type="checkbox" name="rememberMe"/>
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+                        <a>Forgot password?</a>
+                    </div>
+                    <button class="btn btn-login">Log In</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("Partials/Components/_ValidationScript")

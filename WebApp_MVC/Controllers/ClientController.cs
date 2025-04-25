@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Text.Json;
 using Business.Factories;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp_MVC.Controllers;
 
+[Authorize]
 public class ClientController(IClientService clientService) : Controller
 {
     private readonly IClientService _clientService = clientService;

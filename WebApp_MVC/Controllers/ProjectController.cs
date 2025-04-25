@@ -10,9 +10,11 @@ using WebApp_MVC.Models;
 using Data.Contexts;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp_MVC.Controllers;
 
+[Authorize]
 public class ProjectController(IEmployeeService employeeService, IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService) : Controller
 {
 
@@ -333,7 +335,7 @@ public class ProjectController(IEmployeeService employeeService, IClientService 
         }
     }
 
-    private IActionResult JsonValidationError()
+    private BadRequestObjectResult JsonValidationError()
     {
         var errors = ModelState
             .Where(x => x.Value?.Errors.Count > 0)

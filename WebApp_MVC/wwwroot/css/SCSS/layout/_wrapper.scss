@@ -2,5 +2,7 @@
     display: grid; 
     grid-template-rows: 80px 1fr auto;
     grid-template-columns: 1fr 4fr; 
-    min-height: 100vh;
+    min-height: 100%;
+    width: 100%;
+    max-width: 100%;
 }
