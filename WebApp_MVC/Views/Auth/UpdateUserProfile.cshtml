@@ -1,0 +1,105 @@
+﻿@model UpdateUserViewModel
+@{
+    ViewData["Title"] = "Complete user profile";
+    Layout = "_CleanLayout";
+}
+
+<div id="update-user-container" class="signup-container update-user-container">
+    <form class="form" id="update-user-form" method="post" asp-action="UpdateUserProfile" asp-controller="Auth" enctype="multipart/form-data" novalidate>
+        <header>
+            <h2 class="center">Welcome @Model.DisplayName!</h2>
+            <h4>Please complete your profile.</h4>
+        </header>
+        <div class="form-content">
+            <input type="hidden" asp-for="Id" />
+            <div class="upload-image">
+                <button class="btn-upload-image">
+                    <img src="~/ProjectImages/Icons/Camera.png" alt="Camera icon.">
+                    <input asp-for="ProfileImage" accept="image/*" class="hidden" />
+                </button>
+            </div>
+            <div class="form-input">
+                <label asp-for="PhoneNumber"></label>
+                <div class="input-group">
+                    <input data-val="true" asp-for="PhoneNumber" />
+                    <span asp-validation-for="PhoneNumber" class=""></span>
+                </div>
+            </div>
+            <div class="form-input">
+                <label asp-for="JobTitle"></label>
+                <div class="input-group">
+                    <input data-val="true" asp-for="JobTitle" />
+                    <span asp-validation-for="JobTitle" class=""></span>
+                </div>
+            </div>
+            <div class="form-input">
+                <label asp-for="StreetAddress"></label>
+                <div class="input-group">
+                    <input data-val="true" asp-for="StreetAddress" />
+                    <span asp-validation-for="StreetAddress" class=""></span>
+                </div>
+            </div>
+            <div class="horizontal-form">
+                <div class="form-input">
+                    <label asp-for="PostCode"></label>
+                    <div class="input-group">
+                        <input data-val="true" asp-for="PostCode" />
+                        <span asp-validation-for="PostCode" class=""></span>
+                    </div>
+                </div>
+                <div class="form-input">
+                    <label asp-for="City"></label>
+                    <div class="input-group">
+                        <input data-val="true" asp-for="City" />
+                        <span asp-validation-for="City" class=""></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-input">
+                <label for="dateOfBirth"></label>
+                <div class="horizontal-form">
+                    <div class="input-group">
+                        <select class="padding-1" data-val="true" id="complete-day" asp-for="Day">
+                            <option value="">Day</option>
+                        </select>
+                        <span asp-validation-for="Day"></span>
+                    </div>
+                    <div class="input-group">
+                        <select class="padding-1" data-val="true" id="complete-month" asp-for="Month">
+                            <option value="">Month</option>
+                        </select>
+                        <span asp-validation-for="Month"></span>
+                    </div>
+                    <div class="input-group">
+                        <select class="padding-1" data-val="true" id="complete-year" asp-for="Year">
+                            <option value="">Year</option>
+                        </select>
+                        <span asp-validation-for="Year"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <button type="submit" class="btn btn-popup">Save</button>
+        </footer>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const daySelect = document.getElementById('complete-day');
+        const monthSelect = document.getElementById('complete-month');
+        const yearSelect = document.getElementById('complete-year');
+
+        if (daySelect && monthSelect && yearSelect) {
+            populateDateDropdowns(
+                daySelect,
+                monthSelect,
+                yearSelect,
+    @Model.Day,
+    @Model.Month,
+    @Model.Year
+            );
+        }
+    });
+</script>

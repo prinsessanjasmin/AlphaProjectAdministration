@@ -38,8 +38,7 @@ public class SignUpViewModel
     [Range(typeof(bool), "true", "true", ErrorMessage = "Required")]
     public bool AcceptTerms { get; set; }
 
-    [Required(ErrorMessage = "Required")]
-    public string Role { get; set; } = null!;
+    public string? Role { get; set; }
 
     public static implicit operator AppUserDto(SignUpViewModel model)
     {

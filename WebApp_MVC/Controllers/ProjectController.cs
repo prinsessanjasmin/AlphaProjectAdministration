@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace WebApp_MVC.Controllers;
 
-public class ProjectController(IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService) : Controller
+public class ProjectController(IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService, IUserService userService) : Controller
 {
 
     private readonly IClientService _clientService = clientService;
@@ -21,6 +21,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
     private readonly DataContext _dataContext = dataContext;
     private readonly INotificationService _notificationService = notificationService;
+    private readonly IUserService _userService = userService;
 
 
     [HttpGet]
@@ -239,7 +240,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
         ProjectEntity project = projectResult?.Data ?? new ProjectEntity();
         var projectName = project.ProjectName;
         var imagePath = project.ProjectImagePath;
-        
+
 
         var result = await _projectService.DeleteProject(id);
 
@@ -289,28 +290,50 @@ public class ProjectController(IClientService clientService, IProjectService pro
 
     public async Task PopulateMembersAsync(IProjectViewModel viewModel, int? projectId = null)
     {
-        if (projectId.HasValue)
-        {
-            var project = await _projectService.GetProjectById(projectId.Value);
-            IResult<ProjectEntity>? projectResult = project as IResult<ProjectEntity>;
-            if (projectResult != null && projectResult?.Data?.TeamMembers?.Count > 0)
-            {
-                viewModel.PreselectedTeamMembers = projectResult.Data.TeamMembers.Select(tm => new TeamMemberDto
-                {
-                    Id = tm.EmployeeId.ToString(),
-                    MemberFullName = (tm.Employee.FirstName + ' ' + tm.Employee.LastName).ToString(),
-                    ProfileImage = tm.Employee.ProfileImagePath ?? "Avatar.svg"
-                }).ToList();
+        var usersResult = await _userService.GetAllUsers();
 
-                var teamMemberIds = projectResult.Data.TeamMembers.Select(tm => tm.EmployeeId).ToList();
-                viewModel.SelectedTeamMemberIds = JsonSerializer.Serialize(teamMemberIds);
+        if (usersResult is IResult<IEnumerable<ApplicationUser>> typedResult && typedResult.Success && typedResult.Data != null)
+        {
+            viewModel.AvailableTeamMembers = typedResult.Data.Select(user => new TeamMemberDto
+            {
+                Id = user.Id,
+                MemberFullName = $"{user.FirstName} {user.LastName}",
+                ProfileImage = user.ProfileImagePath ?? "Avatar.svg"
+            }).ToList();
+
+            if (projectId.HasValue)
+            {
+                var project = await _projectService.GetProjectById(projectId.Value);
+                IResult<ProjectEntity>? projectResult = project as IResult<ProjectEntity>;
+                if (projectResult != null && projectResult?.Data?.TeamMembers?.Count > 0)
+                {
+                    viewModel.PreselectedTeamMembers = projectResult.Data.TeamMembers.Select(tm => new TeamMemberDto
+                    {
+                        Id = tm.EmployeeId.ToString(),
+                        MemberFullName = (tm.Employee.FirstName + ' ' + tm.Employee.LastName).ToString(),
+                        ProfileImage = tm.Employee.ProfileImagePath ?? "Avatar.svg"
+                    }).ToList();
+
+                    var teamMemberIds = projectResult.Data.TeamMembers.Select(tm => tm.EmployeeId).ToList();
+                    viewModel.SelectedTeamMemberIds = JsonSerializer.Serialize(teamMemberIds);
+                }
+                else
+                {
+                    viewModel.PreselectedTeamMembers = [];
+                    viewModel.SelectedTeamMemberIds = "[]";
+                }
             }
-            else if (string.IsNullOrEmpty(viewModel.SelectedTeamMemberIds) ||
-             viewModel.SelectedTeamMemberIds == "[]")
+            else
             {
                 viewModel.PreselectedTeamMembers = [];
                 viewModel.SelectedTeamMemberIds = "[]";
             }
+        }
+        else
+        {
+            viewModel.AvailableTeamMembers = [];
+            viewModel.PreselectedTeamMembers = [];
+            viewModel.SelectedTeamMemberIds = "[]";
         }
     }
 
@@ -332,7 +355,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
         }
     }
 
-    private IActionResult JsonValidationError()
+    private BadRequestObjectResult JsonValidationError()
     {
         var errors = ModelState
             .Where(x => x.Value?.Errors.Count > 0)

@@ -80,21 +80,21 @@ public class UserService(IUserRepository userRepository, IAddressService address
         }
     }
 
-    public async Task<IResult> GetAllUsers()
+    public async Task<IResult<IEnumerable<ApplicationUser>>> GetAllUsers()
     {
         try
         {
             IEnumerable<ApplicationUser> users = await _userRepository.GetAllUsersAsync();
-            if (users != null)
+            if (users != null && users.Any())
             {
                 return Result<IEnumerable<ApplicationUser>>.Ok(users);
             }
 
-            return Result.NotFound("There are no team members.");
+            return Result<IEnumerable<ApplicationUser>>.NotFound("There are no team members.");
         }
-        catch
+        catch (Exception ex)
         {
-            return Result.Error("Something went wrong.");
+            return Result<IEnumerable<ApplicationUser>>.Error("Something went wrong: " + ex.Message);
         }
     }
 

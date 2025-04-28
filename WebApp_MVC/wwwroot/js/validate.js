@@ -12,75 +12,94 @@
         });
 
         form.addEventListener('submit', async (e) => {
-            e.preventDefault()
-            console.log("Form submitting with team members:", document.getElementById('selected-team-member-ids')?.value);
+            e.preventDefault();
             e.stopPropagation();
+            await submitFormAsync(form);
 
-            let isValid = true;
-            fields.forEach(field => {
-                const fieldValid = validateField(field);
-                if (!validateField(field)) {
-                    isValid = false;
-                }
-            });
-
-            const teamMembersField = form.querySelector('#SelectedTeamMemberIds');
-            if (teamMembersField && !validateMemberSelection(teamMembersField)) {
-                isValid = false;
-            }
-
-            if (!isValid) {
-                return;
-            }
-
-            clearErrorMessages(form)
-            const formData = new FormData(form)
-
-            console.log("Form data before submission:");
-            for (let pair of formData.entries()) {
-                console.log(pair[0] + ': ' + pair[1]);
-            }
-
-            try {
-                const res = await fetch(form.action, {
-                    method: 'post',
-                    body: formData
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-
-                    if (data.success) {
-                        const modal = form.closest('.modal');
-                        if (modal) {
-                            modal.style.display = 'none';
-                        }
-
-                        // Redirect to the URL from the server (e.g., returnUrl)
-                        if (data.redirectUrl) {
-                            window.location.href = data.redirectUrl;
-                        } else {
-                            // fallback, in case redirectUrl is missing
-                            window.location.reload();
-                        }
-                    }
-                }
-                else if (res.status === 400) {
-                    const data = await res.json()
-
-                    if (data.errors) {
-                        Object.keys(data.errors).forEach(key => {
-                            addErrorMessage(form, key, data.errors[key].join('\n'))
-                        });
-                    }
-                }
-            }
-            catch (error) {
-                console.error('Error submitting form:', error);
-            }
         });
-    });  
+    });
 });
+
+async function submitFormAsync(form) {
+
+    const fields = form.querySelectorAll("[data-val='true']")
+    let isValid = true;
+    fields.forEach(field => {
+        const fieldValid = validateField(field);
+        if (!validateField(field)) {
+            isValid = false;
+        }
+    });
+
+    const teamMembersField = form.querySelector('#SelectedTeamMemberIds');
+    if (teamMembersField && !validateMemberSelection(teamMembersField)) {
+        isValid = false;
+    }
+
+    if (!isValid) {
+        return;
+    }
+
+    clearErrorMessages(form)
+    const formData = new FormData(form)
+
+    console.log("Form data before submission:");
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
+
+    try {
+        const res = await fetch(form.action, {
+            method: 'post',
+            body: formData
+        });
+
+        console.log(res);
+
+        if (res.ok) {
+            console.log(res.ok);
+            const data = await res.json();
+            console.log(data);
+
+            if (data.success) {
+                const modal = form.closest('.modal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+
+                // Redirect to the URL from the server (e.g., returnUrl)
+                if (data.redirectUrl) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    // fallback, in case redirectUrl is missing
+                    window.location.reload();
+                }
+            }
+        }
+        else if (res.status === 400) {
+            try {
+                const data = await res.json();
+                if (data.errors) {
+                    Object.keys(data.errors).forEach(key => {
+                        addErrorMessage(form, key, data.errors[key].join('\n'));
+                    });
+                } else if (data.message) {
+                    // Display the general error message
+                    addErrorMessage(form, "", data.message);
+                }
+            } catch (parseError) {
+                console.error('Error parsing response as JSON:', parseError);
+                // Get the text response instead and display it
+                const textResponse = await res.text();
+                console.log('Server response:', textResponse);
+                addErrorMessage(form, "", "An unexpected error occurred");
+            }
+        }
+    }
+    catch (error) {
+        console.error('Error submitting form:', error);
+    }
+}
 
 function clearErrorMessages(form) {
     form.querySelectorAll('[data-val="true"]').forEach(input => {
@@ -98,7 +117,7 @@ function addErrorMessage(form, key, errorMessage) {
     const normalizedKey = key.replace(/\./g, '_');
     let input = form.querySelector(`[name="${key}"]`);
     if (!input) {
-        input = form.querySelector(`#{$normalizedKey}`);
+        input = form.querySelector(`#${normalizedKey}`);
     }
     if (input) {
         input.classList.add('input-validation-error');
@@ -160,15 +179,6 @@ function validateField(field) {
         }
     }
 
-
-    if (field.hasAttribute("required") || field.getAttribute("data-val-required")) {
- 
-        if (value === "") {
-            errorMessage = field.getAttribute("data-val-required") || "Required";
-        }
-    }
-
-
     if (errorMessage) {
         field.classList.add("input-validation-error");
         errorSpan.classList.remove("field-validation-valid");
@@ -226,3 +236,4 @@ function validateMemberSelection(field) {
         return true;
     }
 }
+

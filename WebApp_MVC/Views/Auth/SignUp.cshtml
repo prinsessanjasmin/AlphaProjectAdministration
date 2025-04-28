@@ -4,7 +4,7 @@
     Layout = "_CleanLayout";
 }
 
-<div class="signup-container">
+<div id="signup-container" class="signup-container">
     <h2 class="center">Create Account</h2>
     <div>
         @await Html.PartialAsync("Partials/Components/_ExternalSignUp")
@@ -35,13 +35,6 @@
             </div>
         </div>
         <div class="form-input">
-            <label asp-for="Role"></label>
-            <div class="input-group">
-                <input asp-for="Role" class="input-box">
-                <span asp-validation-for="Role"></span>
-            </div>
-        </div>
-        <div class="form-input">
             <label asp-for="Password"></label>
             <div class="input-group">
                 <input asp-for="Password" id="input-password">
@@ -65,4 +58,3 @@
     </form>
     <p id="no-account">Already have an account? <a asp-controller="Auth" asp-action="SignIn">Log in</a></p>
 </div>
-@await Html.PartialAsync("Partials/Components/_ValidationScript")

@@ -15,11 +15,11 @@ public class EditProjectViewModel : IProjectViewModel
     [DataType(DataType.Upload)]
     public IFormFile? ProjectImage { get; set; } 
 
-    public string? ProjectImagePath { get; set; } 
+    public string? ProjectImagePath { get; set; }
 
     [Display(Name = "Project Title", Prompt = "Enter project name")]
     [Required(ErrorMessage = "Required")]
-    public string ProjectName { get; set; } 
+    public string ProjectName { get; set; } = null!;
 
     [Display(Name = "Client", Prompt = "Select a client")]
     [Required(ErrorMessage = "Required")]
@@ -38,14 +38,18 @@ public class EditProjectViewModel : IProjectViewModel
 
     public decimal? Budget { get; set; }
 
-    public List<SelectListItem> ClientOptions { get; set; } = new();
+    public List<SelectListItem> ClientOptions { get; set; } = [];
+
+    public List<TeamMemberDto> PreselectedTeamMembers { get; set; } = [];
+
+    public List<TeamMemberDto> AvailableTeamMembers { get; set; } = [];
 
     [Display(Name = "Team members", Prompt = "Select team member(s)...")]
     [Required(ErrorMessage = "Required")]
     public string SelectedTeamMemberIds { get; set; } = null!;
     // For handling multiple employee selections Claude AI
 
-    public List<TeamMemberDto> PreselectedTeamMembers { get; set; } = [];
+    
 
     public static implicit operator ProjectDto(EditProjectViewModel model)
     {
@@ -60,10 +64,8 @@ public class EditProjectViewModel : IProjectViewModel
                 EndDate = model.EndDate,
                 Budget = model.Budget,
                 StatusId = 1,
-                SelectedTeamMemberIds = string.IsNullOrEmpty(model.SelectedTeamMemberIds)
-                    ? []
-                    : JsonSerializer.Deserialize<List<string>>(model.SelectedTeamMemberIds)
-            };
+                SelectedTeamMemberIds = JsonSerializer.Deserialize<List<string>>(model.SelectedTeamMemberIds) ?? []
+            }; 
     }
 
     public EditProjectViewModel(ProjectEntity project)
@@ -77,14 +79,12 @@ public class EditProjectViewModel : IProjectViewModel
         Budget = project.Budget;
         ProjectImagePath = project.ProjectImagePath;
 
-        var teamMemberIds = project.TeamMembers?.Select(tm => tm.EmployeeId).ToList() ?? new List<string>();
+        var teamMemberIds = project.TeamMembers?.Select(tm => tm.EmployeeId).ToList() ?? [];
         SelectedTeamMemberIds = JsonSerializer.Serialize(teamMemberIds);
     }
 
     public EditProjectViewModel()
     {
-        // Suggestion from Claude AI 
-        ClientOptions = new List<SelectListItem>();
-
+        ClientOptions = [];
     }
 }

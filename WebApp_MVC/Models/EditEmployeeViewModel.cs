@@ -6,7 +6,7 @@ namespace WebApp_MVC.Models;
 
 public class EditEmployeeViewModel
 {
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
 
     [Display(Name = "First Name", Prompt = "Enter first name")]
     [Required(ErrorMessage = "Required")]
@@ -81,13 +81,13 @@ public class EditEmployeeViewModel
         Id = user.Id;
         FirstName = user.FirstName;
         LastName = user.LastName;
-        Email = user.Email;
-        PhoneNumber = user.PhoneNumber;
-        JobTitle = user.JobTitle;
-        ProfileImagePath = user.ProfileImagePath;
-        StreetAddress = user.Address.StreetAddress;
-        PostCode = user.Address.PostCode;
-        City = user.Address.City;
+        Email = user.Email ?? "";
+        PhoneNumber = user.PhoneNumber ?? "";
+        JobTitle = user.JobTitle ?? "";
+        ProfileImagePath = user.ProfileImagePath ?? "";
+        StreetAddress = user.Address.StreetAddress ?? "";
+        PostCode = user.Address.PostCode ?? "";
+        City = user.Address.City ?? "";
         if (user.DateOfBirth.HasValue)
         {
             Year = DateConverterYear(user.DateOfBirth.Value);

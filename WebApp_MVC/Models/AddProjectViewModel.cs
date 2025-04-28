@@ -34,25 +34,29 @@ public class AddProjectViewModel() : IProjectViewModel
     public decimal? Budget { get; set; }
 
     public List<SelectListItem> ClientOptions { get; set; } = [];
+    public List<TeamMemberDto> AvailableTeamMembers { get; set; } = [];
+    public List<TeamMemberDto> PreselectedTeamMembers { get; set; } = [];
 
     [Display(Name = "Team members", Prompt = "Select team member(s)...")]
-    [Required(ErrorMessage ="Required")]
+    [Required(ErrorMessage = "Required")]
+    
     public string SelectedTeamMemberIds { get; set; } = null!;
     // For handling multiple employee selections Claude AI
 
-    public List<TeamMemberDto> PreselectedTeamMembers { get; set; } = [];
+    
   
 
 
     public static implicit operator ProjectDto(AddProjectViewModel model)
     {
-        List<int> teamMembers = [];
+        List<string> teamMembers;
         try
         {
             if (!string.IsNullOrEmpty(model.SelectedTeamMemberIds))
             {
-                teamMembers = JsonSerializer.Deserialize<List<int>>(model.SelectedTeamMemberIds);
+                teamMembers = JsonSerializer.Deserialize<List<string>>(model.SelectedTeamMemberIds) ?? [];
             }
+
         }
         catch (Exception ex)
         {
@@ -70,10 +74,8 @@ public class AddProjectViewModel() : IProjectViewModel
             EndDate = model.EndDate,
             Budget = model.Budget,
             StatusId = 1,
-            SelectedTeamMemberIds = string.IsNullOrEmpty(model.SelectedTeamMemberIds) 
-                ? [] 
-                : JsonSerializer.Deserialize<List<string>>(model.SelectedTeamMemberIds)
-        };
+            SelectedTeamMemberIds = JsonSerializer.Deserialize<List<string>>(model.SelectedTeamMemberIds) ?? []
+        }; 
 
         return projectDto;    
     }

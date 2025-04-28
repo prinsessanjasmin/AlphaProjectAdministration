@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using WebApp_MVC.Hubs;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // In Program.cs
@@ -55,15 +56,13 @@ builder.Services.AddAuthentication(x =>
     .AddCookie()
     .AddGoogle(x =>
     {
-        x.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-        x.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        x.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? "";
+        x.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? "";
     });
 
-//builder.Services.AddAuthorization(options =>
-//{
-//    options.AddPolicy("Admins", policy => policy.RequireRole("Admin"));
-//    options.AddPolicy("Managers", policy => policy.RequireRole("Admin", "Manager"));
-//});
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("Admins", policy => policy.RequireRole("Admin"))
+    .AddPolicy("Managers", policy => policy.RequireRole("Admin", "Manager"));
 
 builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -122,7 +121,7 @@ app.MapHub<NotificationHub>("/notificationhub");
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    string[] roleNames = { "Admin", "Manager", "User" };
+    string[] roleNames = ["Admin", "Manager", "User"];
 
     foreach (var roleName in roleNames)
     {

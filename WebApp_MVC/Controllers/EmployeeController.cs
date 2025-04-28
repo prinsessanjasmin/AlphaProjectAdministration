@@ -160,6 +160,7 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         }
     }
 
+   
     public IActionResult ConfirmDelete(int id)
     {
         return PartialView("_DeleteEmployee", id);
@@ -231,8 +232,6 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
                 MemberFullName = $"{e.FirstName} {e.LastName}",
                 ProfileImage = e.ProfileImagePath?.Replace("~", "") ?? "/ProjectImages/Icons/Avatar.svg"
             }).ToList();
-
-            Console.WriteLine($"Found {employeeList.Count} employees for term: {term}");
 
             return Json(new { data = employeeList });
         }

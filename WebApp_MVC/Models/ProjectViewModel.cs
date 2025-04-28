@@ -8,7 +8,9 @@ public class ProjectViewModel(IProjectService projectService)
 {
     private readonly IProjectService _projectService = projectService;
     public List<ProjectEntity> Projects { get; set; } = [];
-   
+
+    public List<TeamMemberDto> AvailableTeamMembers { get; set; } = [];
+
     public async Task GetProjects()
     {
         var result = await _projectService.GetAllProjects();

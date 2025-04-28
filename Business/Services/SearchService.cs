@@ -38,17 +38,20 @@ public class SearchService(IDbContextFactory<DataContext> contextFactory) : ISea
 
     public async Task<List<EmployeeSearchResult>> SearchEmployeesAsync(string query, CancellationToken cancellationToken = default)
     {
-        using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
+        var lowerQuery = query.ToLower();
 
+        using var context = await _contextFactory.CreateDbContextAsync(cancellationToken);
         var result = await context.Users
-            .Where(e => e.FirstName.ToLower().Contains(query) ||
-                e.LastName.ToLower().Contains(query) ||
-                e.Email.ToLower().Contains(query) ||
-                e.Address.StreetAddress.ToLower().Contains(query) ||
-                e.Address.PostCode.Contains(query) ||
-                e.Address.City.ToLower().Contains(query) ||
-                e.JobTitle.ToLower().Contains(query))
-            .Select(e => new EmployeeSearchResult
+            .Where(e =>
+                (e.FirstName != null && e.FirstName.ToLower().Contains(lowerQuery)) ||
+                (e.LastName != null && e.LastName.ToLower().Contains(lowerQuery)) ||
+                (e.Email != null && e.Email.ToLower().Contains(lowerQuery)) ||
+                (e.Address != null && e.Address.StreetAddress != null && e.Address.StreetAddress.ToLower().Contains(lowerQuery)) ||
+                (e.Address != null && e.Address.PostCode != null && e.Address.PostCode.Contains(lowerQuery)) ||
+                (e.Address != null && e.Address.City != null && e.Address.City.ToLower().Contains(lowerQuery)) ||
+                (e.JobTitle != null && e.JobTitle.ToLower().Contains(lowerQuery))
+            )
+                .Select(e => new EmployeeSearchResult
             {
                 Id = e.Id,
                 FirstName = e.FirstName,

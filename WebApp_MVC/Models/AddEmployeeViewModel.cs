@@ -69,11 +69,11 @@ public class AddEmployeeViewModel
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 JobTitle = model.JobTitle,
+                Role = model.Role,
                 StreetAddress = model.StreetAddress,
                 PostCode = model.PostCode,
                 City = model.City,
                 DateOfBirth = DateConverter(model.Day, model.Month, model.Year),
-                Role = model.Role
             }; 
     }
 

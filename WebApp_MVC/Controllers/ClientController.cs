@@ -191,7 +191,7 @@ public class ClientController(IClientService clientService) : Controller
         {
             Id = client.Id,
             ClientName = client.ClientName,
-            Projects = client.Projects.ToList(),
+            Projects = [.. client.Projects],
         };
 
         return View(viewModel);

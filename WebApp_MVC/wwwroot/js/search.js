@@ -13,7 +13,10 @@ function initMemberSelector(config) {
     function updateSelectedIdsInput() {
         if (selectedIdsInput) {
             console.log("Before update, value is:", selectedIdsInput.value);
+
+            const stringIds = selectedIds.map(id => id.toString());
             console.log("Updating with IDs:", selectedIds);
+
             selectedIdsInput.value = JSON.stringify(selectedIds);
             console.log("After update, value is:", selectedIdsInput.value);
 
@@ -41,20 +44,13 @@ function initMemberSelector(config) {
 
         // For preselected items, we want to add even if they're in the array
         // But for user-selected items, we want to avoid duplicates
-        if (!item._isPreselected &&
-            (selectedIds.includes(numericId) || selectedIds.includes(itemId))) {
+        if (!item._isPreselected && selectedIds.includes(itemId.toString())) {
             return;
         }
 
         // Add to selectedIds array
-        if (!isNaN(numericId)) {
-            if (!selectedIds.includes(numericId)) {
-                selectedIds.push(numericId);
-            }
-        } else {
-            if (!selectedIds.includes(itemId)) {
-                selectedIds.push(itemId);
-            }
+        if (!selectedIds.includes(itemId.toString())) {
+            selectedIds.push(itemId.toString());
         }
 
         // Create the visual element
@@ -138,8 +134,37 @@ function initMemberSelector(config) {
     }
 
     function searchMember(query) {
+        //Had a lot of help from Claude AI here to implememnt the search, after making som big changes to my database setup. 
+
         if (!query) return;
 
+        // If availableMembers is provided, use that for search instead of making a server call
+        if (config.availableMembers && Array.isArray(config.availableMembers)) {
+            console.log("Searching local members for:", query);
+
+            // Filter available members by the search query
+            const filteredMembers = config.availableMembers.filter(member => {
+                const displayText = member[config.displayProperty] ||
+                    member[config.displayProperty.toLowerCase()] ||
+                    'Unknown';
+
+                // Check if the member's display text includes the search query
+                // and ensure they're not already selected
+                return displayText.toLowerCase().includes(query.toLowerCase()) &&
+                    !selectedIds.includes(member.id) &&
+                    !selectedIds.includes(parseInt(member.id));
+            });
+
+            // Format the response like what would come from the server
+            const response = {
+                data: filteredMembers
+            };
+
+            renderSearchResults(response);
+            return;
+        }
+
+        // Fall back to server search if availableMembers not provided
         const url = typeof config.searchUrl === 'function'
             ? config.searchUrl(query)
             : `${config.searchUrl}?term=${encodeURIComponent(query)}`;
@@ -257,6 +282,7 @@ function initMemberSelector(config) {
 
         // Update the hidden input after adding all preselected members
         updateSelectedIdsInput();
+
     } else {
 
         console.log("No preselected members found");

@@ -173,10 +173,10 @@ public class UserRepository(UserManager<ApplicationUser> userManager, RoleManage
         try
         {
             return await _context.Users
-                .Where(u => u.FirstName.ToLower().Contains(searchTerm) ||
-                    u.LastName.ToLower().Contains(searchTerm) ||
-                    (u.FirstName + " " + u.LastName).ToLower().Contains(searchTerm) ||
-                    u.Email.ToLower().Contains(searchTerm))
+                .Where(u => u.FirstName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase) ||
+                    u.LastName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase) ||
+                    (u.FirstName + " " + u.LastName).Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase) ||
+                    (u.Email != null && u.Email.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase)))
                 .ToListAsync();
         }
         catch (Exception ex)

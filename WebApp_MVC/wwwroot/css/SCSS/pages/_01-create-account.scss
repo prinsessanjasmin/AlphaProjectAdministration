@@ -1,6 +1,6 @@
 ﻿.signup-container {
     width: 600px;
-    height: 950px;
+    height: 850px;
     padding: 3rem 2rem 1rem 2rem;
     gap: 1rem;
     display: flex;
@@ -20,4 +20,8 @@
     width: 400px;
     align-content: space-between;
     gap: .5rem;
+}
+
+.update-user-container {
+    height: 900px;
 }

@@ -32,15 +32,14 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
     {
         if (!ModelState.IsValid)
         {
-            return JsonValidationError();
+            return View(form);
         }
 
         var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, true, false);
         if (!result.Succeeded)
         {
             ModelState.AddModelError(string.Empty, "Incorrect email or password");
-            return JsonValidationError();
-
+            return View(form);
         }
 
         var user = await _userManager.FindByEmailAsync(form.Email);
@@ -70,10 +69,9 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
 
         if (!Url.IsLocalUrl(returnUrl))
         {
-            returnUrl = Url.Action("Index", "Project");
+            returnUrl = Url.Action("Index", "Project") ?? string.Empty;
         }
-        return Json(new { success = true, redirectUrl = returnUrl });
-
+        return Redirect(returnUrl);
     }
 
     public async Task AddClaimByEmailAsync(ApplicationUser user, string typeName, string value)
@@ -94,33 +92,85 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
     }
 
     [HttpPost]
-    public async Task<IActionResult> SignUp(SignUpViewModel model, string returnUrl = "/")
+    public async Task<IActionResult> SignUp(SignUpViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return JsonValidationError();
+            ModelState.AddModelError("", "Complete the form.");
+            return View(model);
         }
 
-        var result = await _userService.RegisterUser(model); 
+        AppUserDto dto = model;
+        var result = await _userService.RegisterUser(dto); 
        
         if (result.Success)
         {
-            if (!Url.IsLocalUrl(returnUrl))
+            var userResult = result as IResult<ApplicationUser>;
+            if (userResult.Success)
             {
-                returnUrl = Url.Action("SignIn", "Auth");
+                var userId = userResult.Data.Id;
+                return RedirectToAction("UpdateUserProfile", "Auth", new { id = userId });
             }
-            return Json(new { success = true, redirectUrl = returnUrl });
+            else
+            {
+                ViewBag.ErrorMessage("Couldn't find user id.");
+                return View(model);
+            }
         }
         else
         {
-            return BadRequest(new { success = false });
+            ViewBag.ErrorMessage(result.ErrorMessage);
+            return View(model);
         }
     }
+
+    [HttpGet]
+    public async Task<IActionResult> UpdateUserProfile(string id)
+    {
+        var result = await _userService.GetUserById(id);
+
+        if (result.Success)
+        {
+            var employeeResult = result as Result<ApplicationUser>;
+            ApplicationUser employee = employeeResult?.Data ?? new ApplicationUser();
+
+            var viewModel = new UpdateUserViewModel(employee);
+
+            return View(viewModel);
+        }
+        else
+        {
+            ViewBag.ErrorMessage("No team member found");
+            return View(id);
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateUserProfile(UpdateUserViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        UpdateUserDto dto = model; 
+        var result = await _userService.UpdateUserProfile(dto);
+
+        if (result.Success)
+        {
+            return RedirectToAction("Index", "Project");
+        }
+        else
+        {
+            return View(model);
+        }
+    }
+
 
     public new async Task<IActionResult> SignOut()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("SignIn", "Auth");
     }
 
     [HttpPost]
@@ -189,17 +239,5 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
 
             return View("SignIn");
         }
-    }
-
-    private BadRequestObjectResult JsonValidationError()
-    {
-        var errors = ModelState
-            .Where(x => x.Value?.Errors.Count > 0)
-            .ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToList()
-            );
-
-        return BadRequest(new { success = false, errors });
     }
 }

@@ -1,16 +1,23 @@
 ﻿using Business.Models;
+using Data.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebApp_MVC.Models;
 
 public class UpdateUserViewModel
 {
+    public string Id { get; set; } = null!;
+
+    public string DisplayName { get; set; } = null!; 
+
     [Display(Name = "Phone number", Prompt = "Enter phone number")]
     public string? PhoneNumber { get; set; }
 
     [Display(Name = "Job Title", Prompt = "Enter job title")]
     [Required(ErrorMessage = "Required")]
     public string JobTitle { get; set; } = null!;
+
+    public string? ProfileImagePath { get; set; }
 
     [Display(Name = "Profile Image", Prompt = "Upload a profile image")]
     [DataType(DataType.Upload)]
@@ -46,9 +53,10 @@ public class UpdateUserViewModel
             ? null!
             : new UpdateUserDto
             {
+                Id = model.Id,
                 PhoneNumber = model.PhoneNumber,
                 JobTitle = model.JobTitle,
-                DateOfBirth = DateConverter(model.Day, model.Month, model.Year),
+                DateOfBirth = DateConverter(model.Year, model.Month, model.Day),
                 StreetAddress = model.StreetAddress,
                 PostCode = model.PostCode,
                 City = model.City,
@@ -57,7 +65,35 @@ public class UpdateUserViewModel
 
     public static DateOnly DateConverter(int year, int month, int day)
     {
-        DateOnly date = new(day, month, year);
+        DateOnly date = new(year, month, day);
         return date;
+    }
+
+    public UpdateUserViewModel(ApplicationUser user)
+    {
+        Id = user.Id;
+        DisplayName = user.FirstName + " " + user.LastName;
+        Year = DateTime.Now.Year;
+        Month = 1;
+        Day = 1;
+    }
+
+    public static int DateConverterDay(DateOnly dateOfBirth)
+    {
+        return dateOfBirth.Day;
+    }
+    public static int DateConverterMonth(DateOnly dateOfBirth)
+    {
+        return dateOfBirth.Month;
+    }
+
+    public static int DateConverterYear(DateOnly dateOfBirth)
+    {
+        return dateOfBirth.Year;
+    }
+
+    public UpdateUserViewModel()
+    {
+
     }
 }
