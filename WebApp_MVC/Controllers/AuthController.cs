@@ -109,6 +109,9 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
             if (userResult.Success)
             {
                 var userId = userResult.Data.Id;
+                var userName = userResult.Data.UserName;
+
+                await _signInManager.SignInAsync(userResult.Data, isPersistent: false);
                 return RedirectToAction("UpdateUserProfile", "Auth", new { id = userId });
             }
             else
@@ -129,20 +132,15 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
     {
         var result = await _userService.GetUserById(id);
 
-        if (result.Success)
+        if (!result.Success)
         {
-            var employeeResult = result as Result<ApplicationUser>;
-            ApplicationUser employee = employeeResult?.Data ?? new ApplicationUser();
-
-            var viewModel = new UpdateUserViewModel(employee);
-
-            return View(viewModel);
+            ViewBag.ErrorMessage = "No team member found";
+            return View(new UpdateUserViewModel()); // prevent null model
         }
-        else
-        {
-            ViewBag.ErrorMessage("No team member found");
-            return View(id);
-        }
+
+        var user = ((Result<ApplicationUser>)result).Data;
+        var viewModel = new UpdateUserViewModel(user);
+        return View(viewModel);
     }
 
     [HttpPost]
@@ -150,20 +148,34 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
     {
         if (!ModelState.IsValid)
         {
+            var errors = ModelState
+            .Where(x => x.Value.Errors.Count > 0)
+            .Select(x => new {
+                Key = x.Key,
+                Errors = x.Value.Errors.Select(e => e.ErrorMessage).ToList()
+            })
+            .ToList();
+
+            // Output errors to debug window or log
+            foreach (var error in errors)
+            {
+                System.Diagnostics.Debug.WriteLine($"Property: {error.Key}, Errors: {string.Join(", ", error.Errors)}");
+            }
+
             return View(model);
+
         }
 
-        UpdateUserDto dto = model; 
+            
+
+        var dto = (UpdateUserDto)model;
         var result = await _userService.UpdateUserProfile(dto);
 
         if (result.Success)
-        {
             return RedirectToAction("Index", "Project");
-        }
-        else
-        {
-            return View(model);
-        }
+
+        ViewBag.ErrorMessage = "error";
+        return View(model);
     }
 
 

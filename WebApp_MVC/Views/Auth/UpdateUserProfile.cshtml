@@ -10,10 +10,12 @@
             <h2 class="center">Welcome @Model.DisplayName!</h2>
             <h4>Please complete your profile.</h4>
         </header>
+        @Html.AntiForgeryToken()
         <div class="form-content">
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" name="Id" id="update-user-id" value="@Model.Id" />
+            
             <div class="upload-image">
-                <button class="btn-upload-image">
+                <button class="btn-upload-image" type="button">
                     <img src="~/ProjectImages/Icons/Camera.png" alt="Camera icon.">
                     <input asp-for="ProfileImage" accept="image/*" class="hidden" />
                 </button>
@@ -78,6 +80,10 @@
                     </div>
                 </div>
             </div>
+            @if (ViewBag.Error != null)
+            {
+                <div class="validation-summary-errors">@ViewBag.Error</div>
+            }
         </div>
         <footer>
             <button type="submit" class="btn btn-popup">Save</button>

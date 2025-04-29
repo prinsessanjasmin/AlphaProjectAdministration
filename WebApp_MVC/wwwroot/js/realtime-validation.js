@@ -17,15 +17,21 @@
             let isValid = true;
             fields.forEach(field => {
 
+                
+
                 if (!validateField(field)) {
                     isValid = false;
+                    console.log(`${field.id} failed validation`);
                 }
             });
 
             if (!isValid) {
                 e.preventDefault();
+                console.log("Form is not valid.");
+                return;
             }
-
+            console.log("Field valid.")
+            console.log("SUBMITTING FORM")
         });
     });
 });
@@ -42,27 +48,27 @@ function clearErrorMessages(form) {
     });
 }
 
-function addErrorMessage(form, key, errorMessage) {
-    const normalizedKey = key.replace(/\./g, '_');
-    let input = form.querySelector(`[name="${key}"]`);
-    if (!input) {
-        input = form.querySelector(`#${normalizedKey}`);
-    }
-    if (input) {
-        input.classList.add('input-validation-error');
-    }
+//function addErrorMessage(form, key, errorMessage) {
+//    const normalizedKey = key.replace(/\./g, '_');
+//    let input = form.querySelector(`[name="${key}"]`);
+//    if (!input) {
+//        input = form.querySelector(`#${normalizedKey}`);
+//    }
+//    if (input) {
+//        input.classList.add('input-validation-error');
+//    }
 
-    let span = form.querySelector(`[data-valmsg-for="${key}"]`);
-    if (!span) {
-        span = form.querySelector(`span[for="${normalizedKey}"]`);
-    }
+//    let span = form.querySelector(`[data-valmsg-for="${key}"]`);
+//    if (!span) {
+//        span = form.querySelector(`span[for="${normalizedKey}"]`);
+//    }
 
-    if (span) {
-        span.textContent = errorMessage;
-        span.classList.remove('field-validation-valid');
-        span.classList.add('field-validation-error');
-    }
-}
+//    if (span) {
+//        span.textContent = errorMessage;
+//        span.classList.remove('field-validation-valid');
+//        span.classList.add('field-validation-error');
+//    }
+//}
 
 function validateField(field) {
     const formElement = field.closest('form');

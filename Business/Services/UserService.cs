@@ -199,10 +199,6 @@ public class UserService(IUserRepository userRepository, IAddressService address
             existingUser.PhoneNumber = dto.PhoneNumber ?? existingUser.PhoneNumber;
             existingUser.JobTitle = dto.JobTitle ?? existingUser.JobTitle;
             existingUser.ProfileImagePath = dto.ProfileImagePath ?? existingUser.ProfileImagePath;
-            if(dto.DateOfBirth.ToString().IsNullOrEmpty())
-{
-                existingUser.DateOfBirth = dto.DateOfBirth;
-            }
 
             var identityResult = await _userRepository.UpdateUserAsync(existingUser);
             

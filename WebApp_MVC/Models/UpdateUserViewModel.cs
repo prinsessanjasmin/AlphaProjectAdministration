@@ -8,7 +8,7 @@ public class UpdateUserViewModel
 {
     public string Id { get; set; } = null!;
 
-    public string DisplayName { get; set; } = null!; 
+    public string? DisplayName { get; set; } 
 
     [Display(Name = "Phone number", Prompt = "Enter phone number")]
     public string? PhoneNumber { get; set; }
