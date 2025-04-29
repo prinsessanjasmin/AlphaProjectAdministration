@@ -1,5 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    const forms = document.querySelectorAll("form");
+    const forms = document.querySelectorAll("form:not(.no-validation)");
 
     forms.forEach(form => {
         const fields = form.querySelectorAll("[data-val='true']")
@@ -21,11 +21,10 @@
 });
 
 async function submitFormAsync(form) {
-
     const fields = form.querySelectorAll("[data-val='true']")
     let isValid = true;
+
     fields.forEach(field => {
-        const fieldValid = validateField(field);
         if (!validateField(field)) {
             isValid = false;
         }
@@ -50,54 +49,61 @@ async function submitFormAsync(form) {
 
     try {
         const res = await fetch(form.action, {
-            method: 'post',
-            body: formData
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
         });
 
-        console.log(res);
+        console.log("Fetch response: ", res);
+        const contentType = res.headers.get("Content-Type") || "";
 
-        if (res.ok) {
-            console.log(res.ok);
-            const data = await res.json();
-            console.log(data);
+        if (res.ok && contentType.includes("application/json")) {
+           
 
-            if (data.success) {
-                const modal = form.closest('.modal');
-                if (modal) {
-                    modal.style.display = 'none';
+            if (contentType && contentType.includes("application/json")) {
+                const data = await res.json();
+                console.log("AJAX response data:", data);
+
+                if (data.success) {
+                    const modal = form.closest('.modal');
+                    if (modal) {
+                        modal.style.display = 'none';
+                    }
+
+                    // Redirect to the URL from the server (e.g., returnUrl)
+                    if (data.redirectUrl) {
+                        window.location.href = data.redirectUrl;
+                    } else {
+                        // fallback, in case redirectUrl is missing
+                        window.location.reload();
+                    }
                 }
-
-                // Redirect to the URL from the server (e.g., returnUrl)
-                if (data.redirectUrl) {
-                    window.location.href = data.redirectUrl;
-                } else {
-                    // fallback, in case redirectUrl is missing
-                    window.location.reload();
-                }
+            } else if (data.message) {
+                addErrorMessage(form, "", data.message);
             }
         }
-        else if (res.status === 400) {
-            try {
-                const data = await res.json();
-                if (data.errors) {
-                    Object.keys(data.errors).forEach(key => {
-                        addErrorMessage(form, key, data.errors[key].join('\n'));
-                    });
-                } else if (data.message) {
-                    // Display the general error message
-                    addErrorMessage(form, "", data.message);
-                }
-            } catch (parseError) {
-                console.error('Error parsing response as JSON:', parseError);
-                // Get the text response instead and display it
-                const textResponse = await res.text();
-                console.log('Server response:', textResponse);
-                addErrorMessage(form, "", "An unexpected error occurred");
+        else if (res.status === 400 && contentType.includes("application/json")) {
+            
+            const data = await res.json();
+            if (data.errors) {
+                Object.entries(data.errors).forEach(([key, messages]) => {
+                    addErrorMessage(form, key, messages.join('\n'));
+                });
+            } else if (data.message) {
+                addErrorMessage(form, "", data.message);
             }
+        }
+        else {
+            const textResponse = await res.text();
+            console.error('Non-JSON error response:', textResponse);
+            addErrorMessage(form, "", "An unexpected error occurred");
         }
     }
     catch (error) {
         console.error('Error submitting form:', error);
+        addErrorMessage(form, "", "An error occurred while submitting the form.");
     }
 }
 
@@ -174,7 +180,7 @@ function validateField(field) {
             const endDate = new Date(value);
 
             if (endDate < startDate) {
-                errorMessage = "End date must be after start date";
+                errorMessage = "Too early";
             }
         }
     }

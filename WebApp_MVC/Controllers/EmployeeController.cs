@@ -4,6 +4,7 @@ using Business.Models;
 using Business.Services;
 using Data.Contexts;
 using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using WebApp_MVC.Models;
 
 namespace WebApp_MVC.Controllers;
 
+[Authorize]
 public class EmployeeController(DataContext dataContext, IWebHostEnvironment webHostEnvironment, IUserService userService) : Controller
 {
     private readonly IUserService _userService = userService;

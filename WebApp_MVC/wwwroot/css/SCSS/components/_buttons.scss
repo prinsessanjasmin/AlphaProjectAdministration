@@ -230,27 +230,7 @@ button.btn-sidebar.active-controller {
     flex-direction: column;
 }
 
-.btn-dropdown {
-    cursor: pointer;
-    border: none;
-    font-size: 18px;
-    color: $clr-body-light;
-    background-color: $clr-background;
-    position: relative;
-}
 
-.btn-notifications {
-    
-}
-
-.btn-settings {
-    border-right: 1px solid $clr-border-200;
-    //padding-right: 1rem;
-}
-
-.btn-account {
-    padding-right: 1rem;
-}
 
 .btn-x {
     height: 2rem;
@@ -262,4 +242,18 @@ button.btn-sidebar.active-controller {
     background-repeat: no-repeat;
     background-size: 12px;
     padding-right: .5rem;
+}
+
+.btn-signout {
+    background-color: transparent; 
+    cursor: pointer; 
+    border: none; 
+    color: $clr-heading; 
+    display: flex; 
+    flex-direction: row; 
+    gap: 1rem; 
+    font-family: Nunito; 
+    font-size: 15px; 
+    padding: .5rem; 
+    align-items: center; 
 }

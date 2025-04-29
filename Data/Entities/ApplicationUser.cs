@@ -29,5 +29,7 @@ public class ApplicationUser : IdentityUser
     public int? AddressId { get; set; }
     public AddressEntity Address { get; set; } = null!;
 
-    public ICollection<NotificationDismissedEntity> DismissedNotifications { get; set; } = []; 
+    public ICollection<NotificationDismissedEntity> DismissedNotifications { get; set; } = [];
+
+    public bool IsProfileComplete { get; set; } = false;
 }

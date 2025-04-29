@@ -1,23 +1,49 @@
 ﻿@{
-	var userId = User.Identity.IsAuthenticated ? Context.User.Identity.Name : "anonymous";
+	// var userId = User.Identity.IsAuthenticated ? Context.User.Identity.Name : "anonymous";
+	var currentUser = await UserManager.GetUserAsync(User); 
 }
-<button id="account-dropdown-button" data-type="dropdown" data-target="#account-dropdown" class="btn-dropdown btn-account">
-	<img class="account-img" src="~/ProjectImages/Icons/Avatar.svg" alt="Avatar icon." />
+<div id="account-dropdown-button" data-type="dropdown" data-target="#account-dropdown" class="btn-dropdown btn-account">
+	@if (!string.IsNullOrEmpty(@currentUser.ProfileImagePath))
+	{
+		<img class="account-img" src="@Url.Content(Model.ProjectImagePath)" alt="Avatar icon" />
+	}
+	else
+	{
+		<img class="account-img" src="~/ProjectImages/Icons/Avatar.svg" alt="Avatar icon placeholder" />
+	}
 	<div id="account-dropdown" class="card dropdown-container account-dropdown-container">
 		<div class="account-dropdown">
-			<div class="dropdown-header">
-				@* User picture
-				user full name  *@
+
+			<div class="account-dropdown-header">
+				@if (!string.IsNullOrEmpty(@currentUser.ProfileImagePath))
+				{
+					<img class="account-img" src="@Url.Content(Model.ProjectImagePath)" alt="Avatar icon" />
+				}
+				else
+				{
+					<img class="account-img" src="~/ProjectImages/Icons/Avatar.svg" alt="Avatar icon placeholder" />
+				}
+				<h6>@currentUser.FirstName @currentUser.LastName</h6>
 			</div>
-			<div class="dropdown-line"></div>
 			<div class="options-container">
 				<div class="option-item" onclick="">
-					<i class="fa-solid fa-gear"></i>
-					<p>Dark mode</p>
-					<div>Darkmode toggle</div>
+					<div class="horizontal">
+						<i class="fa-solid fa-gear"></i>
+						<p>Dark mode</p>
+					</div>
+					<div class="toggle-switch-button">
+						<label class="switch">
+							<input type="checkbox" id="dm-switch" aria-label="darkmode switch">
+							<span class="slider round"></span>
+						</label>
+						<!-- ovan kopierat från w3schools -->
+					</div>
 				</div>
-				<div class="option-item" onclick=""><span class="fa-solid fa-right-from-bracket"></span>Log Out</div>
+				<div class="dropdown-line"></div>
+				<form method="post" asp-controller="Auth" asp-action="SignOut" id="logout-form" class="no-validation">
+					<button type="submit" class="btn-signout"><span class="fa-solid fa-right-from-bracket"></span>Log Out</button>
+				</form>
 			</div>
 		</div>
 	</div>
-</button>
+</div>

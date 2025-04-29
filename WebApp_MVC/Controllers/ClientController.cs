@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Text.Json;
 using Business.Factories;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp_MVC.Controllers;
 
-public class ClientController(IClientService clientService) : Controller
+[Authorize]
+public class ClientController(IClientService clientService) : BaseController
 {
     private readonly IClientService _clientService = clientService;
 
@@ -53,50 +55,18 @@ public class ClientController(IClientService clientService) : Controller
     {
         if (!ModelState.IsValid)
         {
-            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
-            {
-                var errors = ModelState
-                .Where(x => x.Value?.Errors.Count > 0)
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
-                .ToList()
-                );
-
-                return BadRequest(new { success = false, errors });
-            }
-            else
-            {
-                return View("_AddClient", form);
-            }
+            return ReturnBasedOnRequest(form, "_AddClient");
         }
 
         ClientDto clientDto = form;
         var result = await _clientService.CreateClient(clientDto);
         if (result.Success)
         {
-            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
-            {
-                return Ok(new { success = true, message = "Client created successfully" });
-            }
-            else
-            {
-                return RedirectToAction("Index", "Client");
-            }
+            return AjaxResult(true, redirectUrl: Url.Action("Index", "Client"), message: "Client created.");
 
         }
-        else
-        {
-            ModelState.AddModelError("", "Something went wrong when creating the client");
-            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
-            {
-                return BadRequest(new { success = false, message = "Failed to create client" });
-            }
-            else
-            {
-                return PartialView("_AddClient", form);
-            }
-        }
+        ModelState.AddModelError("", "Something went wrong when creating the client");
+        return ReturnBasedOnRequest(form, "_AddClient");
     }
 
     public async Task<IActionResult> EditClient(int id)
@@ -124,15 +94,7 @@ public class ClientController(IClientService clientService) : Controller
     {
         if (!ModelState.IsValid)
         {
-            var errors = ModelState
-                .Where(x => x.Value?.Errors.Count > 0)
-                .ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage)
-                .ToList()
-                );
-
-            return PartialView("_EditClient", model);
+            return ReturnBasedOnRequest(model, "_EditClient");
         }
 
         ClientDto clientDto = model;
@@ -143,12 +105,12 @@ public class ClientController(IClientService clientService) : Controller
 
         if (result.Success)
         {
-            return RedirectToAction("Index", "Client");
+            return AjaxResult(true, redirectUrl: Url.Action("Index", "Client"), message: "Client edited.");
         }
         else
         {
             ViewBag.ErrorMessage("Something went wrong.");
-            return PartialView("_EditClient", model);
+            return ReturnBasedOnRequest(model, "_EditClient");
         }
     }
 
@@ -165,13 +127,11 @@ public class ClientController(IClientService clientService) : Controller
 
         if (result.Success)
         {
-            return RedirectToAction("Index", "Client");
+            return AjaxResult(true, redirectUrl: Url.Action("Index", "Client"));
         }
-        else
-        {
-            ViewBag.ErrorMessage("Something went wrong.");
-            return RedirectToAction("Index", "Client");
-        }
+   
+        ViewBag.ErrorMessage("Something went wrong.");
+        return AjaxResult(true, redirectUrl: Url.Action("Index", "Client"));
     }
 
     [HttpGet]

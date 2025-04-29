@@ -3,12 +3,12 @@
 	var notifications = await notificationService.GetAllAsync(userId);
 }
 
-<button id="notification-dropdown-button" data-type="dropdown" data-target="#notification-dropdown" class="btn-dropdown btn-notifications fa-solid fa-bell">
+<div id="notification-dropdown-button" data-type="dropdown" data-target="#notification-dropdown" class="btn-dropdown btn-notifications fa-solid fa-bell">
 	@if (notifications.Any())
 	{ 
 		<div class="dot red-dot"></div>
 	} 
-</button>
+</div>
 <div id="notification-dropdown" class="notification-dropdown-container dropdown-container card">
 	<div class="notification-dropdown">
 		<div class="dropdown-header">
@@ -24,7 +24,7 @@
 					<img class="account-img" src="@notification.Icon" />
 					<div class="notification-message">@notification.Message</div>
 					<div class="time-stamp" data-created="@notification.Created.ToString("s")">@notification.Created</div>
-					<div class="btn-x" onclick="dismissNotification('@notification.Id')"></div>
+					<button class="btn-x" onclick="dismissNotification('@notification.Id')"></button>
 				</div>
 			}
 		</div>

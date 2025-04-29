@@ -1,4 +1,5 @@
 ﻿using Business.Factories;
+using Business.Helpers;
 using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
@@ -67,6 +68,8 @@ public class UserService(IUserRepository userRepository, IAddressService address
             var userEntity = UserFactory.Create(dto, result.Data.Id);
 
             var password = "Password123!";
+
+            userEntity.IsProfileComplete = UserProfileHelper.IsProfileComplete(userEntity);
 
             var user = await _userRepository.CreateUserAsync(userEntity, password, dto.Role);
             await _userRepository.SaveAsync();
@@ -199,6 +202,10 @@ public class UserService(IUserRepository userRepository, IAddressService address
             existingUser.PhoneNumber = dto.PhoneNumber ?? existingUser.PhoneNumber;
             existingUser.JobTitle = dto.JobTitle ?? existingUser.JobTitle;
             existingUser.ProfileImagePath = dto.ProfileImagePath ?? existingUser.ProfileImagePath;
+            existingUser.DateOfBirth = dto.DateOfBirth;
+            
+           
+            existingUser.IsProfileComplete = true; 
 
             var identityResult = await _userRepository.UpdateUserAsync(existingUser);
             

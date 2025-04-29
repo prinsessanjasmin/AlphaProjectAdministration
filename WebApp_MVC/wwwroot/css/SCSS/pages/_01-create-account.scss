@@ -24,4 +24,18 @@
 
 .update-user-container {
     height: 900px;
+
+    
+}
+
+.update-form-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    padding: .5rem;
+
+    h4 {
+        color: $clr-body-light;
+    }
 }

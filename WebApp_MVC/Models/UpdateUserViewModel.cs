@@ -65,17 +65,41 @@ public class UpdateUserViewModel
 
     public static DateOnly DateConverter(int year, int month, int day)
     {
-        DateOnly date = new(year, month, day);
-        return date;
+        try
+        {
+            DateOnly date = new(year, month, day);
+            return date;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Date conversion error: {ex.Message}");
+            return DateOnly.FromDateTime(DateTime.Now);
+        }
     }
 
     public UpdateUserViewModel(ApplicationUser user)
     {
         Id = user.Id;
         DisplayName = user.FirstName + " " + user.LastName;
-        Year = DateTime.Now.Year;
-        Month = 1;
-        Day = 1;
+        ProfileImagePath = user.ProfileImagePath ?? "";
+        PhoneNumber = user.PhoneNumber ?? "";
+        JobTitle = user.JobTitle ?? "";
+        StreetAddress = user.Address.StreetAddress ?? "";
+        PostCode = user.Address.PostCode ?? "";
+        City = user.Address.City ?? "";
+
+        if (user.DateOfBirth.HasValue)
+        {
+            Year = DateConverterYear(user.DateOfBirth.Value);
+            Month = DateConverterMonth(user.DateOfBirth.Value);
+            Day = DateConverterDay(user.DateOfBirth.Value);
+        }
+        else
+        {
+            Year = DateTime.Now.Year;
+            Month = 1;
+            Day = 1;
+        }
     }
 
     public static int DateConverterDay(DateOnly dateOfBirth)

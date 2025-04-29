@@ -6,8 +6,8 @@
 
 <div id="update-user-container" class="signup-container update-user-container">
     <form class="form" id="update-user-form" method="post" asp-action="UpdateUserProfile" asp-controller="Auth" enctype="multipart/form-data" novalidate>
-        <header>
-            <h2 class="center">Welcome @Model.DisplayName!</h2>
+        <header class="update-form-header">
+            <h2>Welcome @Model.DisplayName!</h2>
             <h4>Please complete your profile.</h4>
         </header>
         @Html.AntiForgeryToken()
@@ -62,19 +62,19 @@
                 <div class="horizontal-form">
                     <div class="input-group">
                         <select class="padding-1" data-val="true" id="complete-day" asp-for="Day">
-                            <option value="">Day</option>
+                            <option value="@Model.Day">@Model.Day</option>
                         </select>
                         <span asp-validation-for="Day"></span>
                     </div>
                     <div class="input-group">
                         <select class="padding-1" data-val="true" id="complete-month" asp-for="Month">
-                            <option value="">Month</option>
+                            <option value="@Model.Month">@Model.Month</option>
                         </select>
                         <span asp-validation-for="Month"></span>
                     </div>
                     <div class="input-group">
                         <select class="padding-1" data-val="true" id="complete-year" asp-for="Year">
-                            <option value="">Year</option>
+                            <option value="@Model.Year">@Model.Year</option>
                         </select>
                         <span asp-validation-for="Year"></span>
                     </div>
@@ -102,9 +102,9 @@
                 daySelect,
                 monthSelect,
                 yearSelect,
-    @Model.Day,
-    @Model.Month,
-    @Model.Year
+                @Model.Day,
+                @Model.Month,
+                @Model.Year
             );
         }
     });

@@ -86,10 +86,12 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<HomeController>();
 builder.Services.AddScoped<AuthController>();
+builder.Services.AddScoped<BaseController>();
 builder.Services.AddScoped<ClientController>();
 builder.Services.AddScoped<EmployeeController>();
 builder.Services.AddScoped<ProjectController>();
 builder.Services.AddScoped<SearchController>();
+
 
 builder.Services.AddScoped<ProjectViewModel>();
 builder.Services.AddScoped<AppUserViewModel>();

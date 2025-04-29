@@ -9,6 +9,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.SignalR;
 using WebApp_MVC.Hubs;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Business.Helpers;
 
 namespace WebApp_MVC.Controllers;
 
@@ -67,10 +68,19 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
             }
         }
 
+        user.IsProfileComplete = UserProfileHelper.IsProfileComplete(user);
+        await _userManager.UpdateAsync(user);
+
+        if (!user.IsProfileComplete)
+        {
+            return RedirectToAction("UpdateUserProfile", new { Id = user.Id });
+        }
+
         if (!Url.IsLocalUrl(returnUrl))
         {
             returnUrl = Url.Action("Index", "Project") ?? string.Empty;
         }
+
         return Redirect(returnUrl);
     }
 
@@ -166,19 +176,18 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
 
         }
 
-            
-
         var dto = (UpdateUserDto)model;
         var result = await _userService.UpdateUserProfile(dto);
 
         if (result.Success)
+            
             return RedirectToAction("Index", "Project");
 
         ViewBag.ErrorMessage = "error";
         return View(model);
     }
 
-
+    [HttpPost]
     public new async Task<IActionResult> SignOut()
     {
         await _signInManager.SignOutAsync();
@@ -218,6 +227,19 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
         var signInResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, isPersistent: false, bypassTwoFactor: true);
         if (signInResult.Succeeded)
         {
+            var user = await _userManager.FindByLoginAsync(
+                externalLoginInfo.LoginProvider,
+                externalLoginInfo.ProviderKey
+                );
+
+            user.IsProfileComplete = UserProfileHelper.IsProfileComplete(user);
+            await _userManager.UpdateAsync(user);
+
+            if (user != null && !user.IsProfileComplete)
+            {
+                return RedirectToAction("UpdateUserProfile", new {Id = user.Id});
+            }
+
             return LocalRedirect(returnUrl);
         }
         else
@@ -241,6 +263,15 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
                 await _userManager.AddLoginAsync(user, externalLoginInfo);
                 await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
                 await _signInManager.SignInAsync(user, isPersistent: false);
+
+                user.IsProfileComplete = UserProfileHelper.IsProfileComplete(user);
+                await _userManager.UpdateAsync(user);
+
+                if (user != null && !user.IsProfileComplete)
+                {
+                    return RedirectToAction("UpdateUserProfile", new { Id = user.Id });
+                }
+
                 return LocalRedirect(returnUrl);
             }
 

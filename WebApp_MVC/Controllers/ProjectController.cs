@@ -10,10 +10,12 @@ using WebApp_MVC.Models;
 using Data.Contexts;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp_MVC.Controllers;
 
-public class ProjectController(IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService, IUserService userService) : Controller
+[Authorize]
+public class ProjectController(IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService, IUserService userService) : BaseController
 {
 
     private readonly IClientService _clientService = clientService;
@@ -79,7 +81,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
 
         if (!ModelState.IsValid)
         {
-            return JsonValidationError();
+            return ReturnBasedOnRequest(form, "_AddProject");
         }
 
         ProjectDto projectDto = form;
@@ -105,35 +107,17 @@ public class ProjectController(IClientService clientService, IProjectService pro
 
         var result = await _projectService.CreateProject(projectDto);
 
-
         if (result.Success)
         {
             string notificationMessage = $"New project '{form.ProjectName}' added.";
             var notification = NotificationFactory.Create(1, 2, notificationMessage, projectDto.ProjectImagePath ?? "");
-            Console.WriteLine(notification);
             await _notificationService.AddNotificationAsync(notification);
 
-            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
-            {
-                return Ok(new { success = true, message = "Project created successfully" });
-            }
-            else
-            {
-                return RedirectToAction("Index", "Project");
-            }
+            return AjaxResult(true, redirectUrl: Url.Action("Index", "Project"), message: "Project created.");
         }
-        else
-        {
-            ModelState.AddModelError("", "Something went wrong when creating the project");
-            if (Request.Headers.XRequestedWith == "XMLHttpRequest")
-            {
-                return BadRequest(new { success = false, message = "Failed to create project" });
-            }
-            else
-            {
-                return PartialView("_AddProject", "Project");
-            }
-        }
+        
+        ModelState.AddModelError("", "Something went wrong when creating the project");
+        return ReturnBasedOnRequest(form, "_AddProject");
     }
 
     [HttpGet]
@@ -181,7 +165,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
     {
         if (!ModelState.IsValid)
         {
-            return JsonValidationError();
+            return ReturnBasedOnRequest(model, "_EditProject");
         }
 
         ProjectDto projectDto = model;
@@ -216,12 +200,12 @@ public class ProjectController(IClientService clientService, IProjectService pro
             Console.WriteLine(notification);
             await _notificationService.AddNotificationAsync(notification);
 
-            return RedirectToAction("Index", "Project");
+            return AjaxResult(true, redirectUrl: Url.Action("Index", "Project"), message: "Project edited.");
         }
         else
         {
             ViewBag.ErrorMessage("Something went wrong.");
-            return PartialView("_EditProject", model);
+            return ReturnBasedOnRequest(model, "_EditProject");
         }
     }
 
@@ -250,13 +234,11 @@ public class ProjectController(IClientService clientService, IProjectService pro
             var notification = NotificationFactory.Create(1, 2, notificationMessage, imagePath ?? "");
             Console.WriteLine(notification);
             await _notificationService.AddNotificationAsync(notification);
-            return RedirectToAction("Index", "Project");
+            return AjaxResult(true, redirectUrl: Url.Action("Index", "Project"));
         }
-        else
-        {
-            ViewBag.ErrorMessage("Something went wrong.");
-            return RedirectToAction("Index", "Project");
-        }
+ 
+        ViewBag.ErrorMessage("Something went wrong.");
+        return AjaxResult(true, redirectUrl: Url.Action("Index", "Project"));
     }
 
     public async Task<IActionResult> Details(int id)
@@ -358,10 +340,10 @@ public class ProjectController(IClientService clientService, IProjectService pro
     private BadRequestObjectResult JsonValidationError()
     {
         var errors = ModelState
-            .Where(x => x.Value?.Errors.Count > 0)
+            .Where(x => x.Value?.Errors.Any() == true)
             .ToDictionary(
                 kvp => kvp.Key,
-                kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToList()
+                kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToArray()
             );
 
         return BadRequest(new { success = false, errors });
