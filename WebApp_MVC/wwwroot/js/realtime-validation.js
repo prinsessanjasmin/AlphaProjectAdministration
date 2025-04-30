@@ -17,8 +17,6 @@
             let isValid = true;
             fields.forEach(field => {
 
-                
-
                 if (!validateField(field)) {
                     isValid = false;
                     console.log(`${field.id} failed validation`);
