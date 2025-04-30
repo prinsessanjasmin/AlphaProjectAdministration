@@ -15,5 +15,6 @@ public class LoginFormViewModel
     [DataType(DataType.Password)]
     public string Password { get; set; } = null!;
 
-    public bool RememberMe { get; set; }
+    [Display(Name = "Remember me")]
+    public bool RememberMe { get; set; } 
 }

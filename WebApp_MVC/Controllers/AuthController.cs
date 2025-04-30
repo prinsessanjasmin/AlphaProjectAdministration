@@ -33,56 +33,72 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
     {
         if (!ModelState.IsValid)
         {
+            Console.WriteLine(ModelState.ErrorCount);
+            Console.WriteLine(ModelState.Values);
             return View(form);
         }
 
-        var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, true, false);
+        var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, form.RememberMe, false);
         if (!result.Succeeded)
         {
-            ModelState.AddModelError(string.Empty, "Incorrect email or password");
+            Console.WriteLine($"Login failed for {form.Email}. Result: {result.ToString()}");
+
+            var appUser = await _userManager.FindByEmailAsync(form.Email);
+            if (appUser == null)
+            {
+                Console.WriteLine("User not found");
+            }
+            else
+            {
+                Console.WriteLine($"User found: {appUser.Id}");
+                // Check if password is correct (without revealing actual password)
+                var isPasswordValid = await _userManager.CheckPasswordAsync(appUser, form.Password);
+                Console.WriteLine($"Password valid: {isPasswordValid}");
+            }
             return View(form);
         }
 
         var user = await _userManager.FindByEmailAsync(form.Email);
-        if (user != null)
-        {
-            if (!User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
+            if (user != null)
             {
-                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
+                if (!User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
+                {
+                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
+                }
+
+                await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
+                var notification = new NotificationEntity
+                {
+                    Message = $"{user.FirstName} {user.LastName} signed in.",
+                    NotificationTypeId = 1,
+                    TargetGroupId = 2
+                };
+                await _notificationService.AddNotificationAsync(notification);
+                var notifications = await _notificationService.GetAllAsync(user.Id);
+                var newNotification = notifications.OrderByDescending(x => x.Created).FirstOrDefault();
+
+                if (newNotification != null)
+                {
+                    await _notificationHub.Clients.All.SendAsync("ReceiveNotification", newNotification);
+                }
             }
 
-            await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
-            var notification = new NotificationEntity
-            {
-                Message = $"{user.FirstName} {user.LastName} signed in.",
-                NotificationTypeId = 1,
-                TargetGroupId = 2
-            };
-            await _notificationService.AddNotificationAsync(notification);
-            var notifications = await _notificationService.GetAllAsync(user.Id);
-            var newNotification = notifications.OrderByDescending(x => x.Created).FirstOrDefault();
+            user.IsProfileComplete = UserProfileHelper.IsProfileComplete(user);
+            await _userManager.UpdateAsync(user);
 
-            if (newNotification != null)
+            if (!user.IsProfileComplete)
             {
-                await _notificationHub.Clients.All.SendAsync("ReceiveNotification", newNotification);
+                return RedirectToAction("UpdateUserProfile", new { Id = user.Id });
             }
+
+            if (!Url.IsLocalUrl(returnUrl))
+            {
+                returnUrl = Url.Action("Index", "Project") ?? string.Empty;
+            }
+
+            return Redirect(returnUrl);
         }
-
-        user.IsProfileComplete = UserProfileHelper.IsProfileComplete(user);
-        await _userManager.UpdateAsync(user);
-
-        if (!user.IsProfileComplete)
-        {
-            return RedirectToAction("UpdateUserProfile", new { Id = user.Id });
-        }
-
-        if (!Url.IsLocalUrl(returnUrl))
-        {
-            returnUrl = Url.Action("Index", "Project") ?? string.Empty;
-        }
-
-        return Redirect(returnUrl);
-    }
+        
 
     public async Task AddClaimByEmailAsync(ApplicationUser user, string typeName, string value)
     {
