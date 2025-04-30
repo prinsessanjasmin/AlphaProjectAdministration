@@ -44,11 +44,11 @@
                     <div class="avatar-container">
                         @if (!string.IsNullOrEmpty(projectEmployee.Employee.ProfileImagePath))
                         {
-                            <img src="@Url.Content(projectEmployee.Employee.ProfileImagePath)" alt="@projectEmployee.Employee.FirstName" class="team-avatar" />
+                            <img class="team-avatar" src="@Url.Content(projectEmployee.Employee.ProfileImagePath)" alt="@projectEmployee.Employee.FirstName" />
                         }
                         else
                         {
-                            <img src="~/ProjectImages/Icons/avatar2.svg" alt="Profile Image Placeholder" class="team-avatar" />
+                            <img class="team-avatar" src="~/ProjectImages/Icons/avatar2.svg" alt="@projectEmployee.Employee.FirstName"  />
                         }
                     </div>
                 }

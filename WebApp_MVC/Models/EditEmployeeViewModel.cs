@@ -57,12 +57,13 @@ public class EditEmployeeViewModel
     [Required(ErrorMessage = "Required")]
     public string City { get; set; } = null!;
 
-    public static implicit operator EmployeeDto(EditEmployeeViewModel model)
+    public static implicit operator EditEmployeeDto(EditEmployeeViewModel model)
     {
         return model == null
             ? null!
-            : new EmployeeDto
+            : new EditEmployeeDto
             {
+                Id = model.Id,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 ProfileImagePath = model.ProfileImagePath,
@@ -73,7 +74,7 @@ public class EditEmployeeViewModel
                 PostCode = model.PostCode,
                 City = model.City,
                 DateOfBirth = DateConverter(model.Year, model.Month, model.Day),
-            };
+            }; 
     }
 
     public EditEmployeeViewModel(ApplicationUser user)

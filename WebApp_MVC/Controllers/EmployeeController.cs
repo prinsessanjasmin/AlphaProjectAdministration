@@ -14,11 +14,13 @@ using WebApp_MVC.Models;
 namespace WebApp_MVC.Controllers;
 
 [Authorize]
-public class EmployeeController(DataContext dataContext, IWebHostEnvironment webHostEnvironment, IUserService userService) : Controller
+public class EmployeeController(DataContext dataContext, IWebHostEnvironment webHostEnvironment, IUserService userService, INotificationService notificationService) : BaseController
 {
     private readonly IUserService _userService = userService;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
     private readonly DataContext _dataContext = dataContext;
+    private readonly INotificationService _notificationService = notificationService;
+
 
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -61,7 +63,7 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
     {
         if (!ModelState.IsValid)
         {
-            return JsonValidationError();
+            return ReturnBasedOnRequest(form, "_AddEmployee");
         }
 
         EmployeeDto employeeDto = form;
@@ -89,11 +91,16 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
 
         if (result.Success)
         {
-            return Ok(new { success = true, message = "Team member created successfully" });
+            string notificationMessage = $"New employee {form.FirstName} {form.LastName} added.";
+            var notification = NotificationFactory.Create(1, 1, notificationMessage, employeeDto.ProfileImagePath ?? "");
+            await _notificationService.AddNotificationAsync(notification);
+
+            return AjaxResult(true, redirectUrl: Url.Action("Index", "Employee"), message: "Employee created.");
         }
         else
         {
-            return JsonValidationError();
+            ModelState.AddModelError("", "Something went wrong when creating the employee");
+            return ReturnBasedOnRequest(form, "_AddEmployee"); 
         }
     }
 
@@ -123,10 +130,10 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
     {
         if (!ModelState.IsValid)
         {
-            return JsonValidationError();
+            return ReturnBasedOnRequest(model, "_EditEmployee");
         }
 
-        EmployeeDto employeeDto = model;
+        EditEmployeeDto employeeDto = model;
 
         if (model.ProfileImage != null && model.ProfileImage.Length > 0)
         {
@@ -153,16 +160,16 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
 
         if (result.Success)
         {
-            return RedirectToAction("Index", "Employee");
+            return AjaxResult(true, redirectUrl: Url.Action("Index", "Employee"), message: "Team member edited.");
         }
         else
         {
             ViewBag.ErrorMessage("Something went wrong.");
-            return PartialView("_EditEmployee", model);
+            return ReturnBasedOnRequest(model, "_EditEmployee");
         }
     }
 
-   
+
     public IActionResult ConfirmDelete(int id)
     {
         return PartialView("_DeleteEmployee", id);

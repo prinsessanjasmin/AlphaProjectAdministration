@@ -6,7 +6,7 @@
     <p>This action cannot be undone.</p>
     <div class="horizontal">
         <button type="button" class="btn btn-cancel-delete" data-close="true">Cancel</button>
-        <form method="post" asp-controller="Employee" asp-action="DeleteEmployee">
+        <form method="post" asp-controller="Employee" asp-action="DeleteEmployee" class="no-validation">
             <input type="hidden" name="id" class="deleteEmployeeId" value="@Model" />
             <button type="submit" class="btn btn-confirm-delete">Delete</button>
         </form>

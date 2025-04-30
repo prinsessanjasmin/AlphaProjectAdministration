@@ -98,6 +98,7 @@
 
                     const data = await response.text();
                     modal.querySelector('.modal-content').innerHTML = data;
+                    initializeModalForms(modal);
 
                     //Claude AI generated this for me to make sure the script is loading 
                     const scripts = modal.querySelectorAll('script');

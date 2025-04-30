@@ -14,9 +14,11 @@ using Microsoft.AspNetCore.Authorization;
 namespace WebApp_MVC.Controllers;
 
 [Authorize]
-public class ClientController(IClientService clientService) : BaseController
+public class ClientController(IClientService clientService, INotificationService notificationService) : BaseController
 {
     private readonly IClientService _clientService = clientService;
+    private readonly INotificationService _notificationService = notificationService;
+
 
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -39,6 +41,7 @@ public class ClientController(IClientService clientService) : BaseController
         return View(model);
     }
 
+    [HttpGet]
     public async Task<IActionResult> AddClient()
     {
         if (ViewData["AddClientViewModel"] is AddClientViewModel viewModel)
@@ -62,8 +65,11 @@ public class ClientController(IClientService clientService) : BaseController
         var result = await _clientService.CreateClient(clientDto);
         if (result.Success)
         {
-            return AjaxResult(true, redirectUrl: Url.Action("Index", "Client"), message: "Client created.");
+            string notificationMessage = $"New client '{form.ClientName}' added.";
+            var notification = NotificationFactory.Create(2, 3, notificationMessage, "");
+            await _notificationService.AddNotificationAsync(notification);
 
+            return AjaxResult(true, redirectUrl: Url.Action("Index", "Client"), message: "Client created.");
         }
         ModelState.AddModelError("", "Something went wrong when creating the client");
         return ReturnBasedOnRequest(form, "_AddClient");
@@ -98,7 +104,7 @@ public class ClientController(IClientService clientService) : BaseController
         }
 
         ClientDto clientDto = model;
-        
+
         ClientEntity clientEntity = ClientFactory.Create(clientDto);
 
         var result = await _clientService.UpdateClient(model.Id, clientEntity);
@@ -127,11 +133,11 @@ public class ClientController(IClientService clientService) : BaseController
 
         if (result.Success)
         {
-            return AjaxResult(true, redirectUrl: Url.Action("Index", "Client"));
+            return RedirectToAction("Index", "Client");
         }
-   
+
         ViewBag.ErrorMessage("Something went wrong.");
-        return AjaxResult(true, redirectUrl: Url.Action("Index", "Client"));
+        return RedirectToAction("Index", "Client");
     }
 
     [HttpGet]

@@ -29,14 +29,13 @@ public class BaseController : Controller
         });
     }
 
-    protected IActionResult AjaxResult(bool success, object data = null, string redirectUrl = null, string message = null)
+    protected IActionResult AjaxResult(bool success, string redirectUrl = null, string message = null)
     {
         Response.ContentType = "application/json";
-
-        return Ok(new
+        // Use Json() instead of Ok() to ensure proper content type handling
+        return Json(new
         {
             success,
-            data,
             redirectUrl,
             message
         });
@@ -46,7 +45,16 @@ public class BaseController : Controller
     {
         if (IsAjaxRequest())
         {
-            return JsonValidationErrors();
+            if (!ModelState.IsValid)
+            {
+                return JsonValidationErrors();
+            }
+
+            // If model is valid but we still need to return the view (like for AJAX form load)
+            if (viewName != null && viewName.StartsWith("_"))
+            {
+                return PartialView(viewName, model);
+            }
         }
 
         return viewName != null ? View(viewName, model) : View(model);

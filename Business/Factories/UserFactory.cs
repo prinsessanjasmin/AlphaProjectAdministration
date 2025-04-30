@@ -80,23 +80,22 @@ public static class UserFactory
     }
 
 
-    //public static EmployeeDto CreateEmployeeDto(ApplicationUser user)
-    //{
-    //    var employee = new EmployeeDto
-    //    {
-    //        FirstName = user.FirstName,
-    //        LastName = user.LastName,
-    //        Email = user.Email ?? "Not provided",
-    //        PhoneNumber = user.PhoneNumber ?? "",
-    //        JobTitle = user.JobTitle ?? "Not provided",
-    //        ProfileImagePath = user.ProfileImagePath,
-    //        DateOfBirth = user.DateOfBirth ?? default,
-    //        StreetAddress = user.Address.StreetAddress,
-    //        PostCode = user.Address.PostCode,
-    //        City = user.Address.City
-    //    };
+    public static ApplicationUser Create(EditEmployeeDto model)
+    {
+        var appUser = new ApplicationUser
+        {
+            Id = model.Id,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            Email = model.Email,
+            UserName = model.Email,
+            PhoneNumber = model.PhoneNumber ?? "",
+            JobTitle = model.JobTitle,
+            ProfileImagePath = model.ProfileImagePath,
+            DateOfBirth = model.DateOfBirth,
+        };
 
-    //    return employee;
-    //}
+        return appUser;
+    }
 
 }

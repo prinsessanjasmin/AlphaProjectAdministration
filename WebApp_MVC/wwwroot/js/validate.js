@@ -60,26 +60,30 @@ async function submitFormAsync(form) {
         const contentType = res.headers.get("Content-Type") || "";
 
         if (res.ok && contentType.includes("application/json")) {
-           
+            const data = await res.json();
+            console.log("AJAX response data:", data);
+            console.log("Response status:", res.status);
+            console.log("Response content type:", contentType);
 
-            if (contentType && contentType.includes("application/json")) {
-                const data = await res.json();
-                console.log("AJAX response data:", data);
-
-                if (data.success) {
-                    const modal = form.closest('.modal');
-                    if (modal) {
-                        modal.style.display = 'none';
-                    }
-
-                    // Redirect to the URL from the server (e.g., returnUrl)
-                    if (data.redirectUrl) {
-                        window.location.href = data.redirectUrl;
-                    } else {
-                        // fallback, in case redirectUrl is missing
-                        window.location.reload();
-                    }
+            if (data.success) {
+                const modal = form.closest('.modal');
+                if (modal) {
+                    // Use classList instead of style.display for consistency
+                    modal.classList.remove('visible');
                 }
+
+                // Add a slight delay before redirecting
+                if (data.redirectUrl) {
+                    console.log("Redirecting to: " + data.redirectUrl);
+                    setTimeout(function () {
+                        window.location.href = data.redirectUrl;
+                    }, 50); // Small delay to ensure modal closing happens first
+                } else {
+                    // fallback, in case redirectUrl is missing
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 50);
+                }  
             } else if (data.message) {
                 addErrorMessage(form, "", data.message);
             }
@@ -243,3 +247,28 @@ function validateMemberSelection(field) {
     }
 }
 
+function initializeModalForms(modal) {
+    console.log("Initializing forms in modal:", modal);
+
+    const forms = modal.querySelectorAll("form:not(.no-validation)");
+    console.log(`Found ${forms.length} forms to initialize`);
+
+    forms.forEach(form => {
+        console.log("Setting up form:", form.id || form.action);
+
+        // Add validation for fields
+        const fields = form.querySelectorAll("[data-val='true']");
+        fields.forEach(field => {
+            field.addEventListener('input', function () {
+                validateField(field);
+            });
+        });
+
+        // Add submit handler
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log("Form submit triggered from modal!");
+            await submitFormAsync(form);
+        });
+    });
+}

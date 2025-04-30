@@ -151,6 +151,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
             }
 
             await PopulateClientsAsync(viewModel);
+            await PopulateMembersAsync(viewModel, id);
             return PartialView("_EditProject", viewModel);
         }
         else
@@ -234,11 +235,11 @@ public class ProjectController(IClientService clientService, IProjectService pro
             var notification = NotificationFactory.Create(1, 2, notificationMessage, imagePath ?? "");
             Console.WriteLine(notification);
             await _notificationService.AddNotificationAsync(notification);
-            return AjaxResult(true, redirectUrl: Url.Action("Index", "Project"));
+            return RedirectToAction("Index", "Project");
         }
  
         ViewBag.ErrorMessage("Something went wrong.");
-        return AjaxResult(true, redirectUrl: Url.Action("Index", "Project"));
+        return RedirectToAction("Index", "Project");
     }
 
     public async Task<IActionResult> Details(int id)
@@ -335,18 +336,6 @@ public class ProjectController(IClientService clientService, IProjectService pro
         {
             viewModel.ClientOptions.Add(new SelectListItem { Text = client.ClientName, Value = client.Id.ToString() });
         }
-    }
-
-    private BadRequestObjectResult JsonValidationError()
-    {
-        var errors = ModelState
-            .Where(x => x.Value?.Errors.Any() == true)
-            .ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToArray()
-            );
-
-        return BadRequest(new { success = false, errors });
     }
 }
     
