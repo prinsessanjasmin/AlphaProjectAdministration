@@ -1,19 +1,19 @@
 .input-validation-error {
-    border: 1px $clr-red;
+    border: 1px var(--clr-red);
 }
 
 .field-validation-error {
-    color: $clr-red; 
-    font-size: 13px; 
-    position: absolute; 
-    top: 9px; 
-    right: 6px; 
-    background-color: $clr-red-opacity; 
-    border-radius: 12px; 
+    color: var(--clr-red);
+    font-size: 13px;
+    position: absolute;
+    top: 9px;
+    right: 6px;
+    background-color: var(--clr-red-opacity);
+    border-radius: 12px;
     padding: .4rem 1rem;
-    text-align: right; 
-    display: flex; 
-    gap: .5rem; 
-    align-items: center; 
-    z-index: 1; 
+    text-align: right;
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    z-index: 1;
 }

@@ -1,17 +1,18 @@
 ﻿@import "../abstracts/mixins";
-@import "../fontAwesome/mixins"; 
+@import "../fontAwesome/mixins";
 
 .btn {
     @include button;
     font-family: Nunito;
-    background-color: $clr-accent;
+    background-color: var(--clr-accent);
     height: 48px;
-    color: $clr-surface; 
+    color: var(--clr-white);
 }
 
 .btn-popup {
     width: 490px; 
     margin-top: 1rem; 
+    color: var(--clr-white);
 }
 
 .btn-login {
@@ -25,8 +26,8 @@
 
 .btn-google {
     width: 400px;
-    background-color: $clr-grey-100;
-    color: $clr-heading;
+    background-color: var(--clr-grey-100);
+    color: var(--clr-heading);
     font-weight: 600;
     padding-right: 2rem;
     background-image: url("/ProjectImages/Icons/google-icon.svg");
@@ -42,8 +43,8 @@
     flex-direction: row;
     align-items: center;
     gap: .5rem;
-    background-color: $clr-background;
-    color: $clr-heading;
+    background-color: transparent;
+    color: var(--clr-heading);
     font-size: 15px;
     font-weight: 600;
     text-align: left;
@@ -62,13 +63,13 @@
 
 .btn-sidebar:active,
 .btn.btn-sidebar:hover {
-    background-color: $clr-accent-opacity;
-    color: $clr-accent;
+    background-color: var(--clr-accent-opacity);
+    color: var(--clr-accent);
 }
 
 button.btn-sidebar.active-controller {
-    background-color: $clr-accent-opacity !important;
-    color: $clr-accent !important;
+    background-color: var(--clr-accent-opacity) !important;
+    color: var(--clr-accent) !important;
 }
 
 #sidebar-clients {
@@ -107,20 +108,20 @@ button.btn-sidebar.active-controller {
 }
 
 .btn-2-dots {
-    height: 40px; 
-    width: 40px; 
-    border: none; 
+    height: 40px;
+    width: 40px;
+    border: none;
     cursor: pointer;
     border-radius: 16px;
-    background-color: $clr-surface; 
+    background-color: var(--clr-surface);
     background-image: url("/Projectimages/Icons/2dots.svg");
-    background-position: 7.5px 7.5px; 
+    background-position: 7.5px 7.5px;
     background-repeat: no-repeat;
     background-size: 24px;
-    position: absolute;  
+    position: absolute;
 
     &:hover {
-        background-color: $clr-grey-100; 
+        background-color: var(--clr-grey-100);
     }
 }
 
@@ -135,42 +136,42 @@ button.btn-sidebar.active-controller {
 .btn-options {
     padding-left: 3.5rem;
     text-align: start;
-    background-color: $clr-surface;
-    color: $clr-heading;
-    width: 100%; 
+    background-color: var(--clr-surface);
+    color: var(--clr-heading);
+    width: 100%;
     align-items: center;
-    background-position: 14px 14px; 
+    background-position: 14px 14px;
     background-repeat: no-repeat;
     background-size: 20px;
     z-index: 10;
 
     &:hover {
-        background-color: $clr-grey-100; 
+        background-color: var(--clr-grey-100);
     }
 }
 
 .btn-options-delete {
     background-image: url("/ProjectImages/Icons/Delete.svg");
-    color: $clr-red;
+    color: var(--clr-red);
 }
 
 .btn-message {
-    background-color: $clr-grey-100;
-    color: $clr-heading;
-    padding: .5rem 2rem; 
+    background-color: var(--clr-grey-100);
+    color: var(--clr-heading);
+    padding: .5rem 2rem;
     width: 100%;
 }
 
 .btn-confirm-delete {
-    background-color: $clr-red;
-    color: $clr-surface;
+    background-color: var(--clr-red);
+    color: var(--clr-surface);
     padding: .5rem 2rem;
     width: 12rem;
 }
 
 .btn-cancel-delete {
-    background-color: $clr-grey-100;
-    color: $clr-heading;
+    background-color: var(--clr-grey-100);
+    color: var(--clr-heading);
     padding: .5rem 2rem;
     width: 12rem;
 }
@@ -191,6 +192,7 @@ button.btn-sidebar.active-controller {
     background-position: 16px 17px;
     background-repeat: no-repeat;
     background-size: 15px;
+    color: var(--clr-white);
 }
 
 .btn-close {
@@ -198,16 +200,15 @@ button.btn-sidebar.active-controller {
     border: none;
     height: 24px;
     width: 24px;
-    background-color: transparent; 
+    background-color: transparent;
     background-image: url("/ProjectImages/Icons/X.svg");
     background-position: 8px 8px;
     background-repeat: no-repeat;
     background-size: 15px;
-
-    //Font awesome ? 
+    //Font awesome ?
 
     &:hover {
-        background-color: $clr-grey-100;
+        background-color: var(--clr-grey-100);
     }
 }
 
@@ -216,12 +217,12 @@ button.btn-sidebar.active-controller {
     border: none;
     padding: .2rem;
     background-color: transparent;
-    color: $clr-body-light;
+    color: var(--clr-body);
     transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out, color 0.1s ease-in-out;
     //Font awesome ?
 
     &:hover {
-        background-color: $clr-grey-300;
+        background-color: var(--clr-grey-300);
     }
 }
 
@@ -235,7 +236,7 @@ button.btn-sidebar.active-controller {
 .btn-x {
     height: 2rem;
     width: 2rem;
-    background-color: $clr-grey-100;
+    background-color: var(--clr-grey-100);
     border: none;
     background-image: url("/ProjectImages/Icons/X.svg");
     background-position: 8px 8px;
@@ -245,15 +246,15 @@ button.btn-sidebar.active-controller {
 }
 
 .btn-signout {
-    background-color: transparent; 
-    cursor: pointer; 
-    border: none; 
-    color: $clr-heading; 
-    display: flex; 
-    flex-direction: row; 
-    gap: 1rem; 
-    font-family: Nunito; 
-    font-size: 15px; 
-    padding: .5rem; 
-    align-items: center; 
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+    color: var(--clr-heading);
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    font-family: Nunito;
+    font-size: 15px;
+    padding: .5rem;
+    align-items: center;
 }

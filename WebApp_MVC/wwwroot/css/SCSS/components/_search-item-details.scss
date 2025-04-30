@@ -1,21 +1,21 @@
 ﻿.search-item-details {
-    margin: 1rem; 
-    padding: 1rem; 
-    background-color: $clr-surface; 
-    border: none; 
-    border-radius: 16px; 
-    display: flex; 
-    flex-direction: column; 
+    margin: 1rem;
+    padding: 1rem;
+    background-color: var(--clr-surface);
+    border: none;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
 
     .details-image {
-        height: 200px; 
-        width: 200px; 
+        height: 200px;
+        width: 200px;
     }
 
     .project-details {
-        display: flex; 
-        flex-direction: column; 
-        gap: 1rem; 
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 }

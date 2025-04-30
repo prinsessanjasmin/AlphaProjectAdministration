@@ -2,10 +2,10 @@
     cursor: pointer;
     border: none;
     font-size: 18px;
-    color: $clr-body-light;
-    background-color: $clr-background;
+    color: var(--clr-heading);
+    background-color: var(--clr-background);
     position: relative;
-    place-content: center; 
+    place-content: center;
 }
 
 .btn-notifications {
@@ -13,7 +13,7 @@
 }
 
 .btn-settings {
-    border-right: 1px solid $clr-border-200;
+    border-right: 1px solid var(--clr-border-200);
     //padding-right: 1rem;
 }
 
@@ -76,7 +76,7 @@
 }
 
 .dropdown-header {
-    display: flex; 
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -84,44 +84,44 @@
     padding-right: 1rem;
 
     h5 {
-        font-family: Nunito; 
-        color: $clr-heading; 
+        font-family: Nunito;
+        color: var(--clr-heading);
     }
 }
 
 .account-dropdown-header {
     display: flex;
     flex-direction: row;
-    background-color: $clr-grey-100;
+    background-color: var(--clr-grey-100);
     border: none;
     border-radius: 16px;
-    padding: .5rem; 
+    padding: .5rem;
     gap: 2rem;
     justify-content: flex-start;
     align-items: center;
-    
+
     h6 {
-        color: $clr-heading; 
-        font-family: Nunito; 
-        font-size: 15px; 
+        color: var(--clr-heading);
+        font-family: Nunito;
+        font-size: 15px;
     }
 }
 
-    .notification-number {
-        background-color: $clr-red;
-        color: $clr-surface;
-        width: 1.2rem;
-        height: 1.2rem;
-        border-radius: 50%;
-        font-weight: 700;
-        justify-content: center;
-        align-items: center;
-    }
+.notification-number {
+    background-color: var(--clr-red);
+    color: var(--clr-white);
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    font-weight: 700;
+    justify-content: center;
+    place-content: center;
+}
 
-    .dropdown-line {
-        padding-bottom: .5rem;
-        border-bottom: 1px solid $clr-grey-400;
-    }
+.dropdown-line {
+    padding-bottom: .5rem;
+    border-bottom: 1px solid var(--clr-grey-400);
+}
 
     .notifications {
         display: flex;
@@ -136,66 +136,64 @@
         padding-top: 1rem;
     }
 
-    .option-item {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
-        align-items: center;
-        justify-content: space-between;
-        text-align: left;
+.option-item {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    font-weight: 400;
+    font-family: Nunito;
+    font-size: 15px;
+    color: var(--clr-heading);
+}
+
+.notification-item {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--clr-grey-100);
+    border: none;
+    border-radius: 16px;
+    padding: .5rem;
+    margin-top: 1rem;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+
+    .vertical-notification {
+        align-items: flex-start;
+        justify-content: center;
+        gap: .5rem;
+    }
+
+    .notification-message {
         font-weight: 400;
         font-family: Nunito;
         font-size: 15px;
-        color: $clr-heading;
+        color: var(--clr-heading);
     }
 
-    .notification-item {
-        display: flex;
-        flex-direction: row;
-        background-color: $clr-grey-100;
-        border: none;
-        border-radius: 16px;
-        padding: .5rem;
-        margin-top: 1rem;
-        gap: 1rem;
-        justify-content: space-between;
-        align-items: center;
-
-        .vertical-notification {
-            align-items: flex-start;
-            justify-content: center;
-            gap: .5rem;
-        }
-
-        .notification-message {
-            font-weight: 400;
-            font-family: Nunito;
-            font-size: 15px;
-            color: $clr-heading;
-        }
-
-        .time-stamp {
-            font-size: 14px;
-            font-family: Nunito;
-            color: $clr-body-light;
-            font-weight: 400;
-        }
-
-        .account-img {
-            height: 40px;
-            width: 40px;
-        }
+    .time-stamp {
+        font-size: 14px;
+        font-family: Nunito;
+        color: var(--clr-body);
+        font-weight: 400;
     }
 
-    .dot {
-        height: 2px;
-        width: 2px;
-        border-radius: 50%;
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
+    .account-img {
+        height: 40px;
+        width: 40px;
     }
+}
 
-    .red-dot {
-        color: $clr-red;
-    }
+.red-dot {
+    height: 11px;
+    width: 11px;
+    border: 2px solid var(--clr-surface);
+    border-radius: 50%;
+    position: absolute;
+    top: 1rem;
+    left: .5rem;
+    background-color: var(--clr-red);
+}

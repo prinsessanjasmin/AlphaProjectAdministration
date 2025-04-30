@@ -1,12 +1,11 @@
 .options-pop-up {
-    width: 230px; 
-    height: 130px; 
-    display: flex; 
-    flex-direction: column; 
+    width: 230px;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
     gap: .2rem;
-    background-color: $clr-surface;
+    background-color: var(--clr-surface);
     border-radius: 16px;
     align-items: center;
-    padding: .5rem; 
+    padding: .5rem;
 }
-

@@ -46,31 +46,35 @@
     font-family: Poppins; 
     font-weight: 700;
     font-size: 72px;
-    color: $clr-surface; 
+    color: var(--clr-surface)
 }
 
 .admin-headline2 {
-    color: $clr-orange; 
+    color: var(--clr-orange)
 }
 
 body {
     font-family: Nunito;
     font-weight: 400;
     font-size: 15px;
+    color: var(--clr-heading);
 }
 
 h1 {
     font-weight: 700;
-    font-size: 36px; 
+    font-size: 36px;
+    color: var(--clr-heading);
 }
 
 h2 {
     font-weight: 700;
     font-size: 32px;
+    color: var(--clr-heading);
 }
 
 h3, h4, h5, h6 {
-    font-weight: 600; 
+    font-weight: 600;
+    color: var(--clr-heading);
 }
 
 h3 {
@@ -90,7 +94,7 @@ h6 {
 }
 
 a {
-    color: $clr-accent;
+    color: var(--clr-accent);
 }
 
 
@@ -101,7 +105,7 @@ a {
     align-items: center;
     text-align: center;
     width: 75%;
-    color: $clr-body-light;
+    color: var(--clr-body);
     font-weight: 400;
     font-size: 12px;
 
@@ -110,10 +114,10 @@ a {
         content: "";
         display: block;
         height: 1px;
-        background-color: $clr-grey-200;
+        background-color: var(--clr-grey-200);
         margin: 1rem .1rem;
     }
-//Got this whole thing from ChatGPT, but of course changed the details. 
+    //Got this whole thing from ChatGPT, but of course changed the details.
 }
 
 .center {
@@ -125,7 +129,7 @@ a {
 }
 
 .p-light {
-    color: $clr-body-light;
+    color: var(--clr-body);
 }
 
 #logo-text {
@@ -146,6 +150,6 @@ a {
 
 
 .field.validation-error {
-    color: $clr-red;
+    color: var(--clr-red);
     font-size: 10px;
 }

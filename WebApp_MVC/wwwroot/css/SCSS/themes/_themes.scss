@@ -1,0 +1,68 @@
+﻿@import "../abstracts/variables";
+
+:root {
+    --clr-background: #{$clr-background};
+    --clr-surface: #{$clr-surface};
+    --clr-heading: #{$clr-heading};
+    --clr-body: #{$clr-body-light};
+    --clr-orange: #{$clr-orange};
+    --clr-red: #{$clr-red};
+    --clr-yellow: #{$clr-yellow};
+    --clr-blue: #{$clr-blue-1};
+    --clr-green: #{$clr-green};
+    --clr-purple: #{$clr-purple};
+    --clr-accent: #{$clr-accent};
+    --clr-grey-100: #{$clr-grey-100};
+    --clr-grey-200: #{$clr-grey-200};
+    --clr-grey-300: #{$clr-grey-300};
+    --clr-grey-400: #{$clr-grey-400};
+    --clr-shadow-drop: #{$shadow-drop-1};
+    --clr-border-100: #{$clr-border-100};
+    --clr-border-200: #{$clr-border-200};
+    --clr-border-300: #{$clr-border-300};
+    --clr-accent-opacity: #{$clr-accent-opacity};
+    --clr-green-opacity: #{$clr-green-opacity};
+    --clr-yellow-opacity: #{$clr-yellow-opacity};
+    --clr-red-opacity: #{$clr-red-opacity};
+    --clr-purple-opacity: #{$clr-purple-opacity};
+    --clr-grey-opacity: #{$clr-grey-opacity};
+    
+    //unchanged colors:
+    --clr-white: #FFFFFF;
+}
+
+.darkmode {
+    --clr-background: #{$clr-heading};
+    --clr-surface: #{$clr-body-dark};
+    --clr-heading: #{$clr-surface};
+    --clr-body: #{$clr-body-dark};
+    --clr-orange: #{$clr-dark-orange};
+    --clr-red: #{$clr-dark-red};
+    --clr-yellow: #{$clr-dark-yellow};
+    --clr-blue: #{$clr-dark-blue};
+    --clr-green: #{$clr-dark-green};
+    --clr-purple: #{$clr-dark-purple};
+    --clr-accent: #{$clr-dark-accent};
+    --clr-grey-100: #{$clr-dark-grey-100};
+    --clr-grey-200: #{$clr-dark-grey-200};
+    --clr-grey-300: #{$clr-dark-grey-300};
+    --clr-grey-400: #{$clr-dark-grey-400};
+    --clr-border-100: #{$clr-border-dark-100};
+    --clr-border-200: #{$clr-border-dark-200};
+    --clr-border-300: #{$clr-border-dark-300};
+    --clr-grey-opacity: #{$clr-dark-grey-opacity};
+    --clr-accent-opacity: #{$clr-dark-accent-opacity};
+    --clr-green-opacity: #{$clr-dark-green-opacity};
+    --clr-yellow-opacity: #{$clr-dark-yellow-opacity};
+    --clr-red-opacity: #{$clr-dark-red-opacity};
+    --clr-purple-opacity: #{$clr-dark-purple-opacity};
+
+    .project-status-menu {
+        color: $clr-body-dark-2;
+    }
+
+    .search-input {
+        color: $clr-body-dark-2;
+    }
+
+}

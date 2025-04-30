@@ -11,9 +11,9 @@
     gap: 1rem;
     margin: 4rem;
     border-radius: 16px;
-    border: 1px solid $clr-border-300;
-    box-shadow: 0 4px 3px $shadow-drop-1;
-    background-color: $clr-surface;
+    border: 1px solid var(--clr-border-300);
+    box-shadow: 0 4px 3px var(--clr-shadow-drop);
+    background-color: var(--clr-surface);
 }
 
 #login-form {

@@ -1,5 +1,5 @@
 ﻿.page-projects {
-    background-color: $clr-background;
+    background-color: var(--clr-background);
     min-width: 100vw;
     min-height: 100vh;
 }
@@ -21,24 +21,24 @@
 }
 
 .project-categories {
-    display: flex; 
-    flex-direction: row; 
-    gap: 3rem; 
-    margin-top: 2rem; 
-    border-bottom: 1px solid $clr-border-200;
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    margin-top: 2rem;
+    border-bottom: 1px solid var(--clr-border-200);
 }
 
 .project-status-menu {
     font-size: 32px;
     font-weight: 700;
-    color: $clr-body-light;
+    color: var(--clr-body);
     cursor: pointer;
 }
 
 .project-status-menu.active,
 .project-status-menu:active,
 .project-status-menu:hover {
-    color: $clr-accent; 
+    color: var(--clr-accent);
 }
 
 .add-project-container {
@@ -69,17 +69,17 @@
 }
 
 .member-search-results {
-    display: none; 
-    background-color: $clr-surface;
-    border: 1px solid $clr-border-300;
-    border-top: none; 
-    border-radius: 0 0 16px 16px; 
-    max-height: 200px; 
-    width: 100%; 
+    display: none;
+    background-color: var(--clr-surface);
+    border: 1px solid var(--clr-border-300);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+    max-height: 200px;
+    width: 100%;
     position: absolute;
-    top: 85%; 
-    left: 0; 
-    z-index: 10; 
+    top: 85%;
+    left: 0;
+    z-index: 10;
 }
 
 .search-item {
@@ -91,12 +91,12 @@
     font-size: 14px;
 
     &:hover {
-        background-color: $clr-accent-opacity;
+        background-color: var(--clr-accent-opacity);
         border-radius: 16px;
     }
 
     &.active {
-        background-color: $clr-accent-opacity;
+        background-color: var(--clr-accent-opacity);
         border-radius: 16px;
     }
 }

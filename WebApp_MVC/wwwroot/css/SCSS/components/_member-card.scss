@@ -1,23 +1,23 @@
 .member-card {
-    display: flex; 
+    display: flex;
     flex-direction: column;
-    height: 460px; 
-    width: 300px; 
-    background-color: $clr-surface;
-    border: none; 
+    height: 460px;
+    width: 300px;
+    background-color: var(--clr-surface);
+    border: none;
     border-radius: 16px;
-    padding: 2.5rem; 
+    padding: 2.5rem;
     padding-top: 1rem;
-    box-shadow: 0 10px 10px $shadow-drop-1;
-    z-index: 1; 
+    box-shadow: 0 10px 10px var(--clr-shadow-drop);
+    z-index: 1;
     justify-content: space-between;
     align-items: center;
-    position: relative; 
+    position: relative;
 
     #btn-2-dots {
         align-self: flex-end;
-        justify-self: flex-end; 
-        padding-bottom: -2rem; 
+        justify-self: flex-end;
+        padding-bottom: -2rem;
     }
 }
 
@@ -41,11 +41,11 @@
 }
 
 .member-title {
-    display: flex; 
-    justify-content: center; 
-    font-size: 12px; 
-    background-color: $clr-grey-200;
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+    background-color: var(--clr-grey-200);
     padding: .5rem 1rem;
     border-radius: 8px;
-    width: auto; 
+    width: auto;
 }

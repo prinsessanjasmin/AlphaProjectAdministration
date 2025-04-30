@@ -28,7 +28,7 @@
                     <label asp-for="ClientId"></label>
                     <div class="input-group">
                         <select data-val="true" asp-for="ClientId" asp-items="Model.ClientOptions">
-                            <option value="">-- Select Client --</option>
+                            <option class="option-dropdown" value="">-- Select Client --</option>
                         </select>
                         <span asp-validation-for="ClientId"></span>
                     </div>

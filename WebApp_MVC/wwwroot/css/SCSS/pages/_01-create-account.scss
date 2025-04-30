@@ -8,10 +8,10 @@
     gap: 1rem;
     margin: 4rem;
     border-radius: 16px;
-    border: 1px solid $clr-border-300;
-    box-shadow: 0 4px 3px $shadow-drop-1;
+    border: 1px solid var(--clr-border-300);
+    box-shadow: 0 4px 3px var(--clr-shadow-drop);
     align-items: center;
-    background-color: $clr-surface;
+    background-color: var(--clr-surface);
 }
 
 #signup-form {
@@ -36,6 +36,6 @@
     padding: .5rem;
 
     h4 {
-        color: $clr-body-light;
+        color: var(--clr-body);
     }
 }

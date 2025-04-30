@@ -10,11 +10,18 @@
     font-size: 15px;
     font-weight: 400;
     font-family: Nunito;
-    color: $clr-heading;
-    border: 1px solid $clr-border-300;
+    color: var(--clr-heading);
+    border: 1px solid var(--clr-border-300);
     border-radius: 16px;
     z-index: 0;
     outline: none;
+
+    data-placeholder {
+        color: var(--clr-body);
+        font-family: Nunito;
+        font-weight: 400;
+        font-size: 15px;
+    }
 }
 
 .ql-editor {
@@ -29,9 +36,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    border: 1px solid $clr-border-300;
+    border: 1px solid var(--clr-border-300);
     border-radius: 0 0 16px 16px;
-    color: $clr-heading;
-    background-color: $clr-surface; 
-
+    color: var(--clr-heading);
+    background-color: var(--clr-surface);
 }

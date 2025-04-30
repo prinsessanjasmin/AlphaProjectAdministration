@@ -25,13 +25,13 @@
 }
 
 .admin-text {
-    position: relative; 
+    position: relative;
     z-index: 5;
     line-height: 1.2;
 
     p {
         padding-top: 1rem;
-        color: $clr-surface;
+        color: var(--clr-surface);
     }
 }
 

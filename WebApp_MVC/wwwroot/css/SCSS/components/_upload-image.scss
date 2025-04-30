@@ -3,7 +3,7 @@
     width: 150px;
     align-self: center;
     border-radius: 25%;
-    border: 2px $clr-grey-400 dashed;
+    border: 2px var(--clr-grey-400) dashed;
     margin: 1rem;
 }
 
@@ -12,5 +12,5 @@
     width: 150px;
     align-self: center;
     border-radius: 25%;
-    border: 2px $clr-grey-400 dashed;
+    border: 2px var(--clr-grey-400) dashed;
 }

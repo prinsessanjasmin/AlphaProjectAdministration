@@ -2,6 +2,7 @@
     height: 276px; 
     width: 350px; 
     position: relative; 
+    color: var(--clr-heading);
 }
 
 .horizontal-project {
@@ -30,18 +31,18 @@
 }
 
 .overdue {
-    background-color: $clr-red-opacity;
-    color: $clr-red;
+    background-color: var(--clr-red-opacity);
+    color: var(--clr-red);
 }
 
 .due-soon {
-    background-color: $clr-yellow-opacity;
-    color: $clr-yellow;
+    background-color: var(--clr-yellow-opacity);
+    color: var(--clr-yellow);
 }
 
 .on-track {
-    background-color: $clr-grey-200;
-    color: $clr-body-light;
+    background-color: var(--clr-grey-200);
+    color: var(--clr-body);
 }
 
 #avatars {

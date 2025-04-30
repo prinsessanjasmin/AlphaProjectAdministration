@@ -1,9 +1,10 @@
 .form {
     width: 490px;
+    background-color: var(--clr-surface);
 
     button {
-        justify-self: center; 
-        align-self: center; 
+        justify-self: center;
+        align-self: center;
     }
 
     .form-content {
@@ -34,26 +35,36 @@
                 width: 100%;
                 height: 100%;
                 border-radius: 16px;
-                border: 1px solid $clr-border-300;
+                border: 1px solid var(--clr-border-300);
                 padding: 0 1rem;
                 font-family: Nunito;
                 font-weight: 400;
                 font-size: 15px;
+                background-color: transparent;
             }
 
             select {
                 border-radius: 16px;
-                border: 1px solid $clr-border-300;
+                border: 1px solid var(--clr-border-300);
                 width: 100%;
                 height: 100%;
                 font-family: Nunito;
                 font-weight: 400;
                 font-size: 15px;
-                //padding: 0 1rem;
+                background-color: transparent;
+                padding: 0 1rem;
+
+                .option-dropdown {
+                    color: var(--clr-body);
+                    background-color: var(--clr-surface);
+                    font-family: Nunito;
+                    font-weight: 400;
+                    font-size: 15px;
+                }
             }
 
-            input::placeholder {
-                color: $clr-body-light;
+            placeholder {
+                color: var(--clr-body);
                 font-family: Nunito;
                 font-weight: 400;
                 font-size: 15px;
@@ -82,5 +93,3 @@
         background-size: 18px;
     }
 }
-
-

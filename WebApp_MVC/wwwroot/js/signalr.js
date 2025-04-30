@@ -216,11 +216,11 @@ function updateNotificationCount() {
 	}
 
     if (notificationDropdownButton) {
-        let dot = notificationDropdownButton.querySelector('.dot.red-dot');
+        let dot = notificationDropdownButton.querySelector('.red-dot');
 
         if (count > 0 && !dot) {
             dot = document.createElement('div');
-            dot.className = 'dot red-dot';
+            dot.className = 'red-dot';
             notificationDropdownButton.appendChild(dot);
         }
         if (count === 0 && dot) {

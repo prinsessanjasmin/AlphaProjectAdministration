@@ -25,7 +25,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: $clr-grey-400;
+        background-color: var(--clr-grey-400);
         -webkit-transition: .4s;
         transition: .4s;
         z-index: 50;
@@ -38,18 +38,18 @@
         width: 22px;
         left: 0px;
         bottom: 0px;
-        background-color: $clr-surface;
+        background-color: var(--clr-surface);
         -webkit-transition: .4s;
         transition: .4s;
         z-index: 50;
     }
 
     input:checked + .slider {
-        background-color: $clr-accent;
+        background-color: var(--clr-accent);
     }
 
     input:focus + .slider {
-        box-shadow: 0 0 1px $clr-accent;
+        box-shadow: 0 0 1px var(--clr-accent);
     }
 
     input:checked + .slider:before {

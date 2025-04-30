@@ -1,7 +1,7 @@
 .header {
     grid-column: 1;
     grid-row: 1;
-    border-right: 1px solid $clr-border-200;
+    border-right: 1px solid var(--clr-border-200);
     height: 80px;
 
 
@@ -15,6 +15,6 @@
         justify-content: left;
         margin: 1rem;
         text-decoration: none;
-        color: $clr-body-dark;
+        color: var(--clr-heading);
     }
 }

@@ -1,13 +1,17 @@
 .top-bar {
     grid-column: 2/5;
     grid-row: 1/2;
-    border-bottom: 1px solid $clr-border-200;
+    border-bottom: 1px solid var(--clr-border-200);
     display: grid;
     grid-template-columns: 14fr 1fr 1fr 2fr;
     align-content: center;
     justify-content: space-between;
-    color: $clr-body-light;
+    color: var(--clr-body);
     position: relative;
+
+    i {
+        color: var(--clr-heading);
+    }
 }
 .search-function {
     grid-column: 1;
@@ -20,14 +24,14 @@
 }
 
 .search-input {
-    color: $clr-body-light;
+    color: var(--clr-body);
     display: flex;
     flex-direction: row;
     align-items: center;
     padding: 1rem 2rem;
     height: 100%;
     width: 100%;
-    
+
 
     label {
         flex: 1;
@@ -53,14 +57,13 @@
     width: 100%;
     max-height: 0;
     padding: 0 3.5rem;
-    opacity: 0; 
-    background-color: $clr-surface;
+    opacity: 0;
+    background-color: var(--clr-surface);
     z-index: 100;
-    border: 1px solid $clr-grey-100;
+    border: 1px solid var(--clr-grey-100);
     border-radius: 0 0 16px 16px;
-    overflow: hidden; 
+    overflow: hidden;
     overflow-y: auto;
-    
     transition: height .4s ease-in-out .2s, padding .4s ease-in-out .2s, opacity .4s ease-in-out .2s;
 
     .search-item {
@@ -68,7 +71,7 @@
         cursor: pointer;
 
         &:hover {
-            color: $clr-accent;
+            color: var(--clr-accent);
         }
     }
 }
