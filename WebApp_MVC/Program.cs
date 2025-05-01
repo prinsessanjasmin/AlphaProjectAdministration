@@ -33,6 +33,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(x =>
         x.Password.RequireNonAlphanumeric = true;
         x.Password.RequireDigit = true;
         x.User.RequireUniqueEmail = true;
+        x.SignIn.RequireConfirmedEmail = false;
+        x.SignIn.RequireConfirmedAccount = false;
     })
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
@@ -42,11 +44,11 @@ builder.Services.ConfigureApplicationCookie(x =>
         x.LoginPath = "/auth/signin";
         x.LogoutPath = "/auth/signout";
         x.AccessDeniedPath = "/auth/denied";
-        x.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-        x.SlidingExpiration = true;
-        x.Cookie.HttpOnly = true;
-        x.Cookie.SameSite = SameSiteMode.None; //Cookiehanteringen skapas av tredje part 
-        x.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
+        //x.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        //x.SlidingExpiration = true;
+        //x.Cookie.HttpOnly = true;
+        //x.Cookie.SameSite = SameSiteMode.None; //Cookiehanteringen skapas av tredje part 
+        //x.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
     });
 
 builder.Services.AddAuthentication(x =>

@@ -22,7 +22,7 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
     private readonly DataContext _dataContext = dataContext;
     private readonly INotificationService _notificationService = notificationService;
 
-
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> Index()
     {
@@ -45,6 +45,7 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         return View(model);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> AddEmployee()
     {
@@ -59,6 +60,7 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         return PartialView("_AddEmployee", fallbackModel);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> AddEmployee(AddEmployeeViewModel form)
     {
@@ -105,6 +107,7 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> EditEmployee(string id)
     {
@@ -126,6 +129,7 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> EditEmployee(EditEmployeeViewModel model)
     {
@@ -170,12 +174,13 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         }
     }
 
-
+    [Authorize(Roles = "Admin")]
     public IActionResult ConfirmDelete(int id)
     {
         return PartialView("_DeleteEmployee", id);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> DeleteEmployee(string id)
     {
@@ -224,6 +229,7 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         return View(viewModel);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<JsonResult> SearchMembers(string term)
     {
@@ -247,17 +253,5 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         }
 
         return Json(new List<object>());
-    }
-
-    private BadRequestObjectResult JsonValidationError()
-    {
-        var errors = ModelState
-            .Where(x => x.Value?.Errors.Count > 0)
-            .ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToList()
-            );
-
-        return BadRequest(new { success = false, errors });
     }
 }

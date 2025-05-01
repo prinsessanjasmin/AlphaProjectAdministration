@@ -19,7 +19,7 @@ public class ClientController(IClientService clientService, INotificationService
     private readonly IClientService _clientService = clientService;
     private readonly INotificationService _notificationService = notificationService;
 
-
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> Index()
     {
@@ -41,6 +41,7 @@ public class ClientController(IClientService clientService, INotificationService
         return View(model);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> AddClient()
     {
@@ -53,6 +54,7 @@ public class ClientController(IClientService clientService, INotificationService
         return PartialView("_AddClient", fallbackModel);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> AddClient(AddClientViewModel form)
     {
@@ -75,6 +77,8 @@ public class ClientController(IClientService clientService, INotificationService
         return ReturnBasedOnRequest(form, "_AddClient");
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
     public async Task<IActionResult> EditClient(int id)
     {
         var result = await _clientService.GetClientById(id);
@@ -95,6 +99,7 @@ public class ClientController(IClientService clientService, INotificationService
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> EditClient(EditClientViewModel model)
     {
@@ -120,12 +125,14 @@ public class ClientController(IClientService clientService, INotificationService
         }
     }
 
+    [Authorize(Roles = "Admin")]
     public IActionResult ConfirmDelete(int id)
     {
         // Return just the ID to the partial view
         return PartialView("_DeleteClient", id);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> DeleteClient(int id)
     {
@@ -139,6 +146,7 @@ public class ClientController(IClientService clientService, INotificationService
         ViewBag.ErrorMessage("Something went wrong.");
         return RedirectToAction("Index", "Client");
     }
+
 
     [HttpGet]
     public async Task<IActionResult> Details(int id)

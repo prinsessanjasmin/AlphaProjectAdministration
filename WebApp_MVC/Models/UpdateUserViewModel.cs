@@ -84,9 +84,9 @@ public class UpdateUserViewModel
         ProfileImagePath = user.ProfileImagePath ?? "";
         PhoneNumber = user.PhoneNumber ?? "";
         JobTitle = user.JobTitle ?? "";
-        StreetAddress = user.Address.StreetAddress ?? "";
-        PostCode = user.Address.PostCode ?? "";
-        City = user.Address.City ?? "";
+        StreetAddress = user.Address?.StreetAddress ?? "";
+        PostCode = user.Address?.PostCode ?? "";
+        City = user.Address?.City ?? "";
 
         if (user.DateOfBirth.HasValue)
         {

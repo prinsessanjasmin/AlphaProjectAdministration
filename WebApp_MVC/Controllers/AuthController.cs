@@ -10,14 +10,16 @@ using Microsoft.AspNetCore.SignalR;
 using WebApp_MVC.Hubs;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Business.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp_MVC.Controllers;
 
-public class AuthController(IUserService userService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IHubContext<NotificationHub> notificationHub, INotificationService notificationService) : Controller
+public class AuthController(IUserService userService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IHubContext<NotificationHub> notificationHub, INotificationService notificationService, RoleManager<IdentityRole> roleManager) : Controller
 {
     private readonly IUserService _userService = userService;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly RoleManager<IdentityRole> _roleManager = roleManager;
     private readonly INotificationService _notificationService = notificationService;
     private readonly IHubContext<NotificationHub> _notificationHub = notificationHub;
 
@@ -38,67 +40,198 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
             return View(form);
         }
 
+        var user = await _userManager.FindByEmailAsync(form.Email);
+        if (user == null)
+        {
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View(form);
+        }
+
+        // Special handling for migrating password hashes
+        // First try with normal password validation
         var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, form.RememberMe, false);
+
         if (!result.Succeeded)
         {
-            Console.WriteLine($"Login failed for {form.Email}. Result: {result.ToString()}");
+            // If normal sign-in fails, try manually checking if it's a hash mismatch
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, form.Password);
 
-            var appUser = await _userManager.FindByEmailAsync(form.Email);
-            if (appUser == null)
+            if (!isPasswordValid)
             {
-                Console.WriteLine("User not found");
+                // Genuinely wrong password
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return View(form);
+            }
+
+            // Password is correct but hash validation failed - rehash password
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var passwordResetResult = await _userManager.ResetPasswordAsync(user, token, form.Password);
+
+            if (passwordResetResult.Succeeded)
+            {
+                // Try sign-in again with updated hash
+                result = await _signInManager.PasswordSignInAsync(user, form.Password, form.RememberMe, false);
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError(string.Empty, "Login failed after password migration.");
+                    return View(form);
+                }
             }
             else
             {
-                Console.WriteLine($"User found: {appUser.Id}");
-                // Check if password is correct (without revealing actual password)
-                var isPasswordValid = await _userManager.CheckPasswordAsync(appUser, form.Password);
-                Console.WriteLine($"Password valid: {isPasswordValid}");
+                ModelState.AddModelError(string.Empty, "Password migration failed.");
+                return View(form);
             }
+        }
+
+
+        user = await _userManager.FindByEmailAsync(form.Email);
+        if (user != null)
+        {
+            if (!User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
+            {
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
+            }
+
+            await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
+            var notification = new NotificationEntity
+            {
+                Message = $"{user.FirstName} {user.LastName} signed in.",
+                NotificationTypeId = 1,
+                TargetGroupId = 2
+            };
+            await _notificationService.AddNotificationAsync(notification);
+            var notifications = await _notificationService.GetAllAsync(user.Id);
+            var newNotification = notifications.OrderByDescending(x => x.Created).FirstOrDefault();
+
+            if (newNotification != null)
+            {
+                await _notificationHub.Clients.All.SendAsync("ReceiveNotification", newNotification);
+            }
+        }
+
+        user.IsProfileComplete = UserProfileHelper.IsProfileComplete(user);
+        await _userManager.UpdateAsync(user);
+
+        if (!user.IsProfileComplete)
+        {
+            return RedirectToAction("UpdateUserProfile", new { Id = user.Id });
+        }
+
+        if (!Url.IsLocalUrl(returnUrl))
+        {
+            returnUrl = Url.Action("Index", "Project") ?? string.Empty;
+        }
+
+        return Redirect(returnUrl);
+    }
+
+    [HttpGet]
+    public IActionResult AdminSignIn(string returnUrl = "/")
+    {
+        ViewBag.ErrorMessage = "";
+        ViewBag.ReturnUrl = returnUrl;
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AdminSignIn(AdminLoginFormViewModel form, string returnUrl = "/")
+    {
+        if (!ModelState.IsValid)
+        {
+            Console.WriteLine(ModelState.ErrorCount);
+            Console.WriteLine(ModelState.Values);
             return View(form);
         }
 
         var user = await _userManager.FindByEmailAsync(form.Email);
-            if (user != null)
-            {
-                if (!User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
-                {
-                    await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
-                }
-
-                await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
-                var notification = new NotificationEntity
-                {
-                    Message = $"{user.FirstName} {user.LastName} signed in.",
-                    NotificationTypeId = 1,
-                    TargetGroupId = 2
-                };
-                await _notificationService.AddNotificationAsync(notification);
-                var notifications = await _notificationService.GetAllAsync(user.Id);
-                var newNotification = notifications.OrderByDescending(x => x.Created).FirstOrDefault();
-
-                if (newNotification != null)
-                {
-                    await _notificationHub.Clients.All.SendAsync("ReceiveNotification", newNotification);
-                }
-            }
-
-            user.IsProfileComplete = UserProfileHelper.IsProfileComplete(user);
-            await _userManager.UpdateAsync(user);
-
-            if (!user.IsProfileComplete)
-            {
-                return RedirectToAction("UpdateUserProfile", new { Id = user.Id });
-            }
-
-            if (!Url.IsLocalUrl(returnUrl))
-            {
-                returnUrl = Url.Action("Index", "Project") ?? string.Empty;
-            }
-
-            return Redirect(returnUrl);
+        if (user == null)
+        {
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View(form);
         }
-        
+
+        // Special handling for migrating password hashes
+        // First try with normal password validation
+        var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, form.RememberMe, false);
+
+        if (!result.Succeeded)
+        {
+            // If normal sign-in fails, try manually checking if it's a hash mismatch
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, form.Password);
+
+            if (!isPasswordValid)
+            {
+                // Genuinely wrong password
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return View(form);
+            }
+
+            // Password is correct but hash validation failed - rehash password
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var passwordResetResult = await _userManager.ResetPasswordAsync(user, token, form.Password);
+
+            if (passwordResetResult.Succeeded)
+            {
+                // Try sign-in again with updated hash
+                result = await _signInManager.PasswordSignInAsync(user, form.Password, form.RememberMe, false);
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError(string.Empty, "Login failed after password migration.");
+                    return View(form);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Password migration failed.");
+                return View(form);
+            }
+        }
+
+
+        user = await _userManager.FindByEmailAsync(form.Email);
+        if (user != null)
+        {
+            if (!User.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
+            {
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
+            }
+
+            await AddClaimByEmailAsync(user, "DisplayName", $"{user.FirstName} {user.LastName}");
+            var notification = new NotificationEntity
+            {
+                Message = $"{user.FirstName} {user.LastName} signed in.",
+                NotificationTypeId = 1,
+                TargetGroupId = 2
+            };
+            await _notificationService.AddNotificationAsync(notification);
+            var notifications = await _notificationService.GetAllAsync(user.Id);
+            var newNotification = notifications.OrderByDescending(x => x.Created).FirstOrDefault();
+
+            if (newNotification != null)
+            {
+                await _notificationHub.Clients.All.SendAsync("ReceiveNotification", newNotification);
+            }
+        }
+
+        user.IsProfileComplete = UserProfileHelper.IsProfileComplete(user);
+        await _userManager.UpdateAsync(user);
+
+        if (!user.IsProfileComplete)
+        {
+            return RedirectToAction("UpdateUserProfile", new { Id = user.Id });
+        }
+
+        if (!Url.IsLocalUrl(returnUrl))
+        {
+            returnUrl = Url.Action("Index", "Project") ?? string.Empty;
+        }
+
+        return Redirect(returnUrl);
+    }
+
 
     public async Task AddClaimByEmailAsync(ApplicationUser user, string typeName, string value)
     {
@@ -126,31 +259,42 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
             return View(model);
         }
 
-        AppUserDto dto = model;
-        var result = await _userService.RegisterUser(dto); 
-       
-        if (result.Success)
+        if (!model.AcceptTerms)
         {
-            var userResult = result as IResult<ApplicationUser>;
-            if (userResult.Success)
-            {
-                var userId = userResult.Data.Id;
-                var userName = userResult.Data.UserName;
-
-                await _signInManager.SignInAsync(userResult.Data, isPersistent: false);
-                return RedirectToAction("UpdateUserProfile", "Auth", new { id = userId });
-            }
-            else
-            {
-                ViewBag.ErrorMessage("Couldn't find user id.");
-                return View(model);
-            }
-        }
-        else
-        {
-            ViewBag.ErrorMessage(result.ErrorMessage);
+            ModelState.AddModelError("AcceptTerms", "You must accept the terms and conditions to register.");
             return View(model);
         }
+
+        var user = new ApplicationUser
+        {
+            UserName = model.Email,
+            Email = model.Email,
+            FirstName = model.FirstName,
+            LastName = model.LastName
+        };
+
+        var result = await _userManager.CreateAsync(user, model.Password);
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+            return View(model);
+        }
+
+        string role = string.IsNullOrEmpty(model.Role) ? "User" : model.Role;
+
+        // Add user to role
+        await _userManager.AddToRoleAsync(user, role);
+
+        await _signInManager.SignInAsync(user, isPersistent: false);
+
+        // Redirect to profile completion
+
+        
+        return RedirectToAction("UpdateUserProfile", new { Id = user.Id });
     }
 
     [HttpGet]
@@ -176,7 +320,8 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
         {
             var errors = ModelState
             .Where(x => x.Value.Errors.Count > 0)
-            .Select(x => new {
+            .Select(x => new
+            {
                 Key = x.Key,
                 Errors = x.Value.Errors.Select(e => e.ErrorMessage).ToList()
             })
@@ -196,7 +341,7 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
         var result = await _userService.UpdateUserProfile(dto);
 
         if (result.Success)
-            
+
             return RedirectToAction("Index", "Project");
 
         ViewBag.ErrorMessage = "error";
@@ -231,7 +376,7 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
         if (!string.IsNullOrEmpty(remoteError))
         {
             ModelState.AddModelError("", $"Errror from external provider: {remoteError}");
-            return View("SignIn"); 
+            return View("SignIn");
         }
 
         var externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
@@ -253,7 +398,7 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
 
             if (user != null && !user.IsProfileComplete)
             {
-                return RedirectToAction("UpdateUserProfile", new {Id = user.Id});
+                return RedirectToAction("UpdateUserProfile", new { Id = user.Id });
             }
 
             return LocalRedirect(returnUrl);
@@ -270,11 +415,11 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
                 firstName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.GivenName)!;
                 lastName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Surname)!;
             }
-            catch {}
+            catch { }
 
             var user = new ApplicationUser { UserName = userName, Email = email, FirstName = firstName, LastName = lastName };
             var identityResult = await _userManager.CreateAsync(user);
-            if (identityResult.Succeeded) 
+            if (identityResult.Succeeded)
             {
                 await _userManager.AddLoginAsync(user, externalLoginInfo);
                 await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id));
@@ -291,7 +436,7 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
                 return LocalRedirect(returnUrl);
             }
 
-            foreach(var error in identityResult.Errors)
+            foreach (var error in identityResult.Errors)
             {
                 ModelState.AddModelError("", error.Description);
             }
@@ -299,4 +444,11 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
             return View("SignIn");
         }
     }
+
+    [AllowAnonymous]
+    public IActionResult Denied()
+    {
+        return View();
+    }
+
 }

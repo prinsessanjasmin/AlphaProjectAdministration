@@ -1,15 +1,22 @@
-﻿<aside class="sidebar">
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<aside class="sidebar">
     <button class="btn btn-sidebar" id="sidebar-projects" asp-action="Index" asp-controller="Project">
         <i class="fa-solid fa-solid fa-suitcase"></i>
         <p>Projects</p>
     </button>
-    <button class="btn btn-sidebar" id="sidebar-members">
-        <i class="fa-solid fa-users-line"></i>
-        <p>Team Members</p>
-    </button>
-    <button class="btn btn-sidebar" id="sidebar-clients">
-       <i class="fa-solid fa-handshake-simple"></i>
-        <p>Clients</p>
-    </button>
-   
+    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+    {
+        <button class="btn btn-sidebar" id="sidebar-members">
+            <i class="fa-solid fa-users-line"></i>
+            <p>Team Members</p>
+        </button>
+
+        <button class="btn btn-sidebar" id="sidebar-clients">
+            <i class="fa-solid fa-handshake-simple"></i>
+            <p>Clients</p>
+        </button>
+    }
 </aside>

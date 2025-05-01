@@ -30,6 +30,19 @@
             </div>
             <div>
                 @ViewBag.ErrorMessage
+                @if (ViewBag.DebugMessage != null)
+                {
+                    <div class="alert alert-warning">
+                        <strong>Debug Info:</strong> @ViewBag.DebugMessage
+                    </div>
+                }
+
+                @if (ViewBag.PasswordReset != null)
+                {
+                    <div class="alert alert-info">
+                        @ViewBag.PasswordReset
+                    </div>
+                }
             </div>
             <div class="horizontal-form">
                 <div>
@@ -43,4 +56,5 @@
         <button type="submit" class="btn btn-login">Log In</button>
     </form>
     <p id="no-account">Don't have an account? <a asp-controller="Auth" asp-action="SignUp">Sign up</a></p>
+    <p id="admin-account">Are you an administrator? <a asp-controller="Auth" asp-action="AdminSignIn">Log in here!</a></p>
 </div>

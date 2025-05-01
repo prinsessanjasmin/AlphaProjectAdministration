@@ -24,27 +24,30 @@ public class UserService(IUserRepository userRepository, IAddressService address
             {
                 return Result.BadRequest("You need to fill out the form.");
             }
-
             if (await _userRepository.AlreadyExistsAsync(u => u.Email == dto.Email))
             {
-                return Result.AlreadyExists("The email adress you are trying to register already exists.");
+                return Result.AlreadyExists("The email address you are trying to register already exists.");
             }
-           
-            var userEntity = UserFactory.Create(dto);
 
-            var user = await _userRepository.CreateUserAsync(userEntity, dto.Password, dto.Role);
+            var userEntity = UserFactory.Create(dto);
+            var result = await _userRepository.CreateUserAsync(userEntity, dto.Password, dto.Role);
+
+            if (!result.Succeeded)
+            {
+                string errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return Result.Error($"Unable to create user: {errors}");
+            }
+
             await _userRepository.SaveAsync();
             await _userRepository.CommitTransactionAsync();
             return Result<ApplicationUser>.Created(userEntity);
         }
-        catch
+        catch (Exception ex)
         {
             await _userRepository.RollbackTransactionAsync();
-            return Result.Error("Unable to create user.");
+            return Result.Error($"Unable to create user: {ex.Message}");
         }
     }
-
-    
 
     public async Task<IResult> CreateEmployee(EmployeeDto dto)
     {
@@ -55,31 +58,35 @@ public class UserService(IUserRepository userRepository, IAddressService address
             {
                 return Result.BadRequest("You need to fill out the form.");
             }
-
             if (await _userRepository.AlreadyExistsAsync(u => u.Email == dto.Email))
             {
-                return Result.AlreadyExists("The email adress you are trying to register already exists.");
+                return Result.AlreadyExists("The email address you are trying to register already exists.");
             }
 
-            var result = await _addressService.CreateAddress(dto);
-            if (!result.Success || result.Data == null)
+            var addressResult = await _addressService.CreateAddress(dto);
+            if (!addressResult.Success || addressResult.Data == null)
                 return Result.Error("Something went wrong when handling the address.");
 
-            var userEntity = UserFactory.Create(dto, result.Data.Id);
-
-            var password = "Password123!";
-
+            var userEntity = UserFactory.Create(dto, addressResult.Data.Id);
             userEntity.IsProfileComplete = UserProfileHelper.IsProfileComplete(userEntity);
 
-            var user = await _userRepository.CreateUserAsync(userEntity, password, dto.Role);
+            var password = "BytMig123!";
+            var result = await _userRepository.CreateUserAsync(userEntity, password, dto.Role);
+
+            if (!result.Succeeded)
+            {
+                string errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                return Result.Error($"Unable to create user: {errors}");
+            }
+
             await _userRepository.SaveAsync();
             await _userRepository.CommitTransactionAsync();
             return Result<ApplicationUser>.Created(userEntity);
         }
-        catch
+        catch (Exception ex)
         {
             await _userRepository.RollbackTransactionAsync();
-            return Result.Error("Unable to create user.");
+            return Result.Error($"Unable to create user: {ex.Message}");
         }
     }
 
@@ -158,7 +165,7 @@ public class UserService(IUserRepository userRepository, IAddressService address
         }
     }
 
-    public async Task<IResult> UpdateUser(string id, ApplicationUser updatedUser) 
+    public async Task<IResult> UpdateUser(string id, ApplicationUser updatedUser)
     {
         try
         {
@@ -203,12 +210,12 @@ public class UserService(IUserRepository userRepository, IAddressService address
             existingUser.JobTitle = dto.JobTitle ?? existingUser.JobTitle;
             existingUser.ProfileImagePath = dto.ProfileImagePath ?? existingUser.ProfileImagePath;
             existingUser.DateOfBirth = dto.DateOfBirth;
-            
-           
-            existingUser.IsProfileComplete = true; 
+
+
+            existingUser.IsProfileComplete = true;
 
             var identityResult = await _userRepository.UpdateUserAsync(existingUser);
-            
+
             if (!identityResult.Succeeded)
             {
                 await _userRepository.RollbackTransactionAsync();
