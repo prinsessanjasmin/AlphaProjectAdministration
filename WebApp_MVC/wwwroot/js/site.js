@@ -335,6 +335,10 @@ function initializeDropdowns() {
     });
 }
 
+function logoutUser() {
+    window.location.href = '/auth/signout';
+    
+}
 
 //Had help with this from Claude AI
 function initializeProjectFilters() {

@@ -117,9 +117,6 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapHub<ChatHub>("/chathub");
-app.MapHub<NotificationHub>("/notificationhub"); 
-
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -134,6 +131,9 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+
+app.MapHub<ChatHub>("/chathub");
+app.MapHub<NotificationHub>("/notificationhub");
 
 app.MapStaticAssets();
 
