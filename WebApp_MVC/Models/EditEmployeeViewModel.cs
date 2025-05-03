@@ -86,9 +86,9 @@ public class EditEmployeeViewModel
         PhoneNumber = user.PhoneNumber ?? "";
         JobTitle = user.JobTitle ?? "";
         ProfileImagePath = user.ProfileImagePath ?? "";
-        StreetAddress = user.Address.StreetAddress ?? "";
-        PostCode = user.Address.PostCode ?? "";
-        City = user.Address.City ?? "";
+        StreetAddress = user.Address?.StreetAddress ?? "";
+        PostCode = user.Address?.PostCode ?? "";
+        City = user.Address?.City ?? "";
         if (user.DateOfBirth.HasValue)
         {
             Year = DateConverterYear(user.DateOfBirth.Value);

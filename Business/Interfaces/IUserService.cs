@@ -12,6 +12,6 @@ public interface IUserService
     Task<IResult> GetUserById(string id);
     Task<IResult> GetUserByEmail(string email);
     Task<IResult> GetUsersBySearchTerm(string term);
-    Task<IResult> UpdateUser(string id, ApplicationUser updatedUser); 
+    Task<IResult> UpdateUser(EditEmployeeDto dto); 
     Task<IResult> DeleteUser(string id);
 }

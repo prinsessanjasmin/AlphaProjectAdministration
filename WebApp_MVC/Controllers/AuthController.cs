@@ -50,11 +50,13 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
         // Special handling for migrating password hashes
         // First try with normal password validation
         var result = await _signInManager.PasswordSignInAsync(form.Email, form.Password, form.RememberMe, false);
+        ViewBag.Debug += $" | Initial sign-in: {result.Succeeded}";
 
         if (!result.Succeeded)
         {
             // If normal sign-in fails, try manually checking if it's a hash mismatch
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, form.Password);
+            ViewBag.Debug += $" | Password valid: {isPasswordValid}";
 
             if (!isPasswordValid)
             {
@@ -66,20 +68,31 @@ public class AuthController(IUserService userService, SignInManager<ApplicationU
             // Password is correct but hash validation failed - rehash password
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var passwordResetResult = await _userManager.ResetPasswordAsync(user, token, form.Password);
+            ViewBag.Debug += $" | Password reset: {passwordResetResult.Succeeded}";
 
             if (passwordResetResult.Succeeded)
             {
                 // Try sign-in again with updated hash
                 result = await _signInManager.PasswordSignInAsync(user, form.Password, form.RememberMe, false);
+                ViewBag.Debug += $" | Second sign-in: {result.Succeeded}";
 
                 if (!result.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, "Login failed after password migration.");
+                    if (result.IsLockedOut)
+                        ViewBag.Debug += " | Account locked";
+                    if (result.IsNotAllowed)
+                        ViewBag.Debug += " | Sign-in not allowed";
+                    if (result.RequiresTwoFactor)
+                        ViewBag.Debug += " | 2FA required";
+
+                    ModelState.AddModelError(string.Empty, "Login failed after password reset.");
                     return View(form);
                 }
             }
             else
             {
+                string errors = string.Join(", ", passwordResetResult.Errors.Select(e => e.Description));
+                ViewBag.Debug += $" | Reset errors: {errors}";
                 ModelState.AddModelError(string.Empty, "Password migration failed.");
                 return View(form);
             }

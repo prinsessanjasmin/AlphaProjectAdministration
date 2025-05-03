@@ -165,19 +165,44 @@ public class UserService(IUserRepository userRepository, IAddressService address
         }
     }
 
-    public async Task<IResult> UpdateUser(string id, ApplicationUser updatedUser)
+    public async Task<IResult> UpdateUser(EditEmployeeDto dto)
     {
         try
         {
-            IdentityResult user = await _userRepository.UpdateUserAsync(updatedUser);
-            if (user == null)
+            var existingUser = await _userRepository.GetUserByIdAsync(dto.Id);
+            if (existingUser == null)
                 return Result.NotFound("Could not find the user in the database.");
 
-            return Result<ApplicationUser>.Ok();
+            // Selectively update properties
+            existingUser.FirstName = dto.FirstName;
+            existingUser.LastName = dto.LastName;
+            existingUser.Email = dto.Email;
+            existingUser.UserName = dto.Email;
+            existingUser.PhoneNumber = dto.PhoneNumber ?? existingUser.PhoneNumber;
+            existingUser.JobTitle = dto.JobTitle ?? existingUser.JobTitle;
+            existingUser.ProfileImagePath = dto.ProfileImagePath ?? existingUser.ProfileImagePath;
+            existingUser.DateOfBirth = dto.DateOfBirth;
+
+            if ((existingUser.Address.StreetAddress != dto.StreetAddress) || (existingUser.Address.PostCode != dto.PostCode) || (existingUser.Address.City != dto.City))
+            {
+
+                var addressResult = await _addressService.CreateAddress(dto);
+                if (addressResult.Success && addressResult.Data != null)
+                {
+                    existingUser.AddressId = addressResult.Data.Id;
+                }
+            }
+
+            // Let the repository update the user safely
+            var result = await _userRepository.UpdateUserAsync(existingUser);
+            if (result.Succeeded)
+                return Result<ApplicationUser>.Ok(existingUser);
+            else
+                return Result.Error(string.Join(", ", result.Errors.Select(e => e.Description)));
         }
-        catch
+        catch (Exception ex)
         {
-            return Result.Error("Something went wrong");
+            return Result.Error($"Something went wrong: {ex.Message}");
         }
     }
 

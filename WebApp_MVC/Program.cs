@@ -12,6 +12,7 @@ using Data.Repositories;
 using Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WebApp_MVC.Hubs;
+using WebApp_MVC.Handlers;
 
 
 
@@ -39,16 +40,22 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(x =>
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => !context.Request.Cookies.ContainsKey("cookieConsent");
+    options.MinimumSameSitePolicy = SameSiteMode.Lax;
+});
+
 builder.Services.ConfigureApplicationCookie(x =>
     {
         x.LoginPath = "/auth/signin";
         x.LogoutPath = "/auth/signout";
         x.AccessDeniedPath = "/auth/denied";
-        //x.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-        //x.SlidingExpiration = true;
-        //x.Cookie.HttpOnly = true;
-        //x.Cookie.SameSite = SameSiteMode.None; //Cookiehanteringen skapas av tredje part 
-        //x.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
+        x.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        x.SlidingExpiration = true;
+        x.Cookie.HttpOnly = true;
+        x.Cookie.SameSite = SameSiteMode.Lax; //Cookiehanteringen skapas av tredje part 
+        x.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     });
 
 builder.Services.AddAuthentication(x =>
@@ -66,6 +73,10 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("Admins", policy => policy.RequireRole("Admin"))
     .AddPolicy("Managers", policy => policy.RequireRole("Admin", "Manager"));
 
+var connectionString = builder.Configuration.GetConnectionString("AzureBlobStorage");
+var containerName = "images";
+
+builder.Services.AddScoped<IFileHandler>(_ => new AzureFileHandler(connectionString!, containerName)); 
 builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IAddressRepository, AddressRepository>();
@@ -116,6 +127,7 @@ app.UseRouting();
 
 app.UseStaticFiles();
 
+app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 

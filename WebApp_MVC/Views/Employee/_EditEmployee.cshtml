@@ -11,11 +11,9 @@
         </header>
         <div class="form-content">
             <input type="hidden" asp-for="Id" />
-            <div class="upload-image">
-                <button class="btn-upload-image">
-                    <img src="~/ProjectImages/Icons/Camera.png" alt="Camera icon.">
-                    <input asp-for="ProfileImage" accept="image/*" class="hidden" />
-                </button>
+            <div class="image-previewer circle @(!string.IsNullOrEmpty(Model.ProfileImagePath) ? "selected" : "")">
+                <img class="image-preview" src="@(string.IsNullOrEmpty(Model.ProfileImagePath) ? "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" : Model.ProfileImagePath)">
+                <input asp-for="ProfileImage" accept="image/*" class="hidden" />
             </div>
             <div class="horizontal-form">
                 <div class="form-input">

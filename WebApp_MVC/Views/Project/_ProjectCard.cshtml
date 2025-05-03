@@ -8,11 +8,11 @@
         <div class="horizontal horizontal-project">
             @if (!string.IsNullOrEmpty(@Model.ProjectImagePath))
             {
-                <img src="@Url.Content(Model.ProjectImagePath)" alt="@Model.ProjectName" />
+                <img class="project-icon" src="@Url.Content(Model.ProjectImagePath)" alt="@Model.ProjectName" />
             }
             else
             {
-                <img src="~/ProjectImages/Icons/projectlogo.svg" alt="Project Image Placeholder" />
+                <img class="project-icon" src="~/ProjectImages/Icons/projectlogo.svg" alt="Project Image Placeholder" />
             }
             <div class="vertical">
                 <h6>@Model.ProjectName</h6>

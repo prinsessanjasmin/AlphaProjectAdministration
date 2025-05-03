@@ -11,11 +11,12 @@ using Data.Contexts;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
+using WebApp_MVC.Handlers;
 
 namespace WebApp_MVC.Controllers;
 
 [Authorize]
-public class ProjectController(IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService, IUserService userService) : BaseController
+public class ProjectController(IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService, IUserService userService, IFileHandler fileHandler) : BaseController
 {
 
     private readonly IClientService _clientService = clientService;
@@ -24,6 +25,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
     private readonly DataContext _dataContext = dataContext;
     private readonly INotificationService _notificationService = notificationService;
     private readonly IUserService _userService = userService;
+    private readonly IFileHandler _fileHandler = fileHandler;
 
 
     [HttpGet]
@@ -88,21 +90,8 @@ public class ProjectController(IClientService clientService, IProjectService pro
 
         if (form.ProjectImage != null && form.ProjectImage.Length > 0)
         {
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + form.ProjectImage.FileName;
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Uploads", "ProjectImages");
-
-            // Ensure directory exists
-            Directory.CreateDirectory(uploadsFolder);
-
-            // Save the file
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await form.ProjectImage.CopyToAsync(fileStream);
-            }
-
-            // Set the image path in the DTO
-            projectDto.ProjectImagePath = "/Images/Uploads/ProjectImages/" + uniqueFileName;
+            var imageFileUri = await _fileHandler.UploadFileAsync(form.ProjectImage);
+            projectDto.ProjectImagePath = imageFileUri;
         }
 
         var result = await _projectService.CreateProject(projectDto);
@@ -115,7 +104,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
 
             return AjaxResult(true, redirectUrl: Url.Action("Index", "Project"), message: "Project created.");
         }
-        
+
         ModelState.AddModelError("", "Something went wrong when creating the project");
         return ReturnBasedOnRequest(form, "_AddProject");
     }
@@ -173,21 +162,8 @@ public class ProjectController(IClientService clientService, IProjectService pro
 
         if (model.ProjectImage != null && model.ProjectImage.Length > 0)
         {
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProjectImage.FileName;
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Uploads", "ProjectImages");
-
-            // Ensure directory exists
-            Directory.CreateDirectory(uploadsFolder);
-
-            // Save the file
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await model.ProjectImage.CopyToAsync(fileStream);
-            }
-
-            // Set the image path in the DTO
-            projectDto.ProjectImagePath = "/Images/Uploads/ProjectImages/" + uniqueFileName;
+            var imageFileUri = await _fileHandler.UploadFileAsync(model.ProjectImage);
+            projectDto.ProjectImagePath = imageFileUri;
         }
 
         ProjectEntity projectEntity = ProjectFactory.Create(projectDto);
@@ -237,7 +213,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
             await _notificationService.AddNotificationAsync(notification);
             return RedirectToAction("Index", "Project");
         }
- 
+
         ViewBag.ErrorMessage("Something went wrong.");
         return RedirectToAction("Index", "Project");
     }

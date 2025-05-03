@@ -23,9 +23,11 @@
             </div>
             <div class="form-input">
                 <label asp-for="Password"></label>
-                <div class="input-group">
-                    <input asp-for="Password" id="input-password">
+                <div class="input-group pw-input">
+                    <input class="input-password" asp-for="Password" id="input-password" />
                     <span asp-validation-for="Password"></span>
+                    <i class="password-toggle fa-regular fa-eye-slash"></i>
+                    
                 </div>
             </div>
             <div>
@@ -41,6 +43,13 @@
                 {
                     <div class="alert alert-info">
                         @ViewBag.PasswordReset
+                    </div>
+                }
+
+                @if (ViewBag.Debug != null)
+                {
+                    <div class="alert alert-info">
+                        <strong>Debug:</strong> @ViewBag.Debug
                     </div>
                 }
             </div>

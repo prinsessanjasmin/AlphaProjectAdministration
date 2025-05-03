@@ -36,18 +36,21 @@
         </div>
         <div class="form-input">
             <label asp-for="Password"></label>
-            <div class="input-group">
-                <input asp-for="Password" id="input-password">
+            <div class="input-group pw-input">
+                <input class="input-password" asp-for="Password" id="input-password" />
                 <span asp-validation-for="Password"></span>
+                <i class="password-toggle fa-regular fa-eye-slash"></i>
+               
             </div>
         </div>
         <div class="form-input">
             <label asp-for="ConfirmPassword"></label>
-            <div class="input-group">
-                <input asp-for="ConfirmPassword" id="confirm-password">
+            <div class="input-group pw-input">
+                <input class="input-password" asp-for="ConfirmPassword" id="confirm-password" />
                 <span asp-validation-for="ConfirmPassword"></span>
+                <i class="password-toggle fa-regular fa-eye-slash"></i>
+               
             </div>
-            
         </div>
         <div>
             <input asp-for="AcceptTerms" type="checkbox">

@@ -10,17 +10,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using WebApp_MVC.Handlers;
 using WebApp_MVC.Models;
 
 namespace WebApp_MVC.Controllers;
 
 [Authorize]
-public class EmployeeController(DataContext dataContext, IWebHostEnvironment webHostEnvironment, IUserService userService, INotificationService notificationService) : BaseController
+public class EmployeeController(DataContext dataContext, IWebHostEnvironment webHostEnvironment, IUserService userService, INotificationService notificationService, IFileHandler fileHandler) : BaseController
 {
     private readonly IUserService _userService = userService;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
     private readonly DataContext _dataContext = dataContext;
     private readonly INotificationService _notificationService = notificationService;
+    private readonly IFileHandler _fileHandler = fileHandler;
 
     [Authorize(Roles = "Admin")]
     [HttpGet]
@@ -73,21 +75,8 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
 
         if (form.ProfileImage != null && form.ProfileImage.Length > 0)
         {
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + form.ProfileImage.FileName;
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Uploads", "ProjectImages");
-
-            // Ensure directory exists
-            Directory.CreateDirectory(uploadsFolder);
-
-            // Save the file
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await form.ProfileImage.CopyToAsync(fileStream);
-            }
-
-            // Set the image path in the DTO
-            employeeDto.ProfileImagePath = "/Images/Uploads/ProfileImages/" + uniqueFileName;
+            var imageFileUri = await _fileHandler.UploadFileAsync(form.ProfileImage);
+            employeeDto.ProfileImagePath = imageFileUri;
         }
 
         var result = await _userService.CreateEmployee(employeeDto);
@@ -103,7 +92,7 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
         else
         {
             ModelState.AddModelError("", "Something went wrong when creating the employee");
-            return ReturnBasedOnRequest(form, "_AddEmployee"); 
+            return ReturnBasedOnRequest(form, "_AddEmployee");
         }
     }
 
@@ -138,30 +127,22 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
             return ReturnBasedOnRequest(model, "_EditEmployee");
         }
 
+        var existingUser = await _userService.GetUserById(model.Id);
+        if (existingUser == null)
+        {
+            ViewBag.ErrorMessage("User not found.");
+            return ReturnBasedOnRequest(model, "_EditEmployee");
+        }
+        
         EditEmployeeDto employeeDto = model;
 
         if (model.ProfileImage != null && model.ProfileImage.Length > 0)
         {
-            string uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ProfileImage.FileName;
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "Uploads", "ProfileImages");
-
-            // Ensure directory exists
-            Directory.CreateDirectory(uploadsFolder);
-
-            // Save the file
-            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await model.ProfileImage.CopyToAsync(fileStream);
-            }
-
-            // Set the image path in the DTO
-            employeeDto.ProfileImagePath = "/Images/Uploads/ProfileImages/" + uniqueFileName;
+            var imageFileUri = await _fileHandler.UploadFileAsync(model.ProfileImage);
+            employeeDto.ProfileImagePath = imageFileUri;
         }
 
-        ApplicationUser employeeEntity = UserFactory.Create(employeeDto);
-
-        var result = await _userService.UpdateUser(model.Id, employeeEntity);
+        var result = await _userService.UpdateUser(employeeDto);
 
         if (result.Success)
         {
@@ -175,7 +156,7 @@ public class EmployeeController(DataContext dataContext, IWebHostEnvironment web
     }
 
     [Authorize(Roles = "Admin")]
-    public IActionResult ConfirmDelete(int id)
+    public IActionResult ConfirmDelete(string id)
     {
         return PartialView("_DeleteEmployee", id);
     }

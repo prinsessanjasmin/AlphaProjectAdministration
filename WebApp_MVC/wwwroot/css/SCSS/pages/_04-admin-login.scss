@@ -9,19 +9,20 @@
     padding-bottom: 5rem;
     position: relative;
     overflow: hidden;
+}
 
-    &::before {
-        content: "";
-        position: absolute;
-        top: -50px;
-        left: -50px;
-        right: -50px;
-        bottom: -50px;
-        background-image: url("../../ProjectImages/Pictures/1.svg");
-        filter: blur(20px);
-        background-size: cover;
-        z-index: -1;
-    }
+.admin-left::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    right: -50px;
+    bottom: -50px;
+    background-image: url("../../ProjectImages/Pictures/1.svg");
+    background-position: center;
+    background-size: cover;
+    filter: blur(20px);
+    z-index: 1;
 }
 
 .admin-text {

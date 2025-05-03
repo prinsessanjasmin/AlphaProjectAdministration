@@ -112,7 +112,6 @@ public class UserRepository(UserManager<ApplicationUser> userManager, RoleManage
 
     public async Task<IdentityResult> UpdateUserAsync(ApplicationUser updatedUser)
     {
-
         try
         {
             var existingUser = await _context.Users
@@ -122,27 +121,27 @@ public class UserRepository(UserManager<ApplicationUser> userManager, RoleManage
             if (existingUser == null)
                 return IdentityResult.Failed(new IdentityError { Description = "User not found" });
 
-            var updatedValues = _context.Entry(updatedUser).CurrentValues;
-            var existingEntry = _context.Entry(existingUser);
+            var passwordHash = existingUser.PasswordHash;
+            var securityStamp = existingUser.SecurityStamp;
+            var normalizedEmail = existingUser.NormalizedEmail;
+            var normalizedUserName = existingUser.NormalizedUserName;
+            var concurrencyStamp = existingUser.ConcurrencyStamp;
 
-            var keyName = existingEntry.Metadata?.FindPrimaryKey()?.Properties
-                .Select(p => p.Name).SingleOrDefault();
+            existingUser.FirstName = updatedUser.FirstName;
+            existingUser.LastName = updatedUser.LastName;
+            existingUser.Email = updatedUser.Email;
+            existingUser.UserName = updatedUser.UserName;
+            existingUser.PhoneNumber = updatedUser.PhoneNumber;
+            existingUser.JobTitle = updatedUser.JobTitle;
+            existingUser.ProfileImagePath = updatedUser.ProfileImagePath;
+            existingUser.DateOfBirth = updatedUser.DateOfBirth;
+            existingUser.AddressId = updatedUser.AddressId;
 
-            foreach (var property in updatedValues.Properties)
-            {
-                if (property.Name != keyName)
-                {
-                    var value = updatedValues[property.Name];
-                    existingEntry.Property(property.Name).CurrentValue = value;
-                }
-            }
-
-            // Update navigation properties like Address if needed
-            if (updatedUser.Address != null)
-            {
-                existingUser.Address ??= new AddressEntity();
-                _context.Entry(existingUser.Address).CurrentValues.SetValues(updatedUser.Address);
-            }
+            existingUser.PasswordHash = passwordHash;
+            existingUser.SecurityStamp = securityStamp;
+            existingUser.NormalizedEmail = normalizedEmail;
+            existingUser.NormalizedUserName = normalizedUserName;
+            existingUser.ConcurrencyStamp = concurrencyStamp;
 
             await _context.SaveChangesAsync();
             return await _userManager.UpdateAsync(existingUser);

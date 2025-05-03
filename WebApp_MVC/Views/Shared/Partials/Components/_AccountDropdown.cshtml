@@ -5,7 +5,7 @@
 <div id="account-dropdown-button" data-type="dropdown" data-target="#account-dropdown" class="btn-dropdown btn-account">
 	@if (!string.IsNullOrEmpty(@currentUser.ProfileImagePath))
 	{
-		<img class="account-img" src="@Url.Content(Model.ProjectImagePath)" alt="Avatar icon" />
+		<img class="account-img" src="@Url.Content(currentUser.ProfileImagePath)" alt="Avatar icon" />
 	}
 	else
 	{
@@ -17,7 +17,7 @@
 			<div class="account-dropdown-header">
 				@if (!string.IsNullOrEmpty(@currentUser.ProfileImagePath))
 				{
-					<img class="account-img" src="@Url.Content(Model.ProjectImagePath)" alt="Avatar icon" />
+					<img class="account-img" src="@Url.Content(currentUser.ProfileImagePath)" alt="Avatar icon" />
 				}
 				else
 				{

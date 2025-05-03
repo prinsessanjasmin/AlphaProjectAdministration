@@ -10,13 +10,13 @@
 }
 
 .btn-popup {
-    width: 490px; 
+    width: 100%; 
     margin-top: 1rem; 
     color: var(--clr-white);
 }
 
 .btn-login {
-    width: 400px; 
+    width: 100%; 
     margin: 1rem 0; 
 }
 
@@ -198,18 +198,27 @@ button.btn-sidebar.active-controller {
 .btn-close {
     @include button;
     border: none;
-    height: 24px;
-    width: 24px;
+    height: 30px;
+    width: 30px;
     background-color: transparent;
-    background-image: url("/ProjectImages/Icons/X.svg");
-    background-position: 8px 8px;
-    background-repeat: no-repeat;
-    background-size: 15px;
-    //Font awesome ?
 
     &:hover {
         background-color: var(--clr-grey-100);
     }
+}
+
+.btn-close::after {
+    content: '\f00d';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--clr-heading);
+    padding: 1rem;
+    position: absolute;
+    background-color: none;
+    top: 27px; 
+    right: 16px;
+    z-index: 1;
 }
 
 .btn-remove {
@@ -257,4 +266,22 @@ button.btn-sidebar.active-controller {
     font-size: 15px;
     padding: .5rem;
     align-items: center;
+}
+
+.btn-cookie-dark {
+    background-color: var(--clr-green);
+    color: var(--clr-white);
+
+    &:hover {
+        background-color: var(--clr-dark-green);
+    }
+}
+
+.btn-cookie-light {
+    background-color: var(--clr-white);
+    color: var(--clr-heading);
+
+    &:hover {
+        background-color: var(--clr-grey-300);
+    }
 }

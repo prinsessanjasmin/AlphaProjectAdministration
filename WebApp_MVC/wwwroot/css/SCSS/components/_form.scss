@@ -38,6 +38,7 @@
                 border: 1px solid var(--clr-border-300);
                 padding: 0 1rem;
                 font-family: Nunito;
+                color: var(--clr-heading);
                 font-weight: 400;
                 font-size: 15px;
                 background-color: transparent;
@@ -51,6 +52,7 @@
                 font-family: Nunito;
                 font-weight: 400;
                 font-size: 15px;
+                color: var(--clr-heading);
                 background-color: transparent;
                 padding: 0 1rem;
 
@@ -62,12 +64,38 @@
                     font-size: 15px;
                 }
             }
+            /* Style the first option in a select dropdown (your placeholder) */
+            select option:first-child {
+                color: var(--clr-placeholder) !important;
+            }
+            /* Style the select itself when showing the placeholder (first option) */
+            select.placeholder-shown,
+            select:required:invalid {
+                color: var(--clr-placeholder) !important;
+            }
 
-            placeholder {
-                color: var(--clr-body);
-                font-family: Nunito;
-                font-weight: 400;
-                font-size: 15px;
+            ::-webkit-input-placeholder {
+                color: var(--clr-placeholder);
+            }
+            /* Firefox 19+ */
+            ::-moz-placeholder {
+                color: var(--clr-placeholder);
+            }
+            /* Firefox 18- */
+            :-moz-placeholder {
+                color: var(--clr-placeholder);
+            }
+            /* IE/Edge */
+            :-ms-input-placeholder {
+                color: var(--clr-placeholder);
+            }
+            /* Standard syntax (must come last) */
+            ::placeholder {
+                color: var(--clr-placeholder);
+            }
+            /* For select fields, style the first option (which acts as placeholder) */
+            select option:first-child {
+                color: var(--clr-placeholder);
             }
         }
 
@@ -85,11 +113,22 @@
         align-content: center;
     }
 
-    #input-password {
-        padding-right: 2rem;
-        background-image: url("/ProjectImages/Icons/Hide.svg");
-        background-position: 365px 13px;
-        background-repeat: no-repeat;
-        background-size: 18px;
+    .input-password {
+        position: relative;
+        padding-right: 40px;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        z-index: 1;
+        color: var(--clr-body);
+    }
+
+    .password-toggle:hover {
+        color: var(--clr-heading);
     }
 }

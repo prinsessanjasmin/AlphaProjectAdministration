@@ -5,6 +5,12 @@
     color: var(--clr-heading);
 }
 
+.project-icon {
+    height: 56px; 
+    width: 56px; 
+    border-radius: 16px; 
+}
+
 .horizontal-project {
     gap: 1rem;
     align-items: center;
@@ -47,4 +53,11 @@
 
 #avatars {
     gap: .5rem; 
+}
+
+.team-avatar {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    aspect-ratio: 1;
 }

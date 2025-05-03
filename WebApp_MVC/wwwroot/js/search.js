@@ -208,19 +208,25 @@ function initMemberSelector(config) {
                 resultItem.classList.add('search-item');
                 resultItem.dataset.id = item.Id;
 
-                const displayText = item[config.displayProperty] || item.name || 'Unknown';
+                const displayProperty = config.displayProperty;
+                const displayText = item[displayProperty] ||
+                    item[displayProperty.toLowerCase()] ||
+                    item[displayProperty.charAt(0).toUpperCase() + displayProperty.slice(1)] ||
+                    'Unknown';
 
-                if (config.memberClass === 'member' && item[config.imageProperty]) {
-
-                    const imagePath = item[config.imageProperty].startsWith('http')
-                        ? item[config.imageProperty]
-                        : (config.avatarFolder || '') + item[config.imageProperty];
+                if (config.memberClass === 'member') {
+                    // Get image path using the same approach as addMemberElement
+                    const imageProperty = config.imageProperty;
+                    const imagePath = item[imageProperty] ||
+                        item[imageProperty.toLowerCase()] ||
+                        item[imageProperty.charAt(0).toUpperCase() + imageProperty.slice(1)] ||
+                        '/ProjectImages/Icons/Avatar.svg';
 
                     resultItem.innerHTML =
                         `
-                        <img class="user-avatar" src="${imagePath}" onerror="this.src='/ProjectImages/Icons/Avatar.svg'" />
-                        <span>${displayText}</span>
-                    `;
+                    <img class="user-avatar" src="${imagePath}" onerror="this.src='/ProjectImages/Icons/Avatar.svg'" />
+                    <span>${displayText}</span>
+                `;
                 } else {
                     resultItem.innerHTML = `<span>${displayText}</span>`;
                 }

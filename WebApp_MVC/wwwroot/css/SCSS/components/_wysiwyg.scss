@@ -29,6 +29,10 @@
     min-height: 173px;
 }
 
+.ql-editor.ql-blank::before {
+    color: var(--clr-placeholder) !important;
+}
+
 #wysiwyg-toolbar {
     position: absolute;
     box-sizing: border-box;

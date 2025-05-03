@@ -5,6 +5,7 @@ namespace Business.Interfaces;
 
 public interface IAddressService
 {
+    Task<IResult<AddressEntity>> CreateAddress(EditEmployeeDto form);
     Task<IResult<AddressEntity>> CreateAddress(UpdateUserDto form);
     Task<IResult<AddressEntity>> CreateAddress(EmployeeDto form);
     Task<IResult> GetAllAddresses();

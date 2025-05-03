@@ -28,11 +28,14 @@
     background-color: $clr-grey-opacity;
     border-radius: 16px;
     padding: .3rem;
+    gap: .5rem; 
+}
 
-    user-avatar {
-        height: 22px;
-        width: 22px;
-    }
+.user-avatar {
+    height: 22px;
+    width: 22px;
+    border-radius: 50%;
+    aspect-ratio: 1;
 }
 
 .input-group .member-selector {

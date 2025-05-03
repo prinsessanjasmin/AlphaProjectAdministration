@@ -11,11 +11,9 @@
                 <button class="btn-close" type="button" data-close="true"></button>
             </header>
             <div class="form-content">
-                <div class="upload-image">
-                    <button class="btn-upload-image">
-                        <img src="~/ProjectImages/Icons/Camera.png" alt="Camera icon.">
-                        <input asp-for="ProjectImage" accept="image/*" class="hidden" />
-                    </button>
+                <div class="image-previewer square">
+                    <img class="image-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                    <input asp-for="ProjectImage" accept="image/*" class="hidden" />
                 </div>
                 <div class="form-input">
                     <label asp-for="ProjectName"></label>
@@ -92,7 +90,8 @@
                 </div>
                 <div class="form-input">
                     <label asp-for="Budget"></label>
-                    <div class="input-group">
+                    <div class="input-group budget-input">
+                        <span class="currency-symbol">$</span>
                         <input data-val="true" asp-for="Budget" id="budget-input" />
                         <span asp-validation-for="Budget"></span>
                     </div>

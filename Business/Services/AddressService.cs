@@ -11,7 +11,7 @@ public class AddressService(IAddressRepository addressRepository) : IAddressServ
 {
     private readonly IAddressRepository _addressRepository = addressRepository;
 
-    public async Task<IResult<AddressEntity>> CreateAddress(UpdateUserDto form)
+    public async Task<IResult<AddressEntity>> CreateAddress(EditEmployeeDto form)
     {
         await _addressRepository.BeginTransactionAsync();
         try
@@ -169,6 +169,43 @@ public class AddressService(IAddressRepository addressRepository) : IAddressServ
         }
     }
 
+    public async Task<IResult<AddressEntity>> CreateAddress(UpdateUserDto form)
+    {
+        await _addressRepository.BeginTransactionAsync();
+        try
+        {
+            if (form.StreetAddress == null || form.PostCode == null || form.City == null)
+            {
+                return Result<AddressEntity>.Error("You need to fill out all address fields.");
+            }
 
+            string normailizedStreetAddress = form.StreetAddress.Trim().ToLower();
+            string normalizedPostCode = form.PostCode.Trim();
+            string normalizedCity = form.City.Trim().ToLower();
+
+            var existingAddress = await _addressRepository.GetAsync(a =>
+                a.StreetAddress == normailizedStreetAddress
+                && a.PostCode == normalizedPostCode
+                && a.City == normalizedCity);
+
+            if (existingAddress != null)
+            {
+                return Result<AddressEntity>.Ok(existingAddress);
+            }
+            else
+            {
+                AddressEntity addressEntity = AddressFactory.Create(normailizedStreetAddress, normalizedPostCode, normalizedCity);
+                await _addressRepository.CreateAsync(addressEntity);
+                await _addressRepository.SaveAsync();
+                await _addressRepository.CommitTransactionAsync();
+                return Result<AddressEntity>.Created(addressEntity);
+            }
+        }
+        catch
+        {
+            await _addressRepository.RollbackTransactionAsync();
+            return Result<AddressEntity>.Error("Something went wrong.");
+        }
+    }
 }
 

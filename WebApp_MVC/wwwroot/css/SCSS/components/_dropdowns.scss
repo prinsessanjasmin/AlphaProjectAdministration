@@ -43,19 +43,22 @@
 }
 
 .notification-dropdown-container {
-    
+    top: 4rem; 
+    right: 17rem; 
 }
 
 .settings-dropdown-container {
     width: 200px;
     top: 3rem;
+    right: 3rem; 
     overflow: hidden; 
     overflow-y: hidden;
 }
 
 .account-dropdown-container {
     width: 300px;
-    top: 4rem;
+    top: 3rem;
+    right: 6rem; 
     overflow: hidden;
     overflow-y: hidden;
     padding: .5rem; 
@@ -160,6 +163,7 @@
     gap: 1rem;
     justify-content: space-between;
     align-items: center;
+    width: 100%; 
 
     .vertical-notification {
         align-items: flex-start;
@@ -180,12 +184,20 @@
         color: var(--clr-body);
         font-weight: 400;
     }
-
-    .account-img {
-        height: 40px;
-        width: 40px;
-    }
 }
+
+.account-img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+.project-img {
+    height: 40px;
+    width: 40px;
+    border-radius: 12px;
+}
+
 
 .red-dot {
     height: 11px;

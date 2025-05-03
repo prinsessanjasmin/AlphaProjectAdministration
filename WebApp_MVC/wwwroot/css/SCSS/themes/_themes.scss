@@ -26,7 +26,9 @@
     --clr-red-opacity: #{$clr-red-opacity};
     --clr-purple-opacity: #{$clr-purple-opacity};
     --clr-grey-opacity: #{$clr-grey-opacity};
-    
+    --clr-grey-opacity-70: #{$clr-grey-opacity-70};
+    --clr-dark-green: #{$clr-dark-green};
+    --clr-placeholder: #{$clr-body-light};
     //unchanged colors:
     --clr-white: #FFFFFF;
 }
@@ -41,6 +43,7 @@
     --clr-yellow: #{$clr-dark-yellow};
     --clr-blue: #{$clr-dark-blue};
     --clr-green: #{$clr-dark-green};
+    --clr-dark-green: #{$clr-green};
     --clr-purple: #{$clr-dark-purple};
     --clr-accent: #{$clr-dark-accent};
     --clr-grey-100: #{$clr-dark-grey-100};
@@ -56,6 +59,7 @@
     --clr-yellow-opacity: #{$clr-dark-yellow-opacity};
     --clr-red-opacity: #{$clr-dark-red-opacity};
     --clr-purple-opacity: #{$clr-dark-purple-opacity};
+    --clr-placeholder: #{$clr-body-dark-2};
 
     .project-status-menu {
         color: $clr-body-dark-2;
@@ -65,4 +69,51 @@
         color: $clr-body-dark-2;
     }
 
+    .btn-cookie-dark {
+        background-color: var(--clr-green);
+        color: var(--clr-white);
+
+        &:hover {
+            background-color: var(--clr-dark-green);
+        }
+    }
+
+    .btn-cookie-light {
+        background-color: var(--clr-white);
+        color: var(--clr-background);
+
+        &:hover {
+            background-color: var(--clr-grey-300);
+        }
+    }
+
+    .option {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: .5rem;
+
+        .switch-label {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+        }
+
+        .slider {
+            background-color: var(--clr-heading);
+        }
+
+        .slider:before {
+            background-color: var(--clr-dark-green);
+        }
+
+        input:checked + .slider {
+            background-color: var(--clr-heading);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--clr-accent);
+        }
+    }
 }

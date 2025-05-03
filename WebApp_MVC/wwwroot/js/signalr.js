@@ -84,14 +84,15 @@ function handleNotification(notification) {
     const timeAgo = updateRelativeTimes();
 
     const item = document.createElement('div');
+    const imageClass = notification.NotificationTypeId == 1 ? "account-img" : "project-img";
     item.className = 'notification-item';
     item.setAttribute('data-id', notification.id)
     item.innerHTML =
     `
-        <img class="image" src="${notification.icon}" />
+        <img class="${imageClass}" src="${notification.icon}" />
         <div class="vertical vertical-notification">
 	        <div class="notification-message">${notification.message}</div>
-	        <div class="time-stamp" data-created="${new Date(notification.created).toISOString()}">${no}</div>
+	        <div class="time-stamp" data-created="${new Date(notification.created).toISOString()}">${timeAgo}</div>
         </div>
         <div class="btn-x" onclick="dismissNotification('${notification.id}')"></div>
     `;
@@ -109,11 +110,12 @@ function handleAdminNotification(notification) {
         return;
     }
     const item = document.createElement('div');
+    const imageClass = notification.NotificationTypeId == 1 ? "account-img" : "project-img";
     item.className = 'notification-item';
     item.setAttribute('data-id', notification.id)
     item.innerHTML =
         `
-        <img class="account-img" src="${notification.icon}" />
+        <img class="${imageClass}" src="${notification.icon}" />
         <div class="vertical vertical-notification">
 	        <div class="notification-message">${notification.message}</div>
 	        <div class="time-stamp" data-created="${new Date(notification.created).toISOString()}">${notification.created}</div>

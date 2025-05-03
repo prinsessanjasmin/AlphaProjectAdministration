@@ -1,16 +1,48 @@
-.upload-image {
+.image-previewer {
     height: 150px;
     width: 150px;
-    align-self: center;
-    border-radius: 25%;
-    border: 2px var(--clr-grey-400) dashed;
-    margin: 1rem;
+    border: 2px dashed var(--clr-grey-400);
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    cursor: pointer; 
+    overflow: hidden; 
+    position: relative; 
 }
 
-.edit-image {
-    height: 150px;
-    width: 150px;
-    align-self: center;
-    border-radius: 25%;
-    border: 2px var(--clr-grey-400) dashed;
+.image-previewer.circle {
+    border-radius: 50%;
 }
+
+.image-previewer.square {
+    border-radius: 16px;
+}
+
+.image-previewer::after {
+    content: '\f030';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 700;
+    background-color: var(--clr-grey-opacity-70);
+    color: var(--clr-white); 
+    padding: 1rem; 
+    border-radius: 50%; 
+    position: absolute;
+    bottom: 35px; 
+    z-index: 1; 
+}
+
+.image-previewer.selected::after {
+    content: '\f044'; 
+    position: absolute; 
+    bottom: 5px; 
+}
+
+.image-preview {
+    height: 100%; /* Changed from fixed height */
+    width: 100%; /* Changed from fixed width */
+    object-fit: cover; /* This ensures the image covers the container properly */
+    display: block; /* This removes any default spacing */
+}
+
