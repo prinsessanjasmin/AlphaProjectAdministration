@@ -104,6 +104,8 @@ builder.Services.AddScoped<ClientController>();
 builder.Services.AddScoped<EmployeeController>();
 builder.Services.AddScoped<ProjectController>();
 builder.Services.AddScoped<SearchController>();
+builder.Services.AddScoped<CookiesController>();
+builder.Services.AddScoped<NotificationsController>();
 
 builder.Services.AddSignalR();
 
