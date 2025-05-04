@@ -679,6 +679,10 @@ section {
   padding: 1rem;
 }
 
+.update-user-container {
+  height: 950px;
+}
+
 .add-client-container {
   padding: 2rem;
 }

@@ -5,6 +5,7 @@ namespace WebApp_MVC.Interfaces;
 
 public interface IProjectViewModel
 {
+    List<SelectListItem> StatusOptions { get; set; }
     List<SelectListItem> ClientOptions { get; set; }
     List<TeamMemberDto> AvailableTeamMembers { get; set; }
 

@@ -14,11 +14,9 @@
         <div class="form-content">
             <input type="hidden" name="Id" id="update-user-id" value="@Model.Id" />
             
-            <div class="upload-image">
-                <button class="btn-upload-image" type="button">
-                    <img src="~/ProjectImages/Icons/Camera.png" alt="Camera icon.">
-                    <input asp-for="ProfileImage" accept="image/*" class="hidden" />
-                </button>
+            <div class="image-previewer circle">
+                <img class="image-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                <input asp-for="ProfileImage" accept="image/*" class="hidden" />
             </div>
             <div class="form-input">
                 <label asp-for="PhoneNumber"></label>

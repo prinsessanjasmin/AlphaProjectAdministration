@@ -12,11 +12,12 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using WebApp_MVC.Handlers;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApp_MVC.Controllers;
 
 [Authorize]
-public class ProjectController(IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService, IUserService userService, IFileHandler fileHandler) : BaseController
+public class ProjectController(IClientService clientService, IProjectService projectService, IWebHostEnvironment webHostEnvironment, DataContext dataContext, INotificationService notificationService, IUserService userService, IFileHandler fileHandler, DataContext context) : BaseController
 {
 
     private readonly IClientService _clientService = clientService;
@@ -26,6 +27,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
     private readonly INotificationService _notificationService = notificationService;
     private readonly IUserService _userService = userService;
     private readonly IFileHandler _fileHandler = fileHandler;
+    private readonly DataContext _context = context;
 
 
     [HttpGet]
@@ -47,6 +49,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
 
         await PopulateClientsAsync(viewModel);
         await PopulateMembersAsync(viewModel);
+        await PopulateStatusesAsync(viewModel);
 
         ViewData["AddProjectViewModel"] = viewModel;
 
@@ -60,6 +63,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
         {
             await PopulateClientsAsync(viewModel);
             await PopulateMembersAsync(viewModel);
+            await PopulateStatusesAsync(viewModel);
             return PartialView("_AddProject", viewModel);
         }
 
@@ -67,6 +71,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
         var fallbackModel = new AddProjectViewModel();
         await PopulateClientsAsync(fallbackModel);
         await PopulateMembersAsync(fallbackModel);
+        await PopulateStatusesAsync(fallbackModel);
 
         return PartialView("_AddProject", fallbackModel);
     }
@@ -78,6 +83,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
 
         await PopulateClientsAsync(form);
         await PopulateMembersAsync(form);
+        await PopulateStatusesAsync(form);
 
         form.SelectedTeamMemberIds = originalSelectedTeamMembers;
 
@@ -140,6 +146,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
             }
 
             await PopulateClientsAsync(viewModel);
+            await PopulateStatusesAsync(viewModel);
             await PopulateMembersAsync(viewModel, id);
             return PartialView("_EditProject", viewModel);
         }
@@ -311,6 +318,17 @@ public class ProjectController(IClientService clientService, IProjectService pro
         foreach (ClientEntity client in clients)
         {
             viewModel.ClientOptions.Add(new SelectListItem { Text = client.ClientName, Value = client.Id.ToString() });
+        }
+    }
+
+    public async Task PopulateStatusesAsync(IProjectViewModel viewModel)
+    {
+        var statuses = await _context.Statuses.ToListAsync<StatusEntity>();  
+
+        viewModel.StatusOptions = [];
+        foreach (StatusEntity status in statuses)
+        {
+            viewModel.StatusOptions.Add(new SelectListItem { Text = status.StatusName, Value = status.Id.ToString() });
         }
     }
 }

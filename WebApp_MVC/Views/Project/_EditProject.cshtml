@@ -73,6 +73,18 @@
                     </div>
                 </div>
             </div>
+            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            {
+                <div class="form-input">
+                    <label asp-for="StatusId"></label>
+                    <div class="input-group">
+                        <select data-val="true" asp-for="StatusId" asp-items="Model.StatusOptions">
+                            <option class="option-dropdown" value="">-- Select Status --</option>
+                        </select>
+                        <span asp-validation-for="StatusId"></span>
+                    </div>
+                </div>
+            }
             <div class="form-input">
                 <label asp-for="SelectedTeamMemberIds">Team members</label>
                 <div class="selected-member-display" id="edit-selected-member-display"></div>

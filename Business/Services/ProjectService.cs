@@ -192,9 +192,13 @@ public class ProjectService(IProjectRepository projectRepository) : IProjectServ
                 existingProject.Description = updatedProject.Description;
                 existingProject.Budget = updatedProject.Budget;
                 existingProject.ClientId = updatedProject.ClientId;
-                existingProject.StatusId = updatedProject.StatusId;
                 existingProject.ProjectImagePath = updatedProject.ProjectImagePath;
                 existingProject.TeamMembers.Clear();
+
+                if (updatedProject.StatusId == 0)
+                {
+                    existingProject.StatusId = existingProject.StatusId;
+                }
 
                 foreach (var teamMember in updatedProject.TeamMembers)
                 {

@@ -33,6 +33,9 @@ public class AddProjectViewModel() : IProjectViewModel
 
     public decimal? Budget { get; set; }
 
+    [Display(Name = "Status")]
+    public int? StatusId { get; set; }
+    public List<SelectListItem> StatusOptions { get; set; } = [];
     public List<SelectListItem> ClientOptions { get; set; } = [];
     public List<TeamMemberDto> AvailableTeamMembers { get; set; } = [];
     public List<TeamMemberDto> PreselectedTeamMembers { get; set; } = [];
@@ -73,7 +76,7 @@ public class AddProjectViewModel() : IProjectViewModel
             StartDate = model.StartDate,
             EndDate = model.EndDate,
             Budget = model.Budget,
-            StatusId = 1,
+            StatusId = model.StatusId ?? 1,
             SelectedTeamMemberIds = JsonSerializer.Deserialize<List<string>>(model.SelectedTeamMemberIds) ?? []
         }; 
 
