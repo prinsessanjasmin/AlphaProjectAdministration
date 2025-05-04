@@ -105,14 +105,6 @@ builder.Services.AddScoped<EmployeeController>();
 builder.Services.AddScoped<ProjectController>();
 builder.Services.AddScoped<SearchController>();
 
-
-builder.Services.AddScoped<ProjectViewModel>();
-builder.Services.AddScoped<AppUserViewModel>();
-builder.Services.AddScoped<AddClientViewModel>();
-builder.Services.AddScoped<LoginFormViewModel>();
-builder.Services.AddScoped<MemberFormViewModel>();
-builder.Services.AddScoped<SignUpViewModel>();
-
 builder.Services.AddSignalR();
 
 var app = builder.Build();
@@ -131,20 +123,7 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    string[] roleNames = ["Admin", "Manager", "User"];
-
-    foreach (var roleName in roleNames)
-    {
-        var exists = await roleManager.RoleExistsAsync(roleName);
-        if (!exists)
-        {
-            await roleManager.CreateAsync(new IdentityRole(roleName));
-        }
-    }
-}
+await Data.Seed.DataSeeder.SeedData(app.Services);
 
 app.MapHub<ChatHub>("/chathub");
 app.MapHub<NotificationHub>("/notificationhub");

@@ -7,8 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Business.Services;
 
+
 public class SearchService(IDbContextFactory<DataContext> contextFactory) : ISearchService
 {
+    //HAd lots of help from botg ChatGPT and Claude AI with this service. 
     private readonly IDbContextFactory<DataContext> _contextFactory = contextFactory;
 
     public async Task<SearchResult> SearchAsync(string query, CancellationToken cancellationToken = default)

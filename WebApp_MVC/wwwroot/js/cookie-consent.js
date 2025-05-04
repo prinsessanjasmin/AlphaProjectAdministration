@@ -1,8 +1,8 @@
-﻿document.addEventListener('DOMContentLoaded'), () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     if (!getCookie("cookieConsent")) {
         openCookieConsentModal();
     }
-}
+});
 
 function openCookieConsentModal() {
     const modal = document.getElementById('cookieModal');
@@ -31,8 +31,6 @@ function closeCookieConsentModal() {
     const modal = document.getElementById('cookieModal');
     if (modal) modal.classList.remove("visible");
 }
-
-
 
 function getCookie(name) {
     const nameEQ = name + "="; 
@@ -90,6 +88,14 @@ async function acceptSelected() {
 
 async function handleConsent(consent) {
     try {
+
+        //Had help here from ClaudeAI with tracking the user, since my original script didn't take into account if the user changed 
+        const userId = document.querySelector('meta[name="user-id"]')?.content;
+        const requestData = {
+            ...consent,
+            userId: userId || null  // Include user ID if available
+        };
+
         const res = await fetch('/cookies/setcookies', {
             method: 'POST',
             headers: {

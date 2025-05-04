@@ -3,7 +3,7 @@
 namespace WebApp_MVC.Controllers;
 
 //I had ChatGPT 4o draw this up for me as a way of not having to handle the JSON and AJAX
-//validation stuff in every controller that handles a form. 
+//validation stuff in every controller that handles a form. Claude AI has also been involved when stuff didn't work as intended. 
 public class BaseController : Controller
 {
     protected bool IsAjaxRequest()

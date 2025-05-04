@@ -10,6 +10,7 @@ public class SearchController(ISearchService searchService) : Controller
 {
     private readonly ISearchService _searchService = searchService;
 
+    //Great deal of help here from ChatGPT 4o AND Claude AI 
     public async Task<JsonResult> Search(string query)
     {
         try

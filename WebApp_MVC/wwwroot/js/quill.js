@@ -34,6 +34,7 @@ function initAddProjectQuill() {
     });
 }
 
+//Had som help here from Claude AI with debugging since some things weren't working as expected. 
 function initEditProjectQuill() {
 
     console.log("Initializing Edit Project Quill...");
@@ -57,14 +58,10 @@ function initEditProjectQuill() {
 
     if (content && content.trim() !== '') {
         try {
-            // Try setting as HTML first
             quill.root.innerHTML = content;
-            console.log("Set content as HTML");
+;
         } catch (error) {
-            console.error("Error setting HTML content:", error);
-            // Fallback to setting as text
             quill.setText(content);
-            console.log("Set content as text");
         }
     }
 

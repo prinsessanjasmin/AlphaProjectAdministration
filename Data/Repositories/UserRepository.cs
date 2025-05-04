@@ -46,6 +46,7 @@ public class UserRepository(UserManager<ApplicationUser> userManager, RoleManage
     }
     #endregion
 
+    //Lots of input here from both ChatGPT 4o and Claude AI. I originally had separate entities for Employee and User - when merging the two I had to ask for a lot of help. 
     public async Task<IdentityResult> CreateUserAsync(ApplicationUser user, string password, string role)
     {
         if (await _userManager.Users.AnyAsync(u => u.Email == user.Email))

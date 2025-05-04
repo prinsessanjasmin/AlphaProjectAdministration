@@ -1,4 +1,6 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+﻿//Script has been changed multiple times with help from borth ChatGPT 4o and CLaude AI, to fix bugs and issues, namely with validating modals which aren't loaded when DOM content is.  
+
+document.addEventListener("DOMContentLoaded", function () {
     const forms = document.querySelectorAll("form:not(.no-validation)");
 
     forms.forEach(form => {
@@ -68,7 +70,6 @@ async function submitFormAsync(form) {
             if (data.success) {
                 const modal = form.closest('.modal');
                 if (modal) {
-                    // Use classList instead of style.display for consistency
                     modal.classList.remove('visible');
                 }
 

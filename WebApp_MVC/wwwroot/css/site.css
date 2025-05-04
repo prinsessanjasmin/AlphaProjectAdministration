@@ -525,7 +525,6 @@ section {
   margin-top: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
   gap: 2rem;
   align-content: space-evenly;
   justify-content: space-evenly;
@@ -1150,7 +1149,8 @@ button.btn-sidebar.active-controller {
 
 select {
   border: 1px solid;
-} 
+}
+
 .project-card {
   height: 276px;
   width: 350px;

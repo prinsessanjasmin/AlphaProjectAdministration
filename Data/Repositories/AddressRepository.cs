@@ -8,6 +8,7 @@ public class AddressRepository(DataContext context) : BaseRepository<AddressEnti
 {
     private readonly DataContext _context = context;
 
+    //These overrides were a suggestion from ChatGPT 4o to skip the transaction management when this repository is called from another repository that already has transaction management. 
     public override Task BeginTransactionAsync()
     {
         return Task.CompletedTask;

@@ -1,4 +1,6 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+﻿//A separate validation function to not have to deal with JSON and AJAX responses. Suggestion by teacher Emil Vettainen to break it up like this. 
+
+document.addEventListener("DOMContentLoaded", function () {
     const forms = document.querySelectorAll("form");
 
     forms.forEach(form => {
@@ -45,28 +47,6 @@ function clearErrorMessages(form) {
         span.classList.add('field-validation-valid');
     });
 }
-
-//function addErrorMessage(form, key, errorMessage) {
-//    const normalizedKey = key.replace(/\./g, '_');
-//    let input = form.querySelector(`[name="${key}"]`);
-//    if (!input) {
-//        input = form.querySelector(`#${normalizedKey}`);
-//    }
-//    if (input) {
-//        input.classList.add('input-validation-error');
-//    }
-
-//    let span = form.querySelector(`[data-valmsg-for="${key}"]`);
-//    if (!span) {
-//        span = form.querySelector(`span[for="${normalizedKey}"]`);
-//    }
-
-//    if (span) {
-//        span.textContent = errorMessage;
-//        span.classList.remove('field-validation-valid');
-//        span.classList.add('field-validation-error');
-//    }
-//}
 
 function validateField(field) {
     const formElement = field.closest('form');

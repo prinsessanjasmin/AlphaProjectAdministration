@@ -32,4 +32,5 @@ public class ApplicationUser : IdentityUser
     public ICollection<NotificationDismissedEntity> DismissedNotifications { get; set; } = [];
 
     public bool IsProfileComplete { get; set; } = false;
+    //Suggestion from Chat GPT 4o to handle the second step of registering a user (self register) 
 }

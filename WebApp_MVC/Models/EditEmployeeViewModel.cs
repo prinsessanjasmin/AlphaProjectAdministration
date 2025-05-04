@@ -77,6 +77,7 @@ public class EditEmployeeViewModel
             }; 
     }
 
+    //Had help from Claude AI with generating these conversion methods, especially the one that puts the right number of days that a month has as options . 
     public EditEmployeeViewModel(ApplicationUser user)
     {
         Id = user.Id;

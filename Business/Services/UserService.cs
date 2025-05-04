@@ -173,7 +173,7 @@ public class UserService(IUserRepository userRepository, IAddressService address
             if (existingUser == null)
                 return Result.NotFound("Could not find the user in the database.");
 
-            // Selectively update properties
+            // Had a problem with users after updating so I had help from Claude AI with updating the member so the Password hashes wouldnt disappear. 
             existingUser.FirstName = dto.FirstName;
             existingUser.LastName = dto.LastName;
             existingUser.Email = dto.Email;

@@ -1,4 +1,7 @@
-﻿function initSearch(config) {
+﻿//Whole function is littered with suggestions from both ChatGPT 4o and Claude AI, but the base is derived from teacher Hans Mattin-Lasseis tutorial on search for users, but this script is for a search where 
+//projects, users AND clients can show up. 
+
+function initSearch(config) {
     let activeIndex = -1;
     let debounceTimer;
     const searchContainer = document.getElementById(config.containerId);
@@ -153,7 +156,7 @@
 
         setTimeout(() => {
             results.innerHTML = '';
-        }, 400); // match your CSS transition duration
+        }, 400); 
     }
 
     function openDetails(itemId, entityType, detailsUrl) {

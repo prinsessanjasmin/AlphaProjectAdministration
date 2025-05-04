@@ -63,7 +63,7 @@ public class ProjectController(IClientService clientService, IProjectService pro
             return PartialView("_AddProject", viewModel);
         }
 
-        // Fallback if ViewData is null
+        // Fallback if ViewData is null - suggestion from Claude AI 
         var fallbackModel = new AddProjectViewModel();
         await PopulateClientsAsync(fallbackModel);
         await PopulateMembersAsync(fallbackModel);

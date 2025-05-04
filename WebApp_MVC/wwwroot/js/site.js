@@ -63,7 +63,9 @@
         });
     });
 
-    //modals
+    //modals - the base for this functionality is from teacher Hans-Mattin Lasseis tutorial, but I had help from both ChatGPT 4o and Claude AI (at different points) with debugging and making sure
+    //the different modals with different parameters and needs can all work. 
+
     const modalButtons = document.querySelectorAll('[data-modal="true"]')
     modalButtons.forEach(button => {
         button.addEventListener('click', async () => {
@@ -277,6 +279,7 @@ async function processImage(file, imagePreview, previewer, previewSize = 150) {
     }
 }
 
+//Lots of help from Claude AI here to get this to work as intended. 
 function initImagePreviewers() {
     document.querySelectorAll('.image-previewer').forEach(previewer => {
         // Check if this previewer has already been initialized
@@ -315,6 +318,7 @@ function initImagePreviewers() {
     });
 }
 
+//Claude AI generated code to populate the DateofBirth dropdowns correctly. 
 function populateDateDropdowns(daySelect, monthSelect, yearSelect, selectedDay, selectedMonth, selectedYear) {
     if (!daySelect || !monthSelect || !yearSelect) return;
 
@@ -453,7 +457,7 @@ function initializeProjectFilters() {
     }
 }
 
-//Darkmode stuff 
+//Darkmode stuff - based on tutorial from CSS & HTML course by EC Utbildning autumn 2024
 const darkmodeSwitch = document.getElementById('dm-switch');
 const hasSetDarkmode = localStorage.getItem('darkmode');
 

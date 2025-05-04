@@ -1,4 +1,6 @@
-﻿//SignalR
+﻿//SignalR - had a lot of help from Claude AI here. I had problems with Notification and Chat functions disturbing each other, so I asked for help in combining the two in one script.
+
+
 window.appConnections = {
     notification: null,
     chat: null

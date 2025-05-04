@@ -12,8 +12,10 @@ public class DataContext(DbContextOptions<DataContext> options) : IdentityDbCont
     public DbSet<StatusEntity> Statuses { get; set; }
     public DbSet<AddressEntity> Addresses { get; set; }
     public DbSet<NotificationEntity> Notifications { get; set; }
+    public DbSet<NotificationTypeEntity> NotificationTypes { get; set; }
     public DbSet<NotificationDismissedEntity> DismissedNotifications { get; set; }
     public DbSet<TargetGroupEntity> TargetGroups { get; set; }
+    public DbSet<UserPreferenceEntity> UserPreferences { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

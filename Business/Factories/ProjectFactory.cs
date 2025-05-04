@@ -46,7 +46,7 @@ namespace Business.Factories
                 Budget = entity.Budget,
                 Description = entity.Description,
 
-                // Convert the ProjectEmployeeEntity collection to a list of employee IDs Claude AI
+                // Convert the ProjectEmployeeEntity collection to a list of employee IDs - help here from Claude AI
                 SelectedTeamMemberIds = entity.TeamMembers?
                 .Select(pe => pe.EmployeeId)
                 .ToList() ?? new List<string>()
